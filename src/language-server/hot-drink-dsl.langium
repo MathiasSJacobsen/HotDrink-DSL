@@ -37,7 +37,7 @@ Method:
     "}"
 ;
 Arguments: 
-    "(" ref+=] ("," ref+=[Variable])* "->" final+=[Variable] ("," final+=[Variable])* ")";
+    "(" ref+=[Variable] ("," ref+=[Variable])* "->" final+=[Variable] ("," final+=[Variable])* ")";
 
 Atomic:
     {IntConst} value=INT |
