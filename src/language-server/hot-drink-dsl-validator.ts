@@ -19,7 +19,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
             Arguments: validator.checkArgumentOnlyReferenceToVarOnce,
             Method: validator.checkMethodStartsWithLowercase,
             Constraint: [validator.checkConstraintStartWithLowercase, validator.checkConstraintMethodsHaveUniqueName],
-            Component: validator.checkComponentConstraintsHaveUniqueName,
+            Component: [validator.checkComponentConstraintsHaveUniqueName, validator.checkComponentVarsHaveUniqueName],
         };
         this.register(checks, validator);
     }
@@ -85,8 +85,17 @@ export class HotDrinkDslValidator {
             if (component.constraints) {
                 const unique = new Set(component.constraints.map(e => e.name));
                 if (unique.size !== component.constraints.length) {
-                    //TODO: Something wrong with the syntax highlighting
+                    //TODO: Something wrong with the syntax highlighting, goes over the hole component
                     accept("warning", "Component constraints should have unique names.", {node: component, property:"constraints"})
+                }
+            }
+        }
+        checkComponentVarsHaveUniqueName(component: Component, accept: ValidationAcceptor) : void {
+            if (component.vars) {
+                const unique = new Set(component.vars.map(e => e.name));
+                if (unique.size !== component.vars.length) {
+                    //TODO: Something wrong with the syntax highlighting, goes over the hole component
+                    accept("error","Component vars should have unique names.", {node: component, property: "vars"})
                 }
             }
         }
