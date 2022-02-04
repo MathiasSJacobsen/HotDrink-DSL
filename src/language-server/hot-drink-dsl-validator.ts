@@ -18,6 +18,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
             Var: validator.checkVarStartsWithLowercase,
             Arguments: validator.checkArgumentOnlyReferenceToVarOnce,
             Method: validator.checkMethodStartsWithLowercase,
+            Constraint: validator.checkConstraintStartWithLowercase,
         };
         this.register(checks, validator);
     }
@@ -62,4 +63,12 @@ export class HotDrinkDslValidator {
             }
         }
 
+        checkConstraintStartWithLowercase(constraint: Constraint, accept: ValidationAcceptor): void {
+            if (constraint.name) {
+                const firstChar = constraint.name.substring(0,1);
+                if (firstChar.toLowerCase() !== firstChar){
+                    accept("warning", "Constraint should start with lowercase.", {node: constraint, property: "name"})
+                }
+            }
+        }
 }
