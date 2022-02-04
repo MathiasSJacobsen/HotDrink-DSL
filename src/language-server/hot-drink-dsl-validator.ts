@@ -1,5 +1,5 @@
 import { ValidationAcceptor, ValidationCheck, ValidationRegistry } from 'langium';
-import { Arguments, HotDrinkDslAstType, Method, Var } from './generated/ast';
+import { Arguments, Component, Constraint, HotDrinkDslAstType, Method, Var } from './generated/ast';
 import { HotDrinkDslServices } from './hot-drink-dsl-module';
 
 /**
@@ -18,7 +18,8 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
             Var: validator.checkVarStartsWithLowercase,
             Arguments: validator.checkArgumentOnlyReferenceToVarOnce,
             Method: validator.checkMethodStartsWithLowercase,
-            Constraint: validator.checkConstraintStartWithLowercase,
+            Constraint: [validator.checkConstraintStartWithLowercase, validator.checkConstraintMethodsHaveUniqueName],
+            Component: validator.checkComponentConstraintsHaveUniqueName,
         };
         this.register(checks, validator);
     }
@@ -73,6 +74,24 @@ export class HotDrinkDslValidator {
                 const firstChar = constraint.name.substring(0,1);
                 if (firstChar.toLowerCase() !== firstChar){
                     accept("warning", "Constraint should start with lowercase.", {node: constraint, property: "name"})
+                }
+            }
+        }
+
+        checkConstraintMethodsHaveUniqueName(constraint: Constraint, accept: ValidationAcceptor) : void {
+            if(constraint.methods){
+                const unique = new Set(constraint.methods.map(e => e.name))
+                if(unique.size !== constraint.methods.length){
+                    accept("warning", "Constraint methods should have unique names.", {node: constraint, property: "methods"})
+                }
+            }
+        }
+        checkComponentConstraintsHaveUniqueName(component: Component, accept: ValidationAcceptor) : void {
+            if (component.constraints) {
+                const unique = new Set(component.constraints.map(e => e.name));
+                if (unique.size !== component.constraints.length) {
+                    //TODO: Something wrong with the syntax highlighting
+                    accept("warning", "Component constraints should have unique names.", {node: component, property:"constraints"})
                 }
             }
         }
