@@ -1,0 +1,70 @@
+{
+    "name": "HotDrink-DSL",
+    "displayName": "HotDrink-DSL",
+    "description": "Please enter a brief description here",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.56.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "hot-drink-dsl",
+                "aliases": [
+                    "HotDrink DSL",
+                    "hot-drink-dsl"
+                ],
+                "extensions": [
+                    ".hd"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "hot-drink-dsl",
+                "scopeName": "source.hot-drink-dsl",
+                "path": "./syntaxes/hot-drink-dsl.tmLanguage.json"
+            }
+        ]
+    },
+    "activationEvents": [
+        "onLanguage:hot-drink-dsl"
+    ],
+    "files": [
+        "bin",
+        "out",
+        "src"
+    ],
+    "bin": {
+        "hot-drink-dsl-cli": "./bin/cli"
+    },
+    "main": "./out/extension.js",
+    "scripts": {
+        "vscode:prepublish": "npm run build && npm run lint",
+        "build": "tsc -b tsconfig.json",
+        "watch": "tsc -b tsconfig.json --watch",
+        "lint": "eslint src --ext ts",
+        "langium:generate": "langium generate",
+        "langium:watch": "langium generate --watch"
+    },
+    "dependencies": {
+        "colors": "^1.4.0",
+        "commander": "^8.0.0",
+        "langium": "^0.2.0",
+        "vscode-languageclient": "^7.0.0",
+        "vscode-languageserver": "^7.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^14.17.3",
+        "@types/vscode": "^1.56.0",
+        "@typescript-eslint/eslint-plugin": "^4.14.1",
+        "@typescript-eslint/parser": "^4.14.1",
+        "eslint": "^7.19.0",
+        "langium-cli": "^0.2.0",
+        "typescript": "^4.1.3"
+    }
+}

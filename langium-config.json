@@ -1,0 +1,9 @@
+{
+    "languageId": "hot-drink-dsl",
+    "grammar": "src/language-server/hot-drink-dsl.langium",
+    "fileExtensions": [".hd"],
+    "out": "src/language-server/generated",
+    "textMate": {
+        "out": "syntaxes/hot-drink-dsl.tmLanguage.json"
+    }
+}
