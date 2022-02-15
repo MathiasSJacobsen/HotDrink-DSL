@@ -34,6 +34,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
             Constraint: [
                 validator.checkConstraintStartWithLowercase,
                 validator.checkConstraintMethodsHaveUniqueName,
+                validator.checkConstraintMethodsUsesTheSameVars,
             ],
             Component: [
                 validator.checkComponentConstraintsHaveUniqueName,
@@ -70,6 +71,17 @@ export class HotDrinkDslValidator {
             if (s1.size !== argument.final.length) {
                 accept("error", "Can no use the same variable more then once in an argument.", {node: argument, property: "final"}) // TODO: Should be shown on the last variable of the 
             }
+            /* Need to ask if this is allowed
+            s.forEach((e) => {
+                if (s1.has(e)) {
+                    accept(
+                        "error",
+                        "Can not use the same variable on both sides of the `->`.",
+                        { node: argument }
+                    );
+                }
+            });
+            */
         }
     }
 
@@ -117,6 +129,25 @@ export class HotDrinkDslValidator {
             }
         }
     }
+    checkConstraintMethodsUsesTheSameVars(
+        constraint: Constraint,
+        accept: ValidationAcceptor
+    ): void {
+        if (constraint.methods) {
+            const unique = constraint.methods[0].args.variables.map((e) => e.ref.ref?.name).concat(constraint.methods[0].args.final.map((e) => e.ref?.name)).sort();
+            constraint.methods.forEach(method => {
+                const unique2 = method.args.variables.map((e) => e.ref.ref?.name).concat(method.args.final.map((e) => e.ref?.name)).sort();
+                if (unique.length !== unique2.length || unique.join(",") !== unique2.join(",")) {
+                    accept("error", `All methods inside a given constraint needs to reference all the same variables.`, {
+                        node: constraint,
+                        property: "methods",
+                    });
+                }
+            })
+        }
+    }
+
+
     checkComponentConstraintsHaveUniqueName(
         component: Component,
         accept: ValidationAcceptor
