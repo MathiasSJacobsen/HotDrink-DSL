@@ -34,6 +34,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
             Constraint: [
                 validator.checkConstraintStartWithLowercase,
                 validator.checkConstraintMethodsHaveUniqueName,
+                validator.checkConstraintMethodsUsesTheSameVars,
             ],
             Component: [
                 validator.checkComponentConstraintsHaveUniqueName,
@@ -81,6 +82,7 @@ export class HotDrinkDslValidator {
                     { node: argument, property: "final" }
                 ); // TODO: Should be shown on the last variable of the
             }
+            /* Need to ask if this is allowed
             s.forEach((e) => {
                 if (s1.has(e)) {
                     accept(
@@ -90,6 +92,7 @@ export class HotDrinkDslValidator {
                     );
                 }
             });
+            */
         }
     }
 
@@ -137,6 +140,25 @@ export class HotDrinkDslValidator {
             }
         }
     }
+    checkConstraintMethodsUsesTheSameVars(
+        constraint: Constraint,
+        accept: ValidationAcceptor
+    ): void {
+        if (constraint.methods) {
+            const unique = constraint.methods[0].args.ref.map((e) => e.ref?.name).concat(constraint.methods[0].args.final.map((e) => e.ref?.name)).sort();
+            constraint.methods.forEach(method => {
+                const unique2 = method.args.ref.map((e) => e.ref?.name).concat(method.args.final.map((e) => e.ref?.name)).sort();
+                if (unique.length !== unique2.length || unique.join(",") !== unique2.join(",")) {
+                    accept("error", `All methods inside a given constraint needs to reference all the same variables.`, {
+                        node: constraint,
+                        property: "methods",
+                    });
+                }
+            })
+        }
+    }
+
+
     checkComponentConstraintsHaveUniqueName(
         component: Component,
         accept: ValidationAcceptor
