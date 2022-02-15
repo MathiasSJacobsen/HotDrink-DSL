@@ -64,6 +64,29 @@ export function isExpr(item: unknown): item is Expr {
     return reflection.isInstance(item, Expr);
 }
 
+export interface ImpFunction extends AstNode {
+    args: Array<Reference<Variable>>
+    name: string
+}
+
+export const ImpFunction = 'ImpFunction';
+
+export function isImpFunction(item: unknown): item is ImpFunction {
+    return reflection.isInstance(item, ImpFunction);
+}
+
+export interface Import extends AstNode {
+    readonly $container: Model;
+    file: string
+    name: string
+}
+
+export const Import = 'Import';
+
+export function isImport(item: unknown): item is Import {
+    return reflection.isInstance(item, Import);
+}
+
 export interface IntConst extends AstNode {
     value: number
 }
@@ -89,6 +112,7 @@ export function isMethod(item: unknown): item is Method {
 
 export interface Model extends AstNode {
     component: Array<Component>
+    imports: Array<Import>
 }
 
 export const Model = 'Model';
@@ -218,14 +242,14 @@ export function isVar(item: unknown): item is Var {
     return reflection.isInstance(item, Var);
 }
 
-export type HotDrinkDslAstType = 'Arguments' | 'BoolConst' | 'Component' | 'Constraint' | 'Expr' | 'IntConst' | 'Method' | 'Model' | 'StringConst' | 'Variable' | 'VarRef' | 'And' | 'Comparison' | 'Equality' | 'MulOrDiv' | 'Not' | 'Or' | 'PlusOrMinus' | 'Var';
+export type HotDrinkDslAstType = 'Arguments' | 'BoolConst' | 'Component' | 'Constraint' | 'Expr' | 'ImpFunction' | 'Import' | 'IntConst' | 'Method' | 'Model' | 'StringConst' | 'Variable' | 'VarRef' | 'And' | 'Comparison' | 'Equality' | 'MulOrDiv' | 'Not' | 'Or' | 'PlusOrMinus' | 'Var';
 
-export type HotDrinkDslAstReference = 'Arguments:final' | 'Arguments:ref' | 'VarRef:value';
+export type HotDrinkDslAstReference = 'Arguments:final' | 'Arguments:ref' | 'ImpFunction:args' | 'VarRef:value';
 
 export class HotDrinkDslAstReflection implements AstReflection {
 
     getAllTypes(): string[] {
-        return ['Arguments', 'BoolConst', 'Component', 'Constraint', 'Expr', 'IntConst', 'Method', 'Model', 'StringConst', 'Variable', 'VarRef', 'And', 'Comparison', 'Equality', 'MulOrDiv', 'Not', 'Or', 'PlusOrMinus', 'Var'];
+        return ['Arguments', 'BoolConst', 'Component', 'Constraint', 'Expr', 'ImpFunction', 'Import', 'IntConst', 'Method', 'Model', 'StringConst', 'Variable', 'VarRef', 'And', 'Comparison', 'Equality', 'MulOrDiv', 'Not', 'Or', 'PlusOrMinus', 'Var'];
     }
 
     isInstance(node: unknown, type: string): boolean {
@@ -261,6 +285,9 @@ export class HotDrinkDslAstReflection implements AstReflection {
                 return Variable;
             }
             case 'Arguments:ref': {
+                return Variable;
+            }
+            case 'ImpFunction:args': {
                 return Variable;
             }
             case 'VarRef:value': {

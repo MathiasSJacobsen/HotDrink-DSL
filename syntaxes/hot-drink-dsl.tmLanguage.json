@@ -10,7 +10,7 @@
     },
     {
       "name": "keyword.control.hot-drink-dsl",
-      "match": "\\b(component|constraint|false|true|var)\\b"
+      "match": "\\b(component|constraint|false|from|import|true|var)\\b"
     },
     {
       "name": "keyword.symbol.hot-drink-dsl",

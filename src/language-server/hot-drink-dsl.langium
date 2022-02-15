@@ -10,7 +10,12 @@ terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 terminal SL_COMMENT: /\/\/[^\n\r]*/;
 
 Model:
-    component+=Component*;
+    imports+=Import*
+    component+=Component*
+    ;
+
+Import:
+    "import" name=ID "from" file=STRING;
 
 Component: 
     "component" name=ID "{"
@@ -29,6 +34,10 @@ Constraint:
     "constraint" (name=ID)? "{" 
         methods+=Method+
     "}"
+;
+
+ImpFunction:
+    name=ID "(" (args+=[Variable] ("," args+=[Variable])* )?  ")"
 ;
 
 Method:
