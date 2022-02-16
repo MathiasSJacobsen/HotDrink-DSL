@@ -188,29 +188,35 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
             "value": "{"
           },
           {
-            "$type": "Assignment",
-            "feature": "vars",
-            "operator": "+=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refText": "Variable"
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "vars",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Variable"
+                  }
+                },
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "constraints",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Constraint"
+                  }
+                },
+                "elements": []
               }
-            },
-            "cardinality": "*"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "constraints",
-            "operator": "+=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refText": "Constraint"
-              }
-            },
+            ],
             "cardinality": "*"
           },
           {
@@ -484,6 +490,40 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
     {
       "$type": "ParserRule",
       "parameters": [],
+      "name": "VariableReference",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "ref",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$refText": "Variable"
+              }
+            },
+            "elements": []
+          },
+          {
+            "$type": "Assignment",
+            "feature": "hasMark",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "!"
+            },
+            "elements": [],
+            "cardinality": "?"
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
       "name": "Arguments",
       "hiddenTokens": [],
       "alternatives": {
@@ -499,9 +539,10 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
             "feature": "ref",
             "operator": "+=",
             "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$refText": "Variable"
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "VariableReference"
               }
             }
           },
@@ -518,9 +559,10 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
                 "feature": "ref",
                 "operator": "+=",
                 "terminal": {
-                  "$type": "CrossReference",
-                  "type": {
-                    "$refText": "Variable"
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "VariableReference"
                   }
                 }
               }

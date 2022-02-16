@@ -49,8 +49,11 @@ Method:
 Body:
     value=ImpFunction | value=Expr;
 
+VariableReference:
+    ref=[Variable] (hasMark?="!")?;
+
 Arguments: 
-    "(" ref+=[Variable] ("," ref+=[Variable])* "->" final+=[Variable] ("," final+=[Variable])* ")";
+    "(" ref+=VariableReference ("," ref+=VariableReference)* "->" final+=[Variable] ("," final+=[Variable])* ")";
 
 Atomic:
     {IntConst} value=INT |
