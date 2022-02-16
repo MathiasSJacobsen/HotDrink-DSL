@@ -77,17 +77,6 @@ export class HotDrinkDslValidator {
             if (s1.size !== argument.final.length) {
                 accept("error", "Can no use the same variable more then once in an argument.", {node: argument, property: "final"}) // TODO: Should be shown on the last variable of the 
             }
-            /* Need to ask if this is allowed
-            s.forEach((e) => {
-                if (s1.has(e)) {
-                    accept(
-                        "error",
-                        "Can not use the same variable on both sides of the `->`.",
-                        { node: argument }
-                    );
-                }
-            });
-            */
         }
     }
 
