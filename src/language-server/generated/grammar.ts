@@ -536,7 +536,7 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
           },
           {
             "$type": "Assignment",
-            "feature": "ref",
+            "feature": "variables",
             "operator": "+=",
             "terminal": {
               "$type": "RuleCall",
@@ -556,7 +556,7 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
               },
               {
                 "$type": "Assignment",
-                "feature": "ref",
+                "feature": "variables",
                 "operator": "+=",
                 "terminal": {
                   "$type": "RuleCall",

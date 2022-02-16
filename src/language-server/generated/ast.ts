@@ -10,7 +10,7 @@ import { AstNode, AstReflection, Reference, isAstNode } from 'langium';
 export interface Arguments extends AstNode {
     readonly $container: Method;
     final: Array<Reference<Variable>>
-    ref: Array<VariableReference>
+    variables: Array<VariableReference>
 }
 
 export const Arguments = 'Arguments';

@@ -53,7 +53,7 @@ VariableReference:
     ref=[Variable] (hasMark?="!")?;
 
 Arguments: 
-    "(" ref+=VariableReference ("," ref+=VariableReference)* "->" final+=[Variable] ("," final+=[Variable])* ")";
+    "(" variables+=VariableReference ("," variables+=VariableReference)* "->" final+=[Variable] ("," final+=[Variable])* ")";
 
 Atomic:
     {IntConst} value=INT |
