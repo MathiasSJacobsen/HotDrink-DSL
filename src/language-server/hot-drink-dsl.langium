@@ -84,25 +84,3 @@ Or returns Expr:
     And({Or.left=current} "$$" right=And)*;
 
 Expr: Or;
-
-
-
-
-
-
-
-
-/**
-assignments
-methodscall
-
-to types:
-
-    easy things => EXPR basic js basic math, 
-
-    =>more of a code block.  "''''''" says that its code and i dont care about it
-
-    mAke issue on github about OR, make it easy
-*/
-
-
