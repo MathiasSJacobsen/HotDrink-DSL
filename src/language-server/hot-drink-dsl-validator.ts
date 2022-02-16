@@ -42,7 +42,10 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
                 validator.checkComponentConstraintsHaveUniqueName,
                 validator.checkComponentVarsHaveUniqueName,
             ],
-            Model: validator.checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement,
+            Model: [
+                validator.checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement,
+                validator.checkModelComponentNameIsUnique,
+            ],
         };
         this.register(checks, validator);
     }
@@ -132,6 +135,7 @@ export class HotDrinkDslValidator {
             }
         }
     }
+
     checkConstraintMethodsUsesTheSameVars(
         constraint: Constraint,
         accept: ValidationAcceptor
@@ -150,7 +154,6 @@ export class HotDrinkDslValidator {
         }
     }
 
-
     checkComponentConstraintsHaveUniqueName(
         component: Component,
         accept: ValidationAcceptor
@@ -166,6 +169,7 @@ export class HotDrinkDslValidator {
             }
         }
     }
+
     checkComponentVarsHaveUniqueName(
         component: Component,
         accept: ValidationAcceptor
@@ -181,6 +185,7 @@ export class HotDrinkDslValidator {
             }
         }
     }
+
     checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement(
         model: Model,
         accept: ValidationAcceptor
@@ -198,4 +203,19 @@ export class HotDrinkDslValidator {
                 })
             }
     }
+
+    checkModelComponentNameIsUnique(
+        model: Model,
+        accept: ValidationAcceptor
+    ): void {
+        if (model.component) {
+            const uniqueNames = new Set(model.component.map((component: Component) => component.name));
+            if (uniqueNames.size !== model.component.length) {
+                accept("warning", "Component names should be unique", {
+                    node: model,
+                    property: "component",
+                })
+            }
+        }
+    } 
 }
