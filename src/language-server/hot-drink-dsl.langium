@@ -10,8 +10,8 @@ terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 terminal SL_COMMENT: /\/\/[^\n\r]*/;
 
 Model:
-    imports+=Import*
-    component+=Component*
+    (imports+=Import |
+    component+=Component)*
     ;
 
 Import:
