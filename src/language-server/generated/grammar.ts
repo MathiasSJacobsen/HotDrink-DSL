@@ -59,7 +59,7 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
       "name": "Model",
       "hiddenTokens": [],
       "alternatives": {
-        "$type": "Group",
+        "$type": "Alternatives",
         "elements": [
           {
             "$type": "Assignment",
@@ -72,7 +72,6 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
                 "$refText": "Import"
               }
             },
-            "cardinality": "*",
             "elements": []
           },
           {
@@ -86,9 +85,10 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
                 "$refText": "Component"
               }
             },
-            "cardinality": "*"
+            "elements": []
           }
-        ]
+        ],
+        "cardinality": "*"
       }
     },
     {
