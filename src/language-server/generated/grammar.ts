@@ -106,8 +106,8 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
           },
           {
             "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
+            "feature": "funcs",
+            "operator": "+=",
             "terminal": {
               "$type": "RuleCall",
               "arguments": [],
@@ -115,6 +115,29 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
                 "$refText": "ID"
               }
             }
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": ",",
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "funcs",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "ID"
+                  }
+                }
+              }
+            ],
+            "cardinality": "*"
           },
           {
             "$type": "Keyword",

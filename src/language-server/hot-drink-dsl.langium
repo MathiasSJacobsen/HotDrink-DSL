@@ -15,7 +15,7 @@ Model:
     ;
 
 Import:
-    "import" name=ID "from" file=STRING;
+    "import" funcs+=ID ("," funcs+=ID)* "from" file=STRING;
 
 Component: 
     "component" name=ID "{"

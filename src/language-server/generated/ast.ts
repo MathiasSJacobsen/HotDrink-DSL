@@ -89,7 +89,7 @@ export function isImpFunction(item: unknown): item is ImpFunction {
 export interface Import extends AstNode {
     readonly $container: Model;
     file: string
-    name: string
+    funcs: Array<string>
 }
 
 export const Import = 'Import';
