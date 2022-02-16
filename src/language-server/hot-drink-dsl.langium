@@ -42,9 +42,13 @@ ImpFunction:
 
 Method:
     name=ID args=Arguments "=>" "{"
-        expr=Expr
+        Body
     "}"
 ;
+
+Body:
+    value=ImpFunction | value=Expr;
+
 Arguments: 
     "(" ref+=[Variable] ("," ref+=[Variable])* "->" final+=[Variable] ("," final+=[Variable])* ")";
 

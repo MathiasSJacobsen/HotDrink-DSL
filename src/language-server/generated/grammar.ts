@@ -408,8 +408,43 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
             "value": "{"
           },
           {
+            "$type": "RuleCall",
+            "arguments": [],
+            "rule": {
+              "$refText": "Body"
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "}"
+          }
+        ]
+      }
+    },
+    {
+      "$type": "ParserRule",
+      "parameters": [],
+      "name": "Body",
+      "hiddenTokens": [],
+      "alternatives": {
+        "$type": "Alternatives",
+        "elements": [
+          {
             "$type": "Assignment",
-            "feature": "expr",
+            "feature": "value",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refText": "ImpFunction"
+              }
+            },
+            "elements": []
+          },
+          {
+            "$type": "Assignment",
+            "feature": "value",
             "operator": "=",
             "terminal": {
               "$type": "RuleCall",
@@ -417,11 +452,8 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
               "rule": {
                 "$refText": "Expr"
               }
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": "}"
+            },
+            "elements": []
           }
         ]
       }
