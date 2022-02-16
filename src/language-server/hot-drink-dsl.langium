@@ -19,8 +19,8 @@ Import:
 
 Component: 
     "component" name=ID "{"
-        vars += Variable*
-        constraints += Constraint*
+        (vars += Variable | 
+        constraints += Constraint)*
     "}"
 ;
 
