@@ -8,7 +8,9 @@ import {
     Component,
     Constraint,
     HotDrinkDslAstType,
+    Import,
     Method,
+    Model,
     Var,
 } from "./generated/ast";
 import { HotDrinkDslServices } from "./hot-drink-dsl-module";
@@ -40,6 +42,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
                 validator.checkComponentConstraintsHaveUniqueName,
                 validator.checkComponentVarsHaveUniqueName,
             ],
+            Model: validator.checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement,
         };
         this.register(checks, validator);
     }
@@ -177,5 +180,22 @@ export class HotDrinkDslValidator {
                 });
             }
         }
+    }
+    checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement(
+        model: Model,
+        accept: ValidationAcceptor
+        ): void {
+            if (model.imports) {
+                const listOfImports = model.imports;
+                listOfImports.forEach((_import:Import) => {
+                    const uni = new Set(_import.funcs.map((name : string) => name));
+                    if (uni.size !== _import.funcs.length) {
+                        accept("warning", "Should not import the same function more then once.", {
+                            node: model,
+                            property: "imports",
+                        })
+                    }
+                })
+            }
     }
 }
