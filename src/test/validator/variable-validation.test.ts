@@ -7,7 +7,7 @@ import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-m
 const services = createHotDrinkDslServices();
 const helper = parseHelper<Grammar>(services);
 describe("Variable validation", () => {
-    it('have a variable with a uppercase starting letter', async () => {
+    it('gets a warning if variable have a uppercase starting letter as name', async () => {
         const documentContent = `component T { 
                                     var A; 
                                     var b;
@@ -21,7 +21,7 @@ describe("Variable validation", () => {
             severity: expectation[0].severity,
         }))
     });
-    it('have two variable with a uppercase starting letter', async () => {
+    it('gets 2 warnings if both variables have a uppercase starting letter', async () => {
         const documentContent = `component T { 
                                     var A; 
                                     var b;
@@ -50,7 +50,7 @@ describe("Variable validation", () => {
             }))
         })
     });
-    it('have no diagnostic errors', async () => {
+    it('have no diagnostic errors if none there', async () => {
         const documentContent = `component T { 
                                     var a; 
                                     var b;
