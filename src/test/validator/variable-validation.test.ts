@@ -39,7 +39,6 @@ describe("Variable validation", () => {
         ];
         const doc = await helper(documentContent);
         const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
-        console.log(JSON.stringify(diagnostics, undefined, 2)); // Store this logged string somewhere
         
         expect(diagnostics.length).toBe(2)
         
