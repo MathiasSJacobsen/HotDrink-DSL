@@ -2,7 +2,7 @@
 
 import { Grammar } from "langium";
 import { parseHelper } from "langium/lib/test"
-import { createHotDrinkDslServices } from "../language-server/hot-drink-dsl-module";
+import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
 
 const services = createHotDrinkDslServices();
 const helper = parseHelper<Grammar>(services);
