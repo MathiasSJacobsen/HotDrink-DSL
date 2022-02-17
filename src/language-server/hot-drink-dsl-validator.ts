@@ -79,7 +79,7 @@ export class HotDrinkDslValidator {
             }
         }
     }
-
+    // TODO: BUG DOSNT WORK
     checkMethodStartsWithLowercase(
         method: Method,
         accept: ValidationAcceptor
