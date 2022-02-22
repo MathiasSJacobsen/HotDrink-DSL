@@ -14,6 +14,13 @@ describe("Component validation", () => {
                 var a;
                 var b;
                 var a;
+
+                constraint c1 {
+                    method(a -> b) => {
+                        true
+                    }
+                }
+
             }`;
             const expectation = { 
                     message: "Component vars should have unique names.", 
