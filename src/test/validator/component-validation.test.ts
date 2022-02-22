@@ -22,14 +22,14 @@ describe("Component validation", () => {
                 }
 
             }`;
-            const expectation = { 
-                    message: "Component vars should have unique names.", 
-                    severity: ERRORSEVERITY 
-                }
-            ;
+            const expectation = {
+                message: "Component vars should have unique names.",
+                severity: ERRORSEVERITY
+            }
+                ;
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
-            
+
             expect(diagnostics.length).toBe(1)
 
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
@@ -53,15 +53,14 @@ describe("Component validation", () => {
                     }
                 }
             }`;
-            const expectation = { 
-                    message: "Component constraints should have unique names.", 
-                    severity: WARNINGSEVERITY 
-                }
-            ;
+            const expectation = {
+                message: "Component constraints should have unique names.",
+                severity: WARNINGSEVERITY
+            }
+                ;
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
-            console.log(diagnostics);
-            
+
 
             expect(diagnostics.length).toBe(1)
 
@@ -89,15 +88,75 @@ describe("Component validation", () => {
                     }
                 }
             }`;
-            const expectation = { 
-                    message: "Component constraints should have unique names.", 
-                    severity: WARNINGSEVERITY 
-                }
-            ;
+            const expectation = {
+                message: "Component constraints should have unique names.",
+                severity: WARNINGSEVERITY
+            }
+                ;
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
-            console.log(diagnostics);
+
+            expect(diagnostics.length).toBe(1)
+
+            expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
+        })
+    })
+    describe("Unused variables", () => {
+        it('gets a warning when a variable is not in use by any method', async () => {
+            const documentContent = `component T {
+                var a;
+                var b;
+                var c;
+                var p;
             
+                constraint c {
+                    method(a, b -> c) => {
+                        true
+                    }
+                }
+            }`;
+            const expectation = {
+                message: "Variable not in use.",
+                severity: WARNINGSEVERITY
+            }
+                ;
+            const doc = await helper(documentContent);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+
+            expect(diagnostics.length).toBe(1)
+
+            expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
+        })
+        it("shows the waring at the right variable", async () => {
+            const documentContent = `component T {
+                var a;
+                var b;
+                var c;
+                var p;
+            
+                constraint c {
+                    method(a, b -> c) => {
+                        true
+                    }
+                }
+            }`;
+            const expectation = {
+                message: "Variable not in use.",
+                severity: WARNINGSEVERITY,
+                range: {
+                    end: {
+                        character: 22,
+                        line: 4,
+                    },
+                    start: {
+                        character: 16,
+                        line: 4,
+                    },
+                }
+            };
+            
+            const doc = await helper(documentContent);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
 
             expect(diagnostics.length).toBe(1)
 
