@@ -24,5 +24,24 @@ describe("Model validation", () => {
 
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
+        it('gets a warning if function is imported twice, on the right line', async () => {
+            const documentContent = `import t, k, t from "test.js";`;
+        
+            const doc = await helper(documentContent);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+
+            expect(diagnostics.length).toBe(1)
+
+            expect(diagnostics[0]).toEqual(expect.objectContaining({
+                range: expect.objectContaining({
+                    end: expect.objectContaining({
+                        line: 0
+                    }), 
+                    start: expect.objectContaining({
+                        line: 0
+                    })
+                })
+            }))
+        })
     })
 })
