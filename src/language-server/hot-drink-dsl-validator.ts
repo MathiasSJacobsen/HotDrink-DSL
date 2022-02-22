@@ -217,12 +217,14 @@ export class HotDrinkDslValidator {
     ): void {
         if (model.imports) {
             const listOfImports = model.imports;
-            listOfImports.forEach((_import: Import) => {
-                const uni = new Set(_import.funcs.map((name: string) => name));
-                if (uni.size !== _import.funcs.length) {
+            listOfImports.forEach((importStatement: Import) => {
+
+                const listOfImportedFunctions = importStatement.funcs.map((name: string) => name)
+                const unique = new Set(listOfImportedFunctions);
+
+                if (unique.size !== importStatement.funcs.length) {
                     accept("warning", "Should not import the same function more then once.", {
-                        node: model,
-                        property: "imports",
+                        node: importStatement
                     })
                 }
             })
