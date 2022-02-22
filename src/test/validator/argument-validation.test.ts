@@ -28,7 +28,7 @@ describe("Argument validation", () => {
             
             expect(diagnostics.length).toBe(1)
             
-            expect(expectation).toEqual(expect.objectContaining(expectation))
+            expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
     })
 })
