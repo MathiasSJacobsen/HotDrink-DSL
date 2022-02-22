@@ -41,7 +41,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
             Component: [
                 validator.checkComponentConstraintsHaveUniqueName,
                 validator.checkComponentVarsHaveUniqueName,
-                validator.checkComponentForUnusedVariables, 
+                validator.checkComponentForUnusedVariables,
             ],
             Model: [
                 validator.checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement,
@@ -182,10 +182,10 @@ export class HotDrinkDslValidator {
     ): void {
         if (component.vars) {
             const usedVariables = this.findAllInUseVariables(component)
-            if (usedVariables.size !== component.vars.length){
+            if (usedVariables.size !== component.vars.length) {
                 component.vars.forEach(_var => {
-                    if (!usedVariables.has(_var.name)){
-                        accept("warning",`Variable not in use.`, {
+                    if (!usedVariables.has(_var.name)) {
+                        accept("warning", `Variable not in use.`, {
                             node: _var
                         })
 
@@ -203,7 +203,7 @@ export class HotDrinkDslValidator {
             const methods = constraint.methods
             methods.forEach(method => {
                 const vars = method.args.variables.map(varRef => varRef.ref.ref!.name).concat(...method.args.final.map(varRef => varRef.ref!.name))
-                if (vars){
+                if (vars) {
                     allVariablesInUse = new Set([...allVariablesInUse, ...vars])
                 }
             });
