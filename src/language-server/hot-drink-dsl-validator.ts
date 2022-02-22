@@ -41,6 +41,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
             Component: [
                 validator.checkComponentConstraintsHaveUniqueName,
                 validator.checkComponentVarsHaveUniqueName,
+                validator.checkComponentForUnusedVariables, 
             ],
             Model: [
                 validator.checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement,
@@ -67,15 +68,15 @@ export class HotDrinkDslValidator {
         }
     }
 
-    checkArgumentOnlyReferenceToVarOnce(argument:Arguments, accept: ValidationAcceptor): void {
-        if(argument.variables){
+    checkArgumentOnlyReferenceToVarOnce(argument: Arguments, accept: ValidationAcceptor): void {
+        if (argument.variables) {
             const s = new Set(argument.variables.map(e => e.ref.ref?.name));
-            if (s.size !== argument.variables.length){
-                accept("error", "Can not use the same variable more then once in an argument.", {node: argument, property: "variables"}) // TODO: Should be shown on the last variable of the
+            if (s.size !== argument.variables.length) {
+                accept("error", "Can not use the same variable more then once in an argument.", { node: argument, property: "variables" }) // TODO: Should be shown on the last variable of the
             }
             const s1 = new Set(argument.final.map(e => e.ref?.name));
             if (s1.size !== argument.final.length) {
-                accept("error", "Can no use the same variable more then once in an argument.", {node: argument, property: "final"}) // TODO: Should be shown on the last variable of the 
+                accept("error", "Can no use the same variable more then once in an argument.", { node: argument, property: "final" }) // TODO: Should be shown on the last variable of the 
             }
         }
     }
@@ -175,6 +176,41 @@ export class HotDrinkDslValidator {
         }
     }
 
+    checkComponentForUnusedVariables(
+        component: Component,
+        accept: ValidationAcceptor,
+    ): void {
+        if (component.vars) {
+            const usedVariables = this.findAllInUseVariables(component)
+            if (usedVariables.size !== component.vars.length){
+                component.vars.forEach(_var => {
+                    if (!usedVariables.has(_var.name)){
+                        accept("warning",`Variable not in use.`, {
+                            node: _var
+                        })
+
+                    }
+                })
+            }
+
+
+        }
+    }
+    private findAllInUseVariables(component: Component): Set<string> {
+        let allVariablesInUse = new Set<string>()
+        const constraints = component.constraints
+        constraints.forEach(constraint => {
+            const methods = constraint.methods
+            methods.forEach(method => {
+                const vars = method.args.variables.map(varRef => varRef.ref.ref!.name).concat(...method.args.final.map(varRef => varRef.ref!.name))
+                if (vars){
+                    allVariablesInUse = new Set([...allVariablesInUse, ...vars])
+                }
+            });
+        });
+        return allVariablesInUse
+    }
+
     checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement(
         model: Model,
         accept: ValidationAcceptor
@@ -207,4 +243,5 @@ export class HotDrinkDslValidator {
             }
         }
     }
+
 }
