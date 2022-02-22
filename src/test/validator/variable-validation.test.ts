@@ -21,11 +21,17 @@ describe("Variable validation", () => {
             severity: expectation[0].severity,
         }))
     });
-    it('gets 2 warnings if both variables have a uppercase starting letter', async () => {
+    it('gets two warnings if both variables have a uppercase starting letter', async () => {
         const documentContent = `component T { 
                                     var A; 
                                     var b;
                                     var C; 
+
+                                    constraint c1 {
+                                        method(A, C -> b) => {
+                                            true
+                                        }
+                                    }
                                 }`;
         const expectation = [
             { 
@@ -54,6 +60,12 @@ describe("Variable validation", () => {
                                     var a; 
                                     var b;
                                     var c; 
+
+                                    constraint c1 {
+                                        method(a, c -> b) => {
+                                            true
+                                        }
+                                    }
                                 }`;
         const doc = await helper(documentContent);
         const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
