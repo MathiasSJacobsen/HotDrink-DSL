@@ -15,15 +15,11 @@ Model:
     ;
 
 Import:
-<<<<<<< HEAD
-    "import" funcs+=ID ("," funcs+=ID)* "from" file+=STRING ";";
-=======
     "import" "{"  funcs+=ImportedFunction ("," funcs+=ImportedFunction)* "}" "from" file=STRING;
 
 ImportedFunction:
     name=ID
     ;
->>>>>>> 3929d4b (90 % of basline DSL done)
 
 Component: 
     "component" name=ID "{"

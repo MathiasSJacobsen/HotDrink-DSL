@@ -56,7 +56,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
  * Implementation of custom validations.
  */
 export class HotDrinkDslValidator {
-    checkVarStartsWithLowercase(_var: Var, accept: ValidationAcceptor): void {
+    checkVarStartsWithLowercase(_var: Variable, accept: ValidationAcceptor): void {
         if (_var.name) {
             const firstChar = _var.name.substring(0, 1);
             if (firstChar.toLowerCase() !== firstChar) {
