@@ -73,7 +73,7 @@ Method:
 ;
 
 Body:
-    value=FunctionCall | value=Expr | "[" values+=Body ("," values+=Body)+ "]" | value=[Variable] ;
+    value=FunctionCall | value=Expr | "[" values+=Body ("," values+=Body)+ "]";
 
 VariableReference:
     ref=[Variable] (hasMark?="!")?;
