@@ -4,14 +4,11 @@ import {
     ValidationRegistry,
 } from "langium";
 import {
-    Arguments,
+
     Component,
     Constraint,
-    HotDrinkDslAstType,
-    Import,
-    Method,
-    Model,
-    Var,
+    HotDrinkDslAstType, Import, Method, Model, Signature, Variable,
+
 } from "./generated/ast";
 import { HotDrinkDslServices } from "./hot-drink-dsl-module";
 
@@ -29,20 +26,23 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
     constructor(services: HotDrinkDslServices) {
         super(services);
         const validator = services.validation.HotDrinkDslValidator;
-        const checks: HotDrinkDslChecks = {
-            Var: validator.checkVarStartsWithLowercase,
-            Arguments: validator.checkArgumentOnlyReferenceToVarOnce,
+        const checks: HotDrinkDslChecks = { 
+            Variable: validator.checkVarStartsWithLowercase,
+            Signature: validator.checkArgumentOnlyReferenceToVarOnce,
             Method: validator.checkMethodStartsWithLowercase,
             Constraint: [
                 validator.checkConstraintStartWithLowercase,
                 validator.checkConstraintMethodsHaveUniqueName,
                 validator.checkConstraintMethodsUsesTheSameVars,
             ],
+    
+
             Component: [
                 validator.checkComponentConstraintsHaveUniqueName,
                 validator.checkComponentVarsHaveUniqueName,
                 validator.checkComponentForUnusedVariables,
             ],
+            
             Model: [
                 validator.checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement,
                 validator.checkModelComponentNameIsUnique,
@@ -68,15 +68,15 @@ export class HotDrinkDslValidator {
         }
     }
 
-    checkArgumentOnlyReferenceToVarOnce(argument: Arguments, accept: ValidationAcceptor): void {
-        if (argument.variables) {
-            const s = new Set(argument.variables.map(e => e.ref.ref?.name));
-            if (s.size !== argument.variables.length) {
-                accept("error", "Can not use the same variable more then once in an argument.", { node: argument, property: "variables" }) // TODO: Should be shown on the last variable of the
+    checkArgumentOnlyReferenceToVarOnce(argument: Signature, accept: ValidationAcceptor): void {
+        if (argument.inputVariables) {
+            const s = new Set(argument.inputVariables.map(e => e.ref.ref?.name));
+            if (s.size !== argument.inputVariables.length) {
+                accept("error", "Can not use the same variable more then once in an statement.", { node: argument, property: "inputVariables" }) // TODO: Should be shown on the last variable of the
             }
-            const s1 = new Set(argument.final.map(e => e.ref?.name));
-            if (s1.size !== argument.final.length) {
-                accept("error", "Can no use the same variable more then once in an argument.", { node: argument, property: "final" }) // TODO: Should be shown on the last variable of the 
+            const s1 = new Set(argument.outputVariables.map(e => e.ref?.ref?.name));
+            if (s1.size !== argument.outputVariables.length) {
+                accept("error", "Can no use the same variable more then once in an statement.", { node: argument, property: "outputVariables" }) // TODO: Should be shown on the last variable of the 
             }
         }
     }
@@ -121,7 +121,7 @@ export class HotDrinkDslValidator {
                 accept("warning", "Constraint methods should have unique names.", {
                     node: constraint,
                     property: "methods",
-                });
+                }); // TODO: Trenger å få denne plassert riktig.
             }
         }
     }
@@ -131,9 +131,9 @@ export class HotDrinkDslValidator {
         accept: ValidationAcceptor
     ): void {
         if (constraint.methods) {
-            const unique = constraint.methods[0].args.variables.map((e) => e.ref.ref?.name).concat(constraint.methods[0].args.final.map((e) => e.ref?.name)).sort();
+            const unique = constraint.methods[0].signature.inputVariables.map((e) => e.ref.ref?.name).concat(constraint.methods[0].signature.outputVariables.map((e) => e.ref?.ref?.name)).sort();
             constraint.methods.forEach(method => {
-                const unique2 = method.args.variables.map((e) => e.ref.ref?.name).concat(method.args.final.map((e) => e.ref?.name)).sort();
+                const unique2 = method.signature.inputVariables.map((e) => e.ref.ref?.name).concat(method.signature.outputVariables.map((e) => e.ref?.ref?.name)).sort();
                 if (unique.length !== unique2.length || unique.join(",") !== unique2.join(",")) {
                     accept("error", `All methods inside a given constraint needs to reference all the same variables.`, {
                         node: constraint,
@@ -156,7 +156,7 @@ export class HotDrinkDslValidator {
                     node: component,
                     property: "constraints",
                 });
-            }
+            } // fikse hvor den vises
         }
     }
 
@@ -164,13 +164,13 @@ export class HotDrinkDslValidator {
         component: Component,
         accept: ValidationAcceptor
     ): void {
-        if (component.vars) {
-            const unique = new Set(component.vars.map((e) => e.name));
-            if (unique.size !== component.vars.length) {
+        if (component.variables) {
+            const unique = new Set(component.variables.flatMap((e) => e.vars).map(e => e.name));
+            if (unique.size !== component.variables.map(e => e.vars).reduce((sum, current) => sum + current.length, 0)) {
                 //TODO: Something wrong with the syntax highlighting, goes over the hole component
                 accept("error", "Component vars should have unique names.", {
                     node: component,
-                    property: "vars",
+                    property: "variables",
                 });
             }
         }
@@ -180,16 +180,18 @@ export class HotDrinkDslValidator {
         component: Component,
         accept: ValidationAcceptor,
     ): void {
-        if (component.vars) {
+        if (component.variables) {
             const usedVariables = this.findAllInUseVariables(component)
-            if (usedVariables.size !== component.vars.length) {
-                component.vars.forEach(_var => {
-                    if (!usedVariables.has(_var.name)) {
-                        accept("warning", `Variable not in use.`, {
-                            node: _var
-                        })
+            if (usedVariables.size !== component.variables.map(e => e.vars).reduce((sum, current) => sum + current.length, 0)) {
+                component.variables.forEach(_var => {
+                    _var.vars.map(_v => {
+                        if (!usedVariables.has(_v.name)) {
+                            accept("warning", `Variable not in use.`, {
+                                node: _var
+                            })
+                        }
+                    })
 
-                    }
                 })
             }
 
@@ -202,7 +204,7 @@ export class HotDrinkDslValidator {
         constraints.forEach(constraint => {
             const methods = constraint.methods
             methods.forEach(method => {
-                const vars = method.args.variables.map(varRef => varRef.ref.ref!.name).concat(...method.args.final.map(varRef => varRef.ref!.name))
+                const vars = method.signature.inputVariables.map(varRef => varRef.ref.ref!.name).concat(...method.signature.outputVariables.map(varRef => varRef.ref!.ref!.name))
                 if (vars) {
                     allVariablesInUse = new Set([...allVariablesInUse, ...vars])
                 }
@@ -210,7 +212,7 @@ export class HotDrinkDslValidator {
         });
         return allVariablesInUse
     }
-
+    
     checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement(
         model: Model,
         accept: ValidationAcceptor
@@ -219,7 +221,7 @@ export class HotDrinkDslValidator {
             const listOfImports = model.imports;
             listOfImports.forEach((importStatement: Import) => {
 
-                const listOfImportedFunctions = importStatement.funcs.map((name: string) => name)
+                const listOfImportedFunctions = importStatement.funcs.map((name) => name.name)
                 const unique = new Set(listOfImportedFunctions);
 
                 if (unique.size !== importStatement.funcs.length) {
@@ -245,5 +247,4 @@ export class HotDrinkDslValidator {
             }
         }
     }
-
 }

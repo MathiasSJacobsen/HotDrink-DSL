@@ -154,7 +154,7 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
           {
             "$type": "Assignment",
             "feature": "file",
-            "operator": "+=",
+            "operator": "=",
             "terminal": {
               "$type": "RuleCall",
               "arguments": [],
@@ -162,10 +162,6 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
                 "$refText": "STRING"
               }
             }
-          },
-          {
-            "$type": "Keyword",
-            "value": ";"
           }
         ]
       }
