@@ -10,11 +10,11 @@
     },
     {
       "name": "keyword.control.hot-drink-dsl",
-      "match": "\\b(component|constraint|false|from|import|true|var)\\b"
+      "match": "\\b(boolean|component|constraint|false|from|import|number|string|true|var)\\b"
     },
     {
       "name": "keyword.symbol.hot-drink-dsl",
-      "match": "(\\-|\\->|\\,|\\;|\\!|\\!=|\\!==|\\(|\\)|\\{|\\}|\\*|\\/|\\&&|\\+|\\<|\\<=|\\==|\\===|\\=>|\\>|\\>=|\\$$)"
+      "match": "(\\-|\\->|\\,|\\;|\\:|\\!|\\!=|\\!==|\\.|\\(|\\)|\\[|\\]|\\{|\\}|\\*|\\/|\\&&|\\+|\\<|\\<=|\\=|\\==|\\===|\\=>|\\>|\\>=|\\$$)"
     }
   ],
   "repository": {

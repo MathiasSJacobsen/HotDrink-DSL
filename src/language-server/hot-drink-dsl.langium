@@ -15,45 +15,71 @@ Model:
     ;
 
 Import:
+<<<<<<< HEAD
     "import" funcs+=ID ("," funcs+=ID)* "from" file+=STRING ";";
+=======
+    "import" "{"  funcs+=ImportedFunction ("," funcs+=ImportedFunction)* "}" "from" file=STRING;
+
+ImportedFunction:
+    name=ID
+    ;
+>>>>>>> 3929d4b (90 % of basline DSL done)
 
 Component: 
     "component" name=ID "{"
-        (vars += Variable | 
+        (variables += Vars | 
         constraints += Constraint)*
     "}"
 ;
 
-Variable:
-    Var;
+Vars:
+	"var" vars+=Variable
+	("," vars+=Variable)* ";"
+;
 
-Var:
-    "var" name=ID ";";
+Variable:
+    name=ID (":" type?=VarType)? ("=" initValue?=ValueExpr)?;
+
+VarType returns string:
+    'string'
+    |
+    'number'
+    |
+    'boolean'
+    ;
+
+ValueExpr:
+    {StringValueExpr} val=STRING
+    |
+    {NumberValueExpr} val=INT("."INT)?
+    |
+    {BooleanValueExpr} val=("true"|"false")
+    ;
 
 Constraint:
-    "constraint" (name=ID)? "{" 
+    "constraint" (name=ID)?"{" 
         methods+=Method+
     "}"
 ;
 
-ImpFunction:
-    name=ID "(" (args+=[Variable] ("," args+=[Variable])* )?  ")"
+FunctionCall:
+    funcRef=[ImportedFunction] "(" (args+=[Variable] ("," args+=[Variable])* )?  ")"
 ;
 
 Method:
-    name=ID args=Arguments "=>" "{"
-        Body
-    "}"
+    name=ID signature=Signature "=>" 
+        body=Body
+    ";"
 ;
 
 Body:
-    value=ImpFunction | value=Expr;
+    value=FunctionCall | value=Expr | "[" values+=Body ("," values+=Body)+ "]" | value=[Variable] ;
 
 VariableReference:
     ref=[Variable] (hasMark?="!")?;
 
-Arguments: 
-    "(" variables+=VariableReference ("," variables+=VariableReference)* "->" final+=[Variable] ("," final+=[Variable])* ")";
+Signature: 
+    "(" inputVariables+=VariableReference ("," inputVariables+=VariableReference)* "->" outputVariables+=VariableReference ("," outputVariables+=VariableReference)* ")";
 
 Atomic:
     {IntConst} value=INT |
@@ -75,15 +101,15 @@ PlusOrMinus returns Expr:
     MulOrDiv ({PlusOrMinus.left=current} op=("+"|"-") right=MulOrDiv)*;
 
 Comparison returns Expr:
-    PlusOrMinus({Comparison.left=current} op=(">="|"<="|">"|"<") right=PlusOrMinus)*;
+    PlusOrMinus ({Comparison.left=current} op=(">="|"<="|">"|"<") right=PlusOrMinus)*;
 
 Equality returns Expr: 
-    Comparison({Equality.left=current} op=("=="|"!=" |"==="| "!==") right=Comparison)*;
+    Comparison ({Equality.left=current} op=("=="|"!=" |"==="| "!==") right=Comparison)*;
 
 And returns Expr:
-    Equality({And.left=current} op=("&&") right=Equality)*;
+    Equality ({And.left=current} op=("&&") right=Equality)*;
 
 Or returns Expr:
-    And({Or.left=current} "$$" right=And)*;
+    And ({Or.left=current} "$$" right=And)*;
 
 Expr: Or;
