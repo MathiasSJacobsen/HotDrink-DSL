@@ -1,4 +1,4 @@
-name: Generate, test and build
+name: Generate, lint, test and build
 
 on:
   pull_request:
