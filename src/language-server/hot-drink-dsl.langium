@@ -106,6 +106,6 @@ And returns Expr:
     Equality ({And.left=current} op=("&&") right=Equality)*;
 
 Or returns Expr:
-    And ({Or.left=current} "$$" right=And)*;
+    And ({Or.left=current} op="$$" right=And)*;
 
 Expr: Or;

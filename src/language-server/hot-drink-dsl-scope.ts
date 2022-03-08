@@ -9,7 +9,7 @@ import {
   SimpleScope,
   stream,
 } from "langium";
-import { isComponent, isMethod, isModel } from "./generated/ast";
+import { isComponent, isMethod, isModel, Variable } from "./generated/ast";
 
 export class HotDrinkDslScopeProvider extends DefaultScopeProvider {
   descriptionProvider: AstNodeDescriptionProvider;
@@ -27,7 +27,7 @@ export class HotDrinkDslScopeProvider extends DefaultScopeProvider {
         .map((v) =>
           this.descriptionProvider.createDescription(v, v.name, getDocument(v))
         );
-      return new SimpleScope(stream(descriptions));
+      return new SimpleScope(stream(descriptions!));
     }
 
     if (referenceId === "FunctionCall:funcRef") {
@@ -44,37 +44,42 @@ export class HotDrinkDslScopeProvider extends DefaultScopeProvider {
       const methodNode = getContainerOfType(node, isMethod);
       const descriptions = methodNode!.signature.inputVariables
         .map((v) => v.ref.ref)
+        .filter((v): v is Variable => !!v) // filterer ut undefined
         .map((v) =>
           this.descriptionProvider.createDescription(
-            v!,
-            v!.name,
-            getDocument(v!)
+            v,
+            v.name,
+            getDocument(v)
           )
         );
       return new SimpleScope(stream(descriptions));
     }
+
     if (referenceId === "Atomic:value") {
       const methodNode = getContainerOfType(node, isMethod);
       const descriptions = methodNode!.signature.inputVariables
         .map((v) => v.ref.ref)
+        .filter((v): v is Variable => !!v) // filterer ut undefined
         .map((v) =>
           this.descriptionProvider.createDescription(
-            v!,
-            v!.name,
-            getDocument(v!)
+            v,
+            v.name,
+            getDocument(v)
           )
         );
       return new SimpleScope(stream(descriptions));
     }
+
     if (referenceId === "VarRef:value") {
       const methodNode = getContainerOfType(node, isMethod);
       const descriptions = methodNode!.signature.inputVariables
         .map((v) => v.ref.ref)
+        .filter((v): v is Variable => !!v) // filterer ut undefined
         .map((v) =>
           this.descriptionProvider.createDescription(
-            v!,
-            v!.name,
-            getDocument(v!)
+            v,
+            v.name,
+            getDocument(v)
           )
         );
       return new SimpleScope(stream(descriptions));

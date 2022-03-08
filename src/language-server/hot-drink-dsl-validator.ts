@@ -1,5 +1,5 @@
-import { ValidationAcceptor, ValidationCheck, ValidationRegistry } from 'langium';
-import { Arguments, HotDrinkDslAstType, Method, Var } from './generated/ast';
+import {  ValidationCheck, ValidationRegistry } from 'langium';
+import {  HotDrinkDslAstType } from './generated/ast';
 import { HotDrinkDslServices } from './hot-drink-dsl-module';
 
 /**
@@ -14,11 +14,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
     constructor(services: HotDrinkDslServices) {
         super(services);
         const validator = services.validation.HotDrinkDslValidator;
-        const checks: HotDrinkDslChecks = {
-            Var: validator.checkVarStartsWithLowercase,
-            Arguments: validator.checkArgumentOnlyReferenceToVarOnce,
-            Method: validator.checkMethodStartsWithLowercase,
-        };
+        const checks: HotDrinkDslChecks = {};
         this.register(checks, validator);
     }
 }
@@ -28,6 +24,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
  */
 export class HotDrinkDslValidator {
 
+/*
     checkVarStartsWithLowercase(_var: Var, accept: ValidationAcceptor): void {
         if (_var.name) {
           const firstChar = _var.name.substring(0, 1);
@@ -61,5 +58,5 @@ export class HotDrinkDslValidator {
                 }
             }
         }
-
+*/
 }

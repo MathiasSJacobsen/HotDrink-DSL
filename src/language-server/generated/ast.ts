@@ -291,6 +291,7 @@ export function isNot(item: unknown): item is Not {
 
 export interface Or extends Expr {
     left: Expr
+    op: '$$'
     right: Expr
 }
 
