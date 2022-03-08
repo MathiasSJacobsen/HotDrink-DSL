@@ -11,7 +11,7 @@ const helper = parseHelper<Grammar>(services);
 describe("Model validation", () => {
     describe("Function is not imported twice", () => {
         it('gets a warning if function is imported twice', async () => {
-            const documentContent = `import t, k, t from "test.js";`;
+            const documentContent = `import { t, k, t }from "test.js"`;
             const expectation = {
                 message: "Should not import the same function more then once.",
                 severity: WARNINGSEVERITY
@@ -25,7 +25,7 @@ describe("Model validation", () => {
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
         it('gets a warning if function is imported twice, on the right line', async () => {
-            const documentContent = `import t, k, t from "test.js";`;
+            const documentContent = `import { t, k, t } from "test.js"`;
 
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
@@ -45,19 +45,17 @@ describe("Model validation", () => {
         })
         describe("All components should have unique names", () => {
             it("gets a warning if two components have the same name", async () => {
-                const documentContent = `import t, k from "test.js";
-                component T {
+                const documentContent = `
+                component t {
                     var a;
                     var b;
                     var c;
     
                     constraint c1 {
-                        method(a, c -> b) => {
-                            true
-                        }
+                        method(a, c -> b) => true;
                     }
                 }
-                component T {
+                component t {
 
                 }
                 `;

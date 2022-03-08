@@ -3,6 +3,7 @@
 import { Grammar } from "langium";
 import { parseHelper } from "langium/lib/test"
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
+import { ERRORSEVERITY, WARNINGSEVERITY } from "../test-utils";
 
 const services = createHotDrinkDslServices();
 const helper = parseHelper<Grammar>(services);
@@ -16,14 +17,12 @@ describe("Constraint validation", () => {
                 var c;
             
                 constraint G {
-                    method(a, b -> c) => {
-                        true
-                    }
+                    method(a, b -> c) => true;
                 }
             }`;
             const expectation = { 
                     message: "Constraint should start with lowercase.", 
-                    severity: 2 
+                    severity: WARNINGSEVERITY
                 }
             ;
             const doc = await helper(documentContent);
@@ -33,26 +32,22 @@ describe("Constraint validation", () => {
         
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
-        it("gets 2 warnings if both constraints have a uppercase starting letter", async () => {
+        it("gets two warnings if both constraints have a uppercase starting letter", async () => {
             const documentContent = `component T {
                 var a;
                 var b;
                 var c;
             
                 constraint G {
-                    method(a, b -> c) => {
-                        true
-                    }
+                    method(a, b -> c) => true;
                 }
                 constraint A {
-                    m(a, b -> c) => {
-                        true
-                    }
+                    m(a, b -> c) => true;
                 }
             }`;
             const expectation = { 
                     message: "Constraint should start with lowercase.", 
-                    severity: 2 
+                    severity: WARNINGSEVERITY 
                 }
             ;
             const doc = await helper(documentContent);
@@ -71,14 +66,10 @@ describe("Constraint validation", () => {
                 var c;
             
                 constraint g {
-                    method(a, b -> c) => {
-                        true
-                    }
+                    method(a, b -> c) => true;
                 }
                 constraint a {
-                    m(a, b -> c) => {
-                        true
-                    }
+                    m(a, b -> c) => true;
                 }
             }`;
             const doc = await helper(documentContent);
@@ -96,19 +87,15 @@ describe("Constraint validation", () => {
                 var c;
             
                 constraint g {
-                    method(a, b -> c) => {
-                        true
-                    }
-                    method(a, c -> b) => {
-                        false
-                    }
+                    method(a, b -> c) => true;
+                    method(a, c -> b) => false;
                 }
                 
             }`;
 
             const expectation = { 
                 message: "Constraint methods should have unique names.", 
-                severity: 2 
+                severity: WARNINGSEVERITY
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
@@ -123,22 +110,15 @@ describe("Constraint validation", () => {
                 var c;
             
                 constraint g {
-                    method(a, b -> c) => {
-                        true
-                    }
-                    method(a, c -> b) => {
-                        false
-                    }
-                    method(a, c -> b) => {
-                        false
-                    }
+                    method(a, b -> c) => true;
+                    method(a, c -> b) => false;
+                    method(a, c -> b) => false;
                 }
-                
             }`;
 
             const expectation = { 
                 message: "Constraint methods should have unique names.", 
-                severity: 2 
+                severity: WARNINGSEVERITY
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
@@ -153,17 +133,10 @@ describe("Constraint validation", () => {
                 var c;
             
                 constraint g {
-                    method(a, b -> c) => {
-                        true
-                    }
-                    me(a, c -> b) => {
-                        false
-                    }
-                    meth(a, c -> b) => {
-                        false
-                    }
+                    method(a, b -> c) => true;
+                    me(a, c -> b) => false;
+                    meth(a, c -> b) => false;
                 }
-                
             }`;
 
             const doc = await helper(documentContent);
@@ -180,24 +153,18 @@ describe("Constraint validation", () => {
                 var c;
             
                 constraint g {
-                    method(a, b -> c) => {
-                        true
-                    }
-                    m(a -> b) => {
-                        false
-                    }
-                    
+                    method(a, b -> c) => true;
+                    m(a -> b) => false;
                 }
-                
             }`;
 
             const expectation = { 
                 message: "All methods inside a given constraint needs to reference all the same variables.", 
-                severity: 1 
+                severity: ERRORSEVERITY
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
-            console.log(JSON.stringify(diagnostics, undefined, 2)); // Store this logged string somewhere
+            
             expect(diagnostics.length).toBe(1)
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })

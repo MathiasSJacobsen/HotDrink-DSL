@@ -72,11 +72,11 @@ export class HotDrinkDslValidator {
         if (argument.inputVariables) {
             const s = new Set(argument.inputVariables.map(e => e.ref.ref?.name));
             if (s.size !== argument.inputVariables.length) {
-                accept("error", "Can not use the same variable more then once in an statement.", { node: argument, property: "inputVariables" }) // TODO: Should be shown on the last variable of the
+                accept("error", "Can not use the same variable more then once in a statement.", { node: argument, property: "inputVariables" }) // TODO: Should be shown on the last variable of the
             }
             const s1 = new Set(argument.outputVariables.map(e => e.ref?.ref?.name));
             if (s1.size !== argument.outputVariables.length) {
-                accept("error", "Can no use the same variable more then once in an statement.", { node: argument, property: "outputVariables" }) // TODO: Should be shown on the last variable of the 
+                accept("error", "Can not use the same variable more then once in a statement.", { node: argument, property: "outputVariables" }) // TODO: Should be shown on the last variable of the 
             }
         }
     }

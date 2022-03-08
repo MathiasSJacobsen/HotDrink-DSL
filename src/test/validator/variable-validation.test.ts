@@ -30,9 +30,7 @@ describe("Variable validation", () => {
                                     var C; 
 
                                     constraint c1 {
-                                        method(A, C -> b) => {
-                                            true
-                                        }
+                                        method(A, C -> b) => true;
                                     }
                                 }`;
         const expectation = [
@@ -64,9 +62,7 @@ describe("Variable validation", () => {
                                     var c; 
 
                                     constraint c1 {
-                                        method(a, c -> b) => {
-                                            true
-                                        }
+                                        method(a, b -> c) => true;
                                     }
                                 }`;
         const doc = await helper(documentContent);

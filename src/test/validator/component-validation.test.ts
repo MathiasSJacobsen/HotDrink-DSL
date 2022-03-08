@@ -16,11 +16,8 @@ describe("Component validation", () => {
                 var a;
 
                 constraint c1 {
-                    method(a -> b) => {
-                        true
-                    }
+                    method(a -> b) => true;
                 }
-
             }`;
             const expectation = {
                 message: "Component vars should have unique names.",
@@ -43,14 +40,10 @@ describe("Component validation", () => {
                 var c;
 
                 constraint c1 {
-                    method(a, b -> c) => {
-                        true
-                    }
+                    method(a, b -> c) => true;
                 }
                 constraint c1 {
-                    method(a, b -> c) => {
-                        true
-                    }
+                    method(a, b -> c) => false;
                 }
             }`;
             const expectation = {
@@ -73,19 +66,13 @@ describe("Component validation", () => {
                 var c;
 
                 constraint c1 {
-                    method(a, b -> c) => {
-                        true
-                    }
+                    method(a, b -> c) => true;
                 }
                 constraint c1 {
-                    method(a, b -> c) => {
-                        true
-                    }
+                    method(a, b -> c) => false;
                 }
                 constraint c1 {
-                    method(a, b -> c) => {
-                        true
-                    }
+                    method(a, b -> c) => true;
                 }
             }`;
             const expectation = {
@@ -110,9 +97,7 @@ describe("Component validation", () => {
                 var p;
             
                 constraint c {
-                    method(a, b -> c) => {
-                        true
-                    }
+                    method(a, b -> c) => true;
                 }
             }`;
             const expectation = {
@@ -135,9 +120,7 @@ describe("Component validation", () => {
                 var p;
             
                 constraint c {
-                    method(a, b -> c) => {
-                        true
-                    }
+                    method(a, b -> c) => false;
                 }
             }`;
             const expectation = {
