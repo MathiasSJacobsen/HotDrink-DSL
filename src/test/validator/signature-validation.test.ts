@@ -1,15 +1,15 @@
 import { Grammar } from "langium";
 import { parseHelper } from "langium/lib/test"
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
-import { ERRORSEVERITY } from "../test-utils";
+import { ERRORSEVERITY, WARNINGSEVERITY } from "../test-utils";
 
 const services = createHotDrinkDslServices();
 const helper = parseHelper<Grammar>(services);
 
-describe("Statement validation", () => {
-    describe("Statement can not have same variable twice", () => {
+describe("Signature validation", () => {
+    describe("Signature can not have same variable twice", () => {
 
-        it("gets a error if argument contains same variable twice (input)",async () => {
+        it("gets a error if signature contains same variable twice (input)",async () => {
             const documentContent = `component T {
                 var a;
                 var c;
@@ -19,7 +19,7 @@ describe("Statement validation", () => {
                 }
             }`;
             const expectation = { 
-                message: "Can not use the same variable more then once in a statement.", 
+                message: "Can not use the same variable more then once in a signature.", 
                 severity: ERRORSEVERITY
             };
             const doc = await helper(documentContent);
@@ -39,8 +39,30 @@ describe("Statement validation", () => {
                 }
             }`;
             const expectation = { 
-                message: "Can not use the same variable more then once in a statement.", 
+                message: "Can not use the same variable more then once in a signature.", 
                 severity: ERRORSEVERITY
+            };
+            const doc = await helper(documentContent);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+            
+            expect(diagnostics.length).toBe(1)
+            
+            expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
+        })
+    })
+    describe('Variables inside a statement with <b>!</b> should be warned about', () => {
+        it('gets a waring if ! in use', async () => {
+            const documentContent = `component t {
+                var a;
+                var c;
+                var b;
+                constraint c {
+                    method(a, b! -> c) => [true, false];
+                }
+            }`;
+            const expectation = { 
+                message: "Experimental feature", 
+                severity: WARNINGSEVERITY
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);

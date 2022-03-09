@@ -28,7 +28,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
         const validator = services.validation.HotDrinkDslValidator;
         const checks: HotDrinkDslChecks = { 
             Variable: validator.checkVarStartsWithLowercase,
-            Signature: validator.checkArgumentOnlyReferenceToVarOnce,
+            Signature: validator.checkSignatureOnlyReferenceToVarOnce,
             Method: validator.checkMethodStartsWithLowercase,
             Constraint: [
                 validator.checkConstraintStartWithLowercase,
@@ -68,19 +68,19 @@ export class HotDrinkDslValidator {
         }
     }
 
-    checkArgumentOnlyReferenceToVarOnce(argument: Signature, accept: ValidationAcceptor): void {
-        if (argument.inputVariables) {
-            const s = new Set(argument.inputVariables.map(e => e.ref.ref?.name));
-            if (s.size !== argument.inputVariables.length) {
-                accept("error", "Can not use the same variable more then once in a statement.", { node: argument, property: "inputVariables" }) // TODO: Should be shown on the last variable of the
+    checkSignatureOnlyReferenceToVarOnce(signature: Signature, accept: ValidationAcceptor): void {
+        if (signature.inputVariables) {
+            const s = new Set(signature.inputVariables.map(e => e.ref.ref?.name));
+            if (s.size !== signature.inputVariables.length) {
+                accept("error", "Can not use the same variable more then once in a statement.", { node: signature, property: "inputVariables" }) // TODO: Should be shown on the last variable of the
             }
-            const s1 = new Set(argument.outputVariables.map(e => e.ref?.ref?.name));
-            if (s1.size !== argument.outputVariables.length) {
-                accept("error", "Can not use the same variable more then once in a statement.", { node: argument, property: "outputVariables" }) // TODO: Should be shown on the last variable of the 
+            const s1 = new Set(signature.outputVariables.map(e => e.ref?.ref?.name));
+            if (s1.size !== signature.outputVariables.length) {
+                accept("error", "Can not use the same variable more then once in a statement.", { node: signature, property: "outputVariables" }) // TODO: Should be shown on the last variable of the 
             }
         }
     }
-    // TODO: BUG DOSNT WORK
+
     checkMethodStartsWithLowercase(
         method: Method,
         accept: ValidationAcceptor
