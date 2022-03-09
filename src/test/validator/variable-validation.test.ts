@@ -1,11 +1,11 @@
 /* we expose some testing functionality in the framework, but none for validation so far. For a quick custom setup you could simply check whether the diagnostics returned from the DocumentValidator match whatever you expect.  */
 
-import { Grammar } from "langium";
 import { parseHelper } from "langium/lib/test"
+import { Model } from "../../language-server/generated/ast";
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
 
 const services = createHotDrinkDslServices();
-const helper = parseHelper<Grammar>(services);
+const helper = parseHelper<Model>(services);
 describe("Variable validation", () => {
     it('gets a warning if variable have a uppercase starting letter as name', async () => {
 
