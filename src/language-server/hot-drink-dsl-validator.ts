@@ -7,7 +7,7 @@ import {
 
     Component,
     Constraint,
-    HotDrinkDslAstType, Import, Method, Model, Signature, Variable,
+    HotDrinkDslAstType, Import, Method, Model, Signature, Variable, VariableReference,
 
 } from "./generated/ast";
 import { HotDrinkDslServices } from "./hot-drink-dsl-module";
@@ -28,7 +28,9 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
         const validator = services.validation.HotDrinkDslValidator;
         const checks: HotDrinkDslChecks = { 
             Variable: validator.checkVarStartsWithLowercase,
-            Signature: validator.checkSignatureOnlyReferenceToVarOnce,
+            Signature: [
+                validator.checkSignatureOnlyReferenceToVarOnce,
+                validator.checkSignatureForExclamationVariables],
             Method: validator.checkMethodStartsWithLowercase,
             Constraint: [
                 validator.checkConstraintStartWithLowercase,
@@ -72,12 +74,23 @@ export class HotDrinkDslValidator {
         if (signature.inputVariables) {
             const s = new Set(signature.inputVariables.map(e => e.ref.ref?.name));
             if (s.size !== signature.inputVariables.length) {
-                accept("error", "Can not use the same variable more then once in a statement.", { node: signature, property: "inputVariables" }) // TODO: Should be shown on the last variable of the
+                accept("error", "Can not use the same variable more then once in a signature.", { node: signature, property: "inputVariables" }) // TODO: Should be shown on the last variable of the
             }
             const s1 = new Set(signature.outputVariables.map(e => e.ref?.ref?.name));
             if (s1.size !== signature.outputVariables.length) {
-                accept("error", "Can not use the same variable more then once in a statement.", { node: signature, property: "outputVariables" }) // TODO: Should be shown on the last variable of the 
+                accept("error", "Can not use the same variable more then once in a signature.", { node: signature, property: "outputVariables" }) // TODO: Should be shown on the last variable of the 
             }
+        }
+    }
+
+    checkSignatureForExclamationVariables(signature: Signature, accept: ValidationAcceptor) : void {
+        if (signature.inputVariables) {
+            const inputVariablesRef = signature.inputVariables
+            inputVariablesRef.forEach((element: VariableReference) => {
+                if (element.hasMark){
+                    accept("info", "Experimental feature, may not work", { node:element, property: "hasMark"} )
+                }
+            })
         }
     }
 

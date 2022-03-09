@@ -1,7 +1,7 @@
 import { Grammar } from "langium";
 import { parseHelper } from "langium/lib/test"
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
-import { ERRORSEVERITY, WARNINGSEVERITY } from "../test-utils";
+import { ERRORSEVERITY, INFOSEVERITY } from "../test-utils";
 
 const services = createHotDrinkDslServices();
 const helper = parseHelper<Grammar>(services);
@@ -50,7 +50,7 @@ describe("Signature validation", () => {
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
     })
-    describe('Variables inside a statement with <b>!</b> should be warned about', () => {
+    describe('Variables inside a signature with <b>!</b> should be warned about', () => {
         it('gets a waring if ! in use', async () => {
             const documentContent = `component t {
                 var a;
@@ -61,8 +61,8 @@ describe("Signature validation", () => {
                 }
             }`;
             const expectation = { 
-                message: "Experimental feature", 
-                severity: WARNINGSEVERITY
+                message: "Experimental feature, may not work", 
+                severity: INFOSEVERITY
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
