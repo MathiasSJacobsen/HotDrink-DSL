@@ -1,11 +1,11 @@
-import { Grammar } from "langium";
 import { parseHelper } from "langium/lib/test"
+import { Model } from "../../language-server/generated/ast";
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
 import { WARNINGSEVERITY } from "../test-utils";
 
 
 const services = createHotDrinkDslServices();
-const helper = parseHelper<Grammar>(services);
+const helper = parseHelper<Model>(services);
 
 
 describe("Model validation", () => {
