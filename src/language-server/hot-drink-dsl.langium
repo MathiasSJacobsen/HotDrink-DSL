@@ -10,34 +10,72 @@ terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 terminal SL_COMMENT: /\/\/[^\n\r]*/;
 
 Model:
-    component+=Component*;
+    (imports+=Import |
+    component+=Component)*
+    ;
+
+Import:
+    "import" "{"  funcs+=ImportedFunction ("," funcs+=ImportedFunction)* "}" "from" file=STRING;
+
+ImportedFunction:
+    name=ID
+    ;
 
 Component: 
     "component" name=ID "{"
-        vars += Variable*
-        constraints += Constraint*
+        (variables += Vars | 
+        constraints += Constraint)*
     "}"
 ;
 
-Variable:
-    Var;
+Vars:
+	"var" vars+=Variable
+	("," vars+=Variable)* ";"
+;
 
-Var:
-    "var" name=ID ";";
+Variable:
+    name=ID (":" type?=VarType)? ("=" initValue?=ValueExpr)?;
+
+VarType returns string:
+    'string'
+    |
+    'number'
+    |
+    'boolean'
+    ;
+
+ValueExpr:
+    {StringValueExpr} val=STRING
+    |
+    {NumberValueExpr} val=INT("."INT)?
+    |
+    {BooleanValueExpr} val=("true"|"false")
+    ;
 
 Constraint:
-    "constraint" (name=ID)? "{" 
+    "constraint" (name=ID)?"{" 
         methods+=Method+
     "}"
 ;
 
-Method:
-    name=ID args=Arguments "=>" "{"
-        expr=Expr
-    "}"
+FunctionCall:
+    funcRef=[ImportedFunction] "(" (args+=[Variable] ("," args+=[Variable])* )?  ")"
 ;
-Arguments: 
-    "(" ref+=[Variable] ("," ref+=[Variable])* "->" final+=[Variable] ("," final+=[Variable])* ")";
+
+Method:
+    name=ID signature=Signature "=>" 
+        body=Body
+    ";"
+;
+
+Body:
+    value=FunctionCall | value=Expr | "[" values+=Body ("," values+=Body)+ "]";
+
+VariableReference:
+    ref=[Variable] (hasMark?="!")?;
+
+Signature: 
+    "(" inputVariables+=VariableReference ("," inputVariables+=VariableReference)* "->" outputVariables+=VariableReference ("," outputVariables+=VariableReference)* ")";
 
 Atomic:
     {IntConst} value=INT |
@@ -59,37 +97,15 @@ PlusOrMinus returns Expr:
     MulOrDiv ({PlusOrMinus.left=current} op=("+"|"-") right=MulOrDiv)*;
 
 Comparison returns Expr:
-    PlusOrMinus({Comparison.left=current} op=(">="|"<="|">"|"<") right=PlusOrMinus)*;
+    PlusOrMinus ({Comparison.left=current} op=(">="|"<="|">"|"<") right=PlusOrMinus)*;
 
 Equality returns Expr: 
-    Comparison({Equality.left=current} op=("=="|"!=" |"==="| "!==") right=Comparison)*;
+    Comparison ({Equality.left=current} op=("=="|"!=" |"==="| "!==") right=Comparison)*;
 
 And returns Expr:
-    Equality({And.left=current} op=("&&") right=Equality)*;
+    Equality ({And.left=current} op=("&&") right=Equality)*;
 
 Or returns Expr:
-    And({Or.left=current} "$$" right=And)*;
+    And ({Or.left=current} "$$" right=And)*;
 
 Expr: Or;
-
-
-
-
-
-
-
-
-/**
-assignments
-methodscall
-
-to types:
-
-    easy things => EXPR basic js basic math, 
-
-    =>more of a code block.  "''''''" says that its code and i dont care about it
-
-    mAke issue on github about OR, make it easy
-*/
-
-

@@ -7,16 +7,16 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { AstNode, AstReflection, Reference, isAstNode } from 'langium';
 
-export interface Arguments extends AstNode {
-    readonly $container: Method;
-    final: Array<Reference<Variable>>
-    ref: Array<Reference<Variable>>
+export interface Body extends AstNode {
+    readonly $container: Method | Body;
+    value: FunctionCall | Expr
+    values: Array<Body>
 }
 
-export const Arguments = 'Arguments';
+export const Body = 'Body';
 
-export function isArguments(item: unknown): item is Arguments {
-    return reflection.isInstance(item, Arguments);
+export function isBody(item: unknown): item is Body {
+    return reflection.isInstance(item, Body);
 }
 
 export interface BoolConst extends AstNode {
@@ -29,11 +29,21 @@ export function isBoolConst(item: unknown): item is BoolConst {
     return reflection.isInstance(item, BoolConst);
 }
 
+export interface BooleanValueExpr extends AstNode {
+    val: 'true' | 'false'
+}
+
+export const BooleanValueExpr = 'BooleanValueExpr';
+
+export function isBooleanValueExpr(item: unknown): item is BooleanValueExpr {
+    return reflection.isInstance(item, BooleanValueExpr);
+}
+
 export interface Component extends AstNode {
     readonly $container: Model;
     constraints: Array<Constraint>
     name: string
-    vars: Array<Variable>
+    variables: Array<Vars>
 }
 
 export const Component = 'Component';
@@ -55,13 +65,48 @@ export function isConstraint(item: unknown): item is Constraint {
 }
 
 export interface Expr extends AstNode {
-    readonly $container: Method | Not | MulOrDiv | PlusOrMinus | Comparison | Equality | And | Or;
+    readonly $container: Body | Not | MulOrDiv | PlusOrMinus | Comparison | Equality | And | Or;
 }
 
 export const Expr = 'Expr';
 
 export function isExpr(item: unknown): item is Expr {
     return reflection.isInstance(item, Expr);
+}
+
+export interface FunctionCall extends AstNode {
+    readonly $container: Body;
+    args: Array<Reference<Variable>>
+    funcRef: Reference<ImportedFunction>
+}
+
+export const FunctionCall = 'FunctionCall';
+
+export function isFunctionCall(item: unknown): item is FunctionCall {
+    return reflection.isInstance(item, FunctionCall);
+}
+
+export interface Import extends AstNode {
+    readonly $container: Model;
+    file: string
+    funcs: Array<ImportedFunction>
+}
+
+export const Import = 'Import';
+
+export function isImport(item: unknown): item is Import {
+    return reflection.isInstance(item, Import);
+}
+
+export interface ImportedFunction extends AstNode {
+    readonly $container: Import;
+    name: string
+}
+
+export const ImportedFunction = 'ImportedFunction';
+
+export function isImportedFunction(item: unknown): item is ImportedFunction {
+    return reflection.isInstance(item, ImportedFunction);
 }
 
 export interface IntConst extends AstNode {
@@ -76,9 +121,9 @@ export function isIntConst(item: unknown): item is IntConst {
 
 export interface Method extends AstNode {
     readonly $container: Constraint;
-    args: Arguments
-    expr: Expr
+    body: Body
     name: string
+    signature: Signature
 }
 
 export const Method = 'Method';
@@ -89,12 +134,35 @@ export function isMethod(item: unknown): item is Method {
 
 export interface Model extends AstNode {
     component: Array<Component>
+    imports: Array<Import>
 }
 
 export const Model = 'Model';
 
 export function isModel(item: unknown): item is Model {
     return reflection.isInstance(item, Model);
+}
+
+export interface NumberValueExpr extends AstNode {
+    val: number
+}
+
+export const NumberValueExpr = 'NumberValueExpr';
+
+export function isNumberValueExpr(item: unknown): item is NumberValueExpr {
+    return reflection.isInstance(item, NumberValueExpr);
+}
+
+export interface Signature extends AstNode {
+    readonly $container: Method;
+    inputVariables: Array<VariableReference>
+    outputVariables: Array<VariableReference>
+}
+
+export const Signature = 'Signature';
+
+export function isSignature(item: unknown): item is Signature {
+    return reflection.isInstance(item, Signature);
 }
 
 export interface StringConst extends AstNode {
@@ -107,15 +175,39 @@ export function isStringConst(item: unknown): item is StringConst {
     return reflection.isInstance(item, StringConst);
 }
 
+export interface StringValueExpr extends AstNode {
+    val: string
+}
+
+export const StringValueExpr = 'StringValueExpr';
+
+export function isStringValueExpr(item: unknown): item is StringValueExpr {
+    return reflection.isInstance(item, StringValueExpr);
+}
+
 export interface Variable extends AstNode {
-    readonly $container: Component;
+    readonly $container: Vars;
+    initValue: boolean
     name: string
+    type: boolean
 }
 
 export const Variable = 'Variable';
 
 export function isVariable(item: unknown): item is Variable {
     return reflection.isInstance(item, Variable);
+}
+
+export interface VariableReference extends AstNode {
+    readonly $container: Signature;
+    hasMark: boolean
+    ref: Reference<Variable>
+}
+
+export const VariableReference = 'VariableReference';
+
+export function isVariableReference(item: unknown): item is VariableReference {
+    return reflection.isInstance(item, VariableReference);
 }
 
 export interface VarRef extends AstNode {
@@ -126,6 +218,17 @@ export const VarRef = 'VarRef';
 
 export function isVarRef(item: unknown): item is VarRef {
     return reflection.isInstance(item, VarRef);
+}
+
+export interface Vars extends AstNode {
+    readonly $container: Component;
+    vars: Array<Variable>
+}
+
+export const Vars = 'Vars';
+
+export function isVars(item: unknown): item is Vars {
+    return reflection.isInstance(item, Vars);
 }
 
 export interface And extends Expr {
@@ -209,23 +312,16 @@ export function isPlusOrMinus(item: unknown): item is PlusOrMinus {
     return reflection.isInstance(item, PlusOrMinus);
 }
 
-export interface Var extends Variable {
-}
+export type VarType = 'string' | 'number' | 'boolean'
 
-export const Var = 'Var';
+export type HotDrinkDslAstType = 'Body' | 'BoolConst' | 'BooleanValueExpr' | 'Component' | 'Constraint' | 'Expr' | 'FunctionCall' | 'Import' | 'ImportedFunction' | 'IntConst' | 'Method' | 'Model' | 'NumberValueExpr' | 'Signature' | 'StringConst' | 'StringValueExpr' | 'Variable' | 'VariableReference' | 'VarRef' | 'Vars' | 'And' | 'Comparison' | 'Equality' | 'MulOrDiv' | 'Not' | 'Or' | 'PlusOrMinus';
 
-export function isVar(item: unknown): item is Var {
-    return reflection.isInstance(item, Var);
-}
-
-export type HotDrinkDslAstType = 'Arguments' | 'BoolConst' | 'Component' | 'Constraint' | 'Expr' | 'IntConst' | 'Method' | 'Model' | 'StringConst' | 'Variable' | 'VarRef' | 'And' | 'Comparison' | 'Equality' | 'MulOrDiv' | 'Not' | 'Or' | 'PlusOrMinus' | 'Var';
-
-export type HotDrinkDslAstReference = 'Arguments:final' | 'Arguments:ref' | 'VarRef:value';
+export type HotDrinkDslAstReference = 'FunctionCall:args' | 'FunctionCall:funcRef' | 'VariableReference:ref' | 'VarRef:value';
 
 export class HotDrinkDslAstReflection implements AstReflection {
 
     getAllTypes(): string[] {
-        return ['Arguments', 'BoolConst', 'Component', 'Constraint', 'Expr', 'IntConst', 'Method', 'Model', 'StringConst', 'Variable', 'VarRef', 'And', 'Comparison', 'Equality', 'MulOrDiv', 'Not', 'Or', 'PlusOrMinus', 'Var'];
+        return ['Body', 'BoolConst', 'BooleanValueExpr', 'Component', 'Constraint', 'Expr', 'FunctionCall', 'Import', 'ImportedFunction', 'IntConst', 'Method', 'Model', 'NumberValueExpr', 'Signature', 'StringConst', 'StringValueExpr', 'Variable', 'VariableReference', 'VarRef', 'Vars', 'And', 'Comparison', 'Equality', 'MulOrDiv', 'Not', 'Or', 'PlusOrMinus'];
     }
 
     isInstance(node: unknown, type: string): boolean {
@@ -246,9 +342,6 @@ export class HotDrinkDslAstReflection implements AstReflection {
             case PlusOrMinus: {
                 return this.isSubtype(Expr, supertype);
             }
-            case Var: {
-                return this.isSubtype(Variable, supertype);
-            }
             default: {
                 return false;
             }
@@ -257,10 +350,13 @@ export class HotDrinkDslAstReflection implements AstReflection {
 
     getReferenceType(referenceId: HotDrinkDslAstReference): string {
         switch (referenceId) {
-            case 'Arguments:final': {
+            case 'FunctionCall:args': {
                 return Variable;
             }
-            case 'Arguments:ref': {
+            case 'FunctionCall:funcRef': {
+                return ImportedFunction;
+            }
+            case 'VariableReference:ref': {
                 return Variable;
             }
             case 'VarRef:value': {

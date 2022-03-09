@@ -1,4 +1,4 @@
-name: Generate and Build
+name: Generate, lint, test and build
 
 on:
   pull_request:
@@ -21,6 +21,13 @@ jobs:
         with:
           node-version: 12.x
           cache: npm
-      - run: npm ci
-      - run: npm run langium:generate
-      - run: npm run build
+      - name: Installing dependencies
+        run: npm ci
+      - name: Generate AST
+        run: npm run langium:generate
+      - name: Lint
+        run: npm run lint
+      - name: Run tests
+        run: npm test
+      - name: Build
+        run: npm run build

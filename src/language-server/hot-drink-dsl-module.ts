@@ -1,5 +1,6 @@
 import { createDefaultModule, DefaultModuleContext, inject, LangiumServices, Module, PartialLangiumServices } from 'langium';
 import { HotDrinkDslGeneratedModule } from './generated/module';
+import { HotDrinkDslScopeProvider } from './hot-drink-dsl-scope';
 import { HotDrinkDslValidationRegistry, HotDrinkDslValidator } from './hot-drink-dsl-validator';
 
 /**
@@ -26,7 +27,11 @@ export const HotDrinkDslModule: Module<HotDrinkDslServices, PartialLangiumServic
     validation: {
         ValidationRegistry: (injector) => new HotDrinkDslValidationRegistry(injector),
         HotDrinkDslValidator: () => new HotDrinkDslValidator()
+    },
+    references : {
+        ScopeProvider: (services) => new HotDrinkDslScopeProvider(services),
     }
+    
 };
 
 /**
