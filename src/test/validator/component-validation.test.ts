@@ -91,6 +91,42 @@ describe("Component validation", () => {
         })
     })
     describe('Range', () => {
+        it('variable range', async () => {
+            const documentContent = `component T {
+                var a;
+                var b;
+                var a;
+
+                constraint c1 {
+                    method(a -> b) => true;
+                }
+            }`;
+
+            const expectation = {
+                range: { 
+                    start: { 
+                        character: 20,
+                        line: 3 
+                    }, 
+                    end: { 
+                        character: 21, 
+                        line: 3
+                    } 
+                }
+            };
+            const doc = await helper(documentContent);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+            console.log(diagnostics[0].range);
+            
+            expect(diagnostics.length).toBe(1)
+
+            expect(diagnostics[0]).toEqual(expect.objectContaining({
+                range: expect.objectContaining({
+                    start: expectation.range.start, 
+                    end: expectation.range.end
+                })
+            }))
+        })
         it('constraint range', async () => {
             const documentContent = `component T {
                 var a;

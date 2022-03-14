@@ -7,7 +7,7 @@ import {
 
     Component,
     Constraint,
-    HotDrinkDslAstType, Import, Method, Model, Signature, Variable, VariableReference,
+    HotDrinkDslAstType, Import, Method, Model, Signature, Variable, VariableReference, Vars,
 
 } from "./generated/ast";
 import { HotDrinkDslServices } from "./hot-drink-dsl-module";
@@ -183,13 +183,15 @@ export class HotDrinkDslValidator {
     ): void {
         if (component.variables) {
             const unique = new Set(component.variables.flatMap((e) => e.vars).map(e => e.name));
-            if (unique.size !== component.variables.map(e => e.vars).reduce((sum, current) => sum + current.length, 0)) {
-                //TODO: Something wrong with the syntax highlighting, goes over the hole component
-                accept("error", "Component vars should have unique names.", {
-                    node: component,
-                    property: "variables",
-                });
-            }
+            component.variables.forEach((_vars: Vars) => {
+                _vars.vars.forEach((value:Variable) => {
+                    if (unique.has(value.name)){
+                        unique.delete(value.name)
+                    } else {
+                        accept("error", "Component vars should have unique names.", {node: value, property: "name"})
+                    }
+                })
+            })
         }
     }
 
