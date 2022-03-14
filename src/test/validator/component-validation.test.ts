@@ -83,9 +83,50 @@ describe("Component validation", () => {
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
 
-            expect(diagnostics.length).toBe(1)
+            expect(diagnostics.length).toBe(2)
 
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
+            expect(diagnostics[1]).toEqual(expect.objectContaining(expectation))
+
+        })
+    })
+    describe('Range', () => {
+        it('constraint range', async () => {
+            const documentContent = `component T {
+                var a;
+                var b;
+                var c;
+
+                constraint c1 {
+                    method(a, b -> c) => true;
+                }
+                constraint c1 {
+                    method(a, b -> c) => false;
+                }
+            }`;
+            const expectation = {
+                range: { 
+                    start: { 
+                        character: 27, 
+                        line: 8
+                    },
+                    end: {
+                        character: 29, 
+                        line: 8 
+                    } 
+                }
+            };
+            const doc = await helper(documentContent);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+            
+            expect(diagnostics.length).toBe(1)
+
+            expect(diagnostics[0]).toEqual(expect.objectContaining({
+                range: expect.objectContaining({
+                    start: expectation.range.start, 
+                    end: expectation.range.end
+                })
+            }))
         })
     })
     describe("Unused variables", () => {

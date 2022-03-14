@@ -147,6 +147,43 @@ describe("Constraint validation", () => {
             expect(diagnostics.length).toBe(0)
         })
     })
+    describe('Range', () => {
+        it('Methods', async () => {
+            const documentContent = `component T {
+                var a;
+                var b;
+                var c;
+            
+                constraint g {
+                    m1(a, b -> c) => true;
+                    m1(a, c -> b) => false;
+                }
+            }`;
+            const expectation = {
+                range: { 
+                    start: { 
+                        character: 20, 
+                        line: 7
+                    },
+                    end: {
+                        character: 22, 
+                        line: 7
+                    } 
+                }
+            };
+            const doc = await helper(documentContent);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+            console.log(diagnostics[0].range);
+            
+            
+            expect(diagnostics[0]).toEqual(expect.objectContaining({
+                range: expect.objectContaining({
+                    start: expectation.range.start, 
+                    end: expectation.range.end
+                })
+            }))
+        })
+    })
     describe("All methods inside a constraint uses the same variables", () => {
         it("get a error if not all methods inside a constraint uses the same variables", async()=> {
             const documentContent = `component T {

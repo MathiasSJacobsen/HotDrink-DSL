@@ -163,14 +163,17 @@ export class HotDrinkDslValidator {
         accept: ValidationAcceptor
     ): void {
         if (component.constraints) {
-            const unique = new Set(component.constraints.map((e) => e.name));
-            if (unique.size !== component.constraints.length) {
-                //TODO: Something wrong with the syntax highlighting, goes over the hole component
-                accept("warning", "Component constraints should have unique names.", {
-                    node: component,
-                    property: "constraints",
-                });
-            } // fikse hvor den vises
+            const unique = new Set(component.constraints.map((e:Constraint) => e.name).filter((e:string) => e!== undefined));
+            component.constraints.forEach((constraint: Constraint) => {
+                if (unique.has(constraint.name)){
+                    unique.delete(constraint.name)
+                } else if (!unique.has(constraint.name) && constraint.name !== undefined) {
+                    accept("warning", "Component constraints should have unique names.", {
+                        node: constraint,
+                        property: "name",
+                    });
+                }
+            })
         }
     }
 
