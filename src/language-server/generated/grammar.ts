@@ -648,7 +648,8 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
                 "$refText": "ID"
               }
             },
-            "elements": []
+            "elements": [],
+            "cardinality": "?"
           },
           {
             "$type": "Assignment",

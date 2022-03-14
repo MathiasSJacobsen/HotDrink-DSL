@@ -63,7 +63,7 @@ FunctionCall:
 ;
 
 Method:
-    name=ID signature=Signature "=>" 
+    (name=ID)? signature=Signature "=>" 
         body=Body
     ";"
 ;

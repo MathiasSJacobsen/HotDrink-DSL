@@ -66,6 +66,7 @@ export class HotDrinkDslScopeProvider extends DefaultScopeProvider {
         );
       return new SimpleScope(stream(descriptions));
     }
+    
     if (referenceId === "VarRef:value") {
       const methodNode = getContainerOfType(node, isMethod);
       const descriptions = methodNode!.signature.inputVariables
