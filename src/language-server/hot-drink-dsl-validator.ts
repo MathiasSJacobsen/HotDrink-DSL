@@ -252,13 +252,18 @@ export class HotDrinkDslValidator {
         accept: ValidationAcceptor
     ): void {
         if (model.component) {
-            const uniqueNames = new Set(model.component.map((component: Component) => component.name));
-            if (uniqueNames.size !== model.component.length) {
-                accept("warning", "Component names should be unique", {
-                    node: model,
-                    property: "component",
-                })
-            }
+            const uniqueNames = new Set(model.component.map((component: Component) => component.name).filter((e:string) => e!== undefined));
+
+            model.component.forEach((comp: Component) => {
+                if (uniqueNames.has(comp.name)) {
+                    uniqueNames.delete(comp.name)
+                } else if (!uniqueNames.has(comp.name) && comp.name !== undefined) {
+                    accept("warning", "Component names should be unique", {
+                        node: comp,
+                        property: "name",
+                    })
+                }
+            })
         }
     }
 }
