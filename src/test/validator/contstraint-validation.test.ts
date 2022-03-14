@@ -103,7 +103,7 @@ describe("Constraint validation", () => {
             expect(diagnostics.length).toBe(1)
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
-        it("gets a warning if tree methods have the same name", async () => {
+        it("gets two warnings if tree methods have the same name", async () => {
             const documentContent = `component T {
                 var a;
                 var b;
@@ -123,8 +123,10 @@ describe("Constraint validation", () => {
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
             
-            expect(diagnostics.length).toBe(1)
+            expect(diagnostics.length).toBe(2)
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
+            expect(diagnostics[1]).toEqual(expect.objectContaining(expectation))
+
         })
         it("gets nothing if all good", async () => {
             const documentContent = `component T {

@@ -129,13 +129,14 @@ export class HotDrinkDslValidator {
         accept: ValidationAcceptor
     ): void {
         if (constraint.methods) {
-            const unique = new Set(constraint.methods.map((e) => e.name));
-            if (unique.size !== constraint.methods.length) {
-                accept("warning", "Constraint methods should have unique names.", {
-                    node: constraint,
-                    property: "methods",
-                }); // TODO: Trenger å få denne plassert riktig.
-            }
+            const unique = new Set(constraint.methods.map((e: Method) => e.name).filter((e: string) => e!==undefined)); // filter undefined in case where method do not have name.
+            constraint.methods.forEach((method:Method) => {
+                if(unique.has(method.name)) {
+                    unique.delete(method.name)
+                } else if (!unique.has(method.name) && method.name !== undefined) {
+                    accept("warning", "Constraint methods should have unique names.", {node: method, property:"name"})
+                }
+            })
         }
     }
 
