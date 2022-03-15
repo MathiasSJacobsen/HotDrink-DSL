@@ -37,7 +37,7 @@ function generateImports(imports: Import[], fileNode: CompositeGeneratorNode) {
 
 function generateComponent(model: Model, fileNode: CompositeGeneratorNode) {
     model.component.forEach((component: Component, idx: number) => {
-        var compName = component.name
+        const compName = component.name
         fileNode.append(`let ${compName} = new Component(${compName})`, NL)
         generateVariables(component, fileNode)
         fileNode.append(NL)
