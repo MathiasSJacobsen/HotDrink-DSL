@@ -26,7 +26,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
     constructor(services: HotDrinkDslServices) {
         super(services);
         const validator = services.validation.HotDrinkDslValidator;
-        const checks: HotDrinkDslChecks = { 
+        const checks: HotDrinkDslChecks = {
             Variable: validator.checkVarStartsWithLowercase,
             Signature: [
                 validator.checkSignatureOnlyReferenceToVarOnce,
@@ -37,14 +37,14 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
                 validator.checkConstraintMethodsHaveUniqueName,
                 validator.checkConstraintMethodsUsesTheSameVars,
             ],
-    
+
 
             Component: [
                 validator.checkComponentConstraintsHaveUniqueName,
                 validator.checkComponentVarsHaveUniqueName,
                 validator.checkComponentForUnusedVariables,
             ],
-            
+
             Model: [
                 validator.checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement,
                 validator.checkModelComponentNameIsUnique,
@@ -83,12 +83,12 @@ export class HotDrinkDslValidator {
         }
     }
 
-    checkSignatureForExclamationVariables(signature: Signature, accept: ValidationAcceptor) : void {
+    checkSignatureForExclamationVariables(signature: Signature, accept: ValidationAcceptor): void {
         if (signature.inputVariables) {
             const inputVariablesRef = signature.inputVariables
             inputVariablesRef.forEach((element: VariableReference) => {
-                if (element.hasMark){
-                    accept("info", "Experimental feature, may not work", { node:element, property: "hasMark"} )
+                if (element.hasMark) {
+                    accept("info", "Experimental feature, may not work", { node: element, property: "hasMark" })
                 }
             })
         }
@@ -129,12 +129,12 @@ export class HotDrinkDslValidator {
         accept: ValidationAcceptor
     ): void {
         if (constraint.methods) {
-            const unique = new Set(constraint.methods.map((e: Method) => e.name).filter((e: string) => e!==undefined)); // filter undefined in case where method do not have name.
-            constraint.methods.forEach((method:Method) => {
-                if(unique.has(method.name)) {
+            const unique = new Set(constraint.methods.map((e: Method) => e.name).filter((e: string) => e !== undefined)); // filter undefined in case where method do not have name.
+            constraint.methods.forEach((method: Method) => {
+                if (unique.has(method.name)) {
                     unique.delete(method.name)
                 } else if (!unique.has(method.name) && method.name !== undefined) {
-                    accept("warning", "Constraint methods should have unique names.", {node: method, property:"name"})
+                    accept("warning", "Constraint methods should have unique names.", { node: method, property: "name" })
                 }
             })
         }
@@ -163,9 +163,9 @@ export class HotDrinkDslValidator {
         accept: ValidationAcceptor
     ): void {
         if (component.constraints) {
-            const unique = new Set(component.constraints.map((e:Constraint) => e.name).filter((e:string) => e!== undefined));
+            const unique = new Set(component.constraints.map((e: Constraint) => e.name).filter((e: string) => e !== undefined));
             component.constraints.forEach((constraint: Constraint) => {
-                if (unique.has(constraint.name)){
+                if (unique.has(constraint.name)) {
                     unique.delete(constraint.name)
                 } else if (!unique.has(constraint.name) && constraint.name !== undefined) {
                     accept("warning", "Component constraints should have unique names.", {
@@ -184,11 +184,11 @@ export class HotDrinkDslValidator {
         if (component.variables) {
             const unique = new Set(component.variables.flatMap((e) => e.vars).map(e => e.name));
             component.variables.forEach((_vars: Vars) => {
-                _vars.vars.forEach((value:Variable) => {
-                    if (unique.has(value.name)){
+                _vars.vars.forEach((value: Variable) => {
+                    if (unique.has(value.name)) {
                         unique.delete(value.name)
                     } else {
-                        accept("error", "Component vars should have unique names.", {node: value, property: "name"})
+                        accept("error", "Component vars should have unique names.", { node: value, property: "name" })
                     }
                 })
             })
@@ -231,7 +231,7 @@ export class HotDrinkDslValidator {
         });
         return allVariablesInUse
     }
-    
+
     checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement(
         model: Model,
         accept: ValidationAcceptor
@@ -257,7 +257,7 @@ export class HotDrinkDslValidator {
         accept: ValidationAcceptor
     ): void {
         if (model.component) {
-            const uniqueNames = new Set(model.component.map((component: Component) => component.name).filter((e:string) => e!== undefined));
+            const uniqueNames = new Set(model.component.map((component: Component) => component.name).filter((e: string) => e !== undefined));
 
             model.component.forEach((comp: Component) => {
                 if (uniqueNames.has(comp.name)) {
