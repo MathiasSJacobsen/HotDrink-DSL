@@ -10,16 +10,19 @@ terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 terminal SL_COMMENT: /\/\/[^\n\r]*/;
 
 Model:
-    (imports+=Import |
-    component+=Component)*
+    (imports+=Import)*
+    (component+=Component)*
     ;
 
 Import:
-    "import" "{"  funcs+=ImportedFunction ("," funcs+=ImportedFunction)* "}" "from" file=STRING;
+    //"import" "{"  funcs+=ImportedFunction ("," funcs+=ImportedFunction)* "}" "from" file=STRING;
+    "import" "{" imports+=ImportedFunction ("," imports+=ImportedFunction )* "}" "from" file=STRING;
 
 ImportedFunction:
-    name=ID
+    function=FuncName ("as" altName=FuncName)?
     ;
+FuncName:
+    name=ID;
 
 Component: 
     "component" name=ID "{"
@@ -34,7 +37,7 @@ Vars:
 ;
 
 Variable:
-    name=ID (":" type?=VarType)? ("=" initValue?=ValueExpr)?;
+    name=ID (":" type?=VarType)? ("=" initValue=ValueExpr)?;
 
 VarType returns string:
     'string'
@@ -45,12 +48,13 @@ VarType returns string:
     ;
 
 ValueExpr:
-    {StringValueExpr} val=STRING
-    |
-    {NumberValueExpr} val=INT("."INT)?
-    |
-    {BooleanValueExpr} val=("true"|"false")
-    ;
+    StringValueExpr | NumberValueExpr | BooleanValueExpr;
+
+StringValueExpr: val=STRING;
+
+NumberValueExpr: digit=INT ("."decimal=INT)?;
+
+BooleanValueExpr: val=("true"|"false");
 
 Constraint:
     "constraint" (name=ID)?"{" 
@@ -59,7 +63,7 @@ Constraint:
 ;
 
 FunctionCall:
-    funcRef=[ImportedFunction] "(" (args+=[Variable] ("," args+=[Variable])* )?  ")"
+    funcRef=[FuncName] "(" (args+=[Variable] ("," args+=[Variable])* )?  ")"
 ;
 
 Method:
@@ -106,6 +110,6 @@ And returns Expr:
     Equality ({And.left=current} op=("&&") right=Equality)*;
 
 Or returns Expr:
-    And ({Or.left=current} "$$" right=And)*;
+    And ({Or.left=current} op=("$$") right=And)*;
 
 Expr: Or;

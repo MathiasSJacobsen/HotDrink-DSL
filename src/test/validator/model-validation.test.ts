@@ -1,7 +1,7 @@
 import { parseHelper } from "langium/lib/test"
 import { Model } from "../../language-server/generated/ast";
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
-import { WARNINGSEVERITY } from "../test-utils";
+import { ERRORSEVERITY, WARNINGSEVERITY } from "../test-utils";
 
 
 const services = createHotDrinkDslServices();
@@ -14,7 +14,7 @@ describe("Model validation", () => {
             const documentContent = `import { t, k, t }from "test.js"`;
             const expectation = {
                 message: "Should not import the same function more then once.",
-                severity: WARNINGSEVERITY
+                severity: ERRORSEVERITY
             }
                 ;
             const doc = await helper(documentContent);

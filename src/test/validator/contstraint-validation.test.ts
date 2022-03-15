@@ -173,8 +173,6 @@ describe("Constraint validation", () => {
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
-            console.log(diagnostics[0].range);
-            
             
             expect(diagnostics[0]).toEqual(expect.objectContaining({
                 range: expect.objectContaining({

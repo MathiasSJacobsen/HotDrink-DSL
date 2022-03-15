@@ -116,7 +116,6 @@ describe("Component validation", () => {
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
-            console.log(diagnostics[0].range);
             
             expect(diagnostics.length).toBe(1)
 

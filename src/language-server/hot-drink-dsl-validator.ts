@@ -7,7 +7,7 @@ import {
 
     Component,
     Constraint,
-    HotDrinkDslAstType, Import, Method, Model, Signature, Variable, VariableReference, Vars,
+    HotDrinkDslAstType, ImportedFunction, Method, Model, Signature, Variable, VariableReference, Vars,
 
 } from "./generated/ast";
 import { HotDrinkDslServices } from "./hot-drink-dsl-module";
@@ -238,17 +238,19 @@ export class HotDrinkDslValidator {
     ): void {
         if (model.imports) {
             const listOfImports = model.imports;
-            listOfImports.forEach((importStatement: Import) => {
-
-                const listOfImportedFunctions = importStatement.funcs.map((name) => name.name)
+            listOfImports.forEach(importStatement => {
+                const listOfImportedFunctions = importStatement.imports.map((importedFunction:ImportedFunction) => {
+                    if (importedFunction.altName){
+                        return importedFunction.altName.name
+                    } else return importedFunction.function.name
+                })
                 const unique = new Set(listOfImportedFunctions);
-
-                if (unique.size !== importStatement.funcs.length) {
-                    accept("warning", "Should not import the same function more then once.", {
+                if (unique.size !== importStatement.imports.length) {
+                    accept("error", "Should not import the same function more then once.", {
                         node: importStatement
                     })
                 }
-            })
+            });
         }
     }
 

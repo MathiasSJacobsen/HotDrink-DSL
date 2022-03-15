@@ -33,10 +33,13 @@ export class HotDrinkDslScopeProvider extends DefaultScopeProvider {
     if (referenceId === "FunctionCall:funcRef") {
       const modelNode = getContainerOfType(node, isModel);
       const descriptions = modelNode!.imports
-        .flatMap((i) => i.funcs)
-        .map((v) =>
-          this.descriptionProvider.createDescription(v, v.name, getDocument(v))
-        );
+        .flatMap((i) => i.imports)
+        .map((v) => {
+          if(v.altName) {
+            return this.descriptionProvider.createDescription(v, v.altName.name, getDocument(v))
+          }
+          return this.descriptionProvider.createDescription(v, v.function.name, getDocument(v))
+        });
       return new SimpleScope(stream(descriptions));
     }
 
