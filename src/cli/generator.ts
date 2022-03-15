@@ -25,8 +25,34 @@ export function generateJavaScript(model: Model, filePath: string, destination: 
 }
 
 function generateImports(imports: Import[], fileNode: CompositeGeneratorNode) {
-    imports.forEach((_import: Import) => {
-        fileNode.append(`import { ${_import.funcs.map((func:ImportedFunction) => `${func.name}`).join(', ')} } from ${_import.file};`, NL)
-    })
+    imports.forEach((_import: Import) =>
+        fileNode.append(
+            `import { ${_import.funcs
+                .map((func: ImportedFunction) => `${func.name}`)
+                .join(", ")} } from ${_import.file};`,
+            NL
+        )
+    );
 }
 
+function generateComponent(model: Model, fileNode: CompositeGeneratorNode) {
+    model.component.forEach((component: Component, idx: number) => {
+        var compName = component.name
+        fileNode.append(`let ${compName} = new Component(${compName})`, NL)
+        generateVariables(component, fileNode)
+        fileNode.append(NL)
+
+     });
+}
+
+function generateVariables(component:Component, fileNode: CompositeGeneratorNode) {
+    component.variables.forEach((vars: Vars) => {
+        vars.vars.forEach((variable: Variable) => {
+            fileNode.append(`let ${variable.name} = ${component.name}.emplaceVariable(${variable.name}`)
+            // if(variable._initValue) 
+            
+            fileNode.append(')', NL)
+
+        })
+    })
+}
