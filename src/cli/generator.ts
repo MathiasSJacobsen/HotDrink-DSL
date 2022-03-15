@@ -13,11 +13,12 @@ import {
     NumberValueExpr,
     StringValueExpr,
     Variable,
+    VariableReference,
     Vars,
 } from "../language-server/generated/ast";
 import { extractDestinationAndName } from "./cli-util";
 import path from "path";
-import { NAMETAKEN, uid, usedVariableNames, variableIndex } from "../utils";
+import { NAMETAKEN, NONENAMEGIVEN, uid, usedVariableNames, variableIndex } from "../utils";
 
 export function generateJavaScript(
     model: Model,
@@ -105,25 +106,15 @@ function generateVariables(component:Component, fileNode: CompositeGeneratorNode
 function generateConstraintSpec(component:Component, vars: Vars[], fileNode: CompositeGeneratorNode) {
     component.constraints.forEach((constraint: Constraint) => {
         constraint.methods.forEach((method: Method, idx: number) => {
-            /*
+
             const methodName = method.name || `${NONENAMEGIVEN}${uid()}`
             const nvars = method.signature.inputVariables.length + method.signature.outputVariables.length
             const ins = method.signature.inputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
             const outs = method.signature.outputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
             const promiseMask = ["MaskNone"]
-             
-            //const body = method.body.values.length !== 0 ? method.body.values : (method.body.value as Expr ? method.body.value as Expr : method.body.value as FunctionCall )
-                
-            
-            // const code = method.body.value
-            console.log(methodName);
-            console.log(nvars);
-            console.log(ins);
-            console.log(outs);
-            console.log(promiseMask);
-            //console.log(body);
-            */
-            
+            const code = "Need fixing"
+            fileNode.append(`let ${methodName} = new Method(${nvars}, [${ins}], [${outs}], [${promiseMask}], "${code}")`, NL)
+
         })
     })
 }
