@@ -11,7 +11,7 @@ terminal SL_COMMENT: /\/\/[^\n\r]*/;
 
 Model:
     (imports+=Import)*
-    (component+=Component)*
+    (components+=Component)*
     ;
 
 Import:

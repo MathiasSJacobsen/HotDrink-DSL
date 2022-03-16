@@ -77,7 +77,7 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
           },
           {
             "$type": "Assignment",
-            "feature": "component",
+            "feature": "components",
             "operator": "+=",
             "terminal": {
               "$type": "RuleCall",

@@ -258,10 +258,10 @@ export class HotDrinkDslValidator {
         model: Model,
         accept: ValidationAcceptor
     ): void {
-        if (model.component) {
-            const uniqueNames = new Set(model.component.map((component: Component) => component.name).filter((e: string) => e !== undefined));
+        if (model.components) {
+            const uniqueNames = new Set(model.components.map((component: Component) => component.name).filter((e: string) => e !== undefined));
 
-            model.component.forEach((comp: Component) => {
+            model.components.forEach((comp: Component) => {
                 if (uniqueNames.has(comp.name)) {
                     uniqueNames.delete(comp.name)
                 } else if (!uniqueNames.has(comp.name) && comp.name !== undefined) {

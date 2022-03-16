@@ -135,7 +135,7 @@ export function isMethod(item: unknown): item is Method {
 }
 
 export interface Model extends AstNode {
-    component: Array<Component>
+    components: Array<Component>
     imports: Array<Import>
 }
 
