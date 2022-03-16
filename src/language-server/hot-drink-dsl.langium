@@ -81,7 +81,7 @@ VariableReference:
 Signature: 
     "(" inputVariables+=VariableReference ("," inputVariables+=VariableReference)* "->" outputVariables+=VariableReference ("," outputVariables+=VariableReference)* ")";
 
-Atomic:
+Atomic returns Expr:
     {IntConst} value=INT |
     {StringConst} value=STRING |
     {BoolConst} value=("true" | "false") |
@@ -89,7 +89,7 @@ Atomic:
 ;
 
 Primary returns Expr:
-    "("Expr")" |
+    {Parenthesis} "("expression=Expr")" |
     {Not} "!" expression=Primary | 
     Atomic
 ;

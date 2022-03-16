@@ -978,6 +978,7 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
       "parameters": [],
       "name": "Atomic",
       "hiddenTokens": [],
+      "type": "Expr",
       "alternatives": {
         "$type": "Alternatives",
         "elements": [
@@ -1091,15 +1092,24 @@ export const grammar = (): Grammar => loaded || (loaded = loadGrammar(`{
             "$type": "Group",
             "elements": [
               {
-                "$type": "Keyword",
-                "value": "(",
+                "$type": "Action",
+                "type": "Parenthesis",
                 "elements": []
               },
               {
-                "$type": "RuleCall",
-                "arguments": [],
-                "rule": {
-                  "$refText": "Expr"
+                "$type": "Keyword",
+                "value": "("
+              },
+              {
+                "$type": "Assignment",
+                "feature": "expression",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "Expr"
+                  }
                 }
               },
               {

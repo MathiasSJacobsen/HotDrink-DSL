@@ -19,16 +19,6 @@ export function isBody(item: unknown): item is Body {
     return reflection.isInstance(item, Body);
 }
 
-export interface BoolConst extends AstNode {
-    value: 'true' | 'false'
-}
-
-export const BoolConst = 'BoolConst';
-
-export function isBoolConst(item: unknown): item is BoolConst {
-    return reflection.isInstance(item, BoolConst);
-}
-
 export interface Component extends AstNode {
     readonly $container: Model;
     constraints: Array<Constraint>
@@ -55,7 +45,7 @@ export function isConstraint(item: unknown): item is Constraint {
 }
 
 export interface Expr extends AstNode {
-    readonly $container: Body | Not | MulOrDiv | PlusOrMinus | Comparison | Equality | And | Or;
+    readonly $container: Body | Parenthesis | Not | MulOrDiv | PlusOrMinus | Comparison | Equality | And | Or;
 }
 
 export const Expr = 'Expr';
@@ -111,16 +101,6 @@ export function isImportedFunction(item: unknown): item is ImportedFunction {
     return reflection.isInstance(item, ImportedFunction);
 }
 
-export interface IntConst extends AstNode {
-    value: number
-}
-
-export const IntConst = 'IntConst';
-
-export function isIntConst(item: unknown): item is IntConst {
-    return reflection.isInstance(item, IntConst);
-}
-
 export interface Method extends AstNode {
     readonly $container: Constraint;
     body: Body
@@ -155,16 +135,6 @@ export const Signature = 'Signature';
 
 export function isSignature(item: unknown): item is Signature {
     return reflection.isInstance(item, Signature);
-}
-
-export interface StringConst extends AstNode {
-    value: string
-}
-
-export const StringConst = 'StringConst';
-
-export function isStringConst(item: unknown): item is StringConst {
-    return reflection.isInstance(item, StringConst);
 }
 
 export interface ValueExpr extends AstNode {
@@ -202,16 +172,6 @@ export function isVariableReference(item: unknown): item is VariableReference {
     return reflection.isInstance(item, VariableReference);
 }
 
-export interface VarRef extends AstNode {
-    value: Reference<Variable>
-}
-
-export const VarRef = 'VarRef';
-
-export function isVarRef(item: unknown): item is VarRef {
-    return reflection.isInstance(item, VarRef);
-}
-
 export interface Vars extends AstNode {
     readonly $container: Component;
     vars: Array<Variable>
@@ -233,6 +193,16 @@ export const And = 'And';
 
 export function isAnd(item: unknown): item is And {
     return reflection.isInstance(item, And);
+}
+
+export interface BoolConst extends Expr {
+    value: 'true' | 'false'
+}
+
+export const BoolConst = 'BoolConst';
+
+export function isBoolConst(item: unknown): item is BoolConst {
+    return reflection.isInstance(item, BoolConst);
 }
 
 export interface Comparison extends Expr {
@@ -257,6 +227,16 @@ export const Equality = 'Equality';
 
 export function isEquality(item: unknown): item is Equality {
     return reflection.isInstance(item, Equality);
+}
+
+export interface IntConst extends Expr {
+    value: number
+}
+
+export const IntConst = 'IntConst';
+
+export function isIntConst(item: unknown): item is IntConst {
+    return reflection.isInstance(item, IntConst);
 }
 
 export interface MulOrDiv extends Expr {
@@ -293,6 +273,16 @@ export function isOr(item: unknown): item is Or {
     return reflection.isInstance(item, Or);
 }
 
+export interface Parenthesis extends Expr {
+    expression: Expr
+}
+
+export const Parenthesis = 'Parenthesis';
+
+export function isParenthesis(item: unknown): item is Parenthesis {
+    return reflection.isInstance(item, Parenthesis);
+}
+
 export interface PlusOrMinus extends Expr {
     left: Expr
     op: '+' | '-'
@@ -303,6 +293,26 @@ export const PlusOrMinus = 'PlusOrMinus';
 
 export function isPlusOrMinus(item: unknown): item is PlusOrMinus {
     return reflection.isInstance(item, PlusOrMinus);
+}
+
+export interface StringConst extends Expr {
+    value: string
+}
+
+export const StringConst = 'StringConst';
+
+export function isStringConst(item: unknown): item is StringConst {
+    return reflection.isInstance(item, StringConst);
+}
+
+export interface VarRef extends Expr {
+    value: Reference<Variable>
+}
+
+export const VarRef = 'VarRef';
+
+export function isVarRef(item: unknown): item is VarRef {
+    return reflection.isInstance(item, VarRef);
 }
 
 export interface BooleanValueExpr extends ValueExpr {
@@ -338,14 +348,14 @@ export function isStringValueExpr(item: unknown): item is StringValueExpr {
 
 export type VarType = 'string' | 'number' | 'boolean'
 
-export type HotDrinkDslAstType = 'Body' | 'BoolConst' | 'Component' | 'Constraint' | 'Expr' | 'FuncName' | 'FunctionCall' | 'Import' | 'ImportedFunction' | 'IntConst' | 'Method' | 'Model' | 'Signature' | 'StringConst' | 'ValueExpr' | 'Variable' | 'VariableReference' | 'VarRef' | 'Vars' | 'And' | 'Comparison' | 'Equality' | 'MulOrDiv' | 'Not' | 'Or' | 'PlusOrMinus' | 'BooleanValueExpr' | 'NumberValueExpr' | 'StringValueExpr';
+export type HotDrinkDslAstType = 'Body' | 'Component' | 'Constraint' | 'Expr' | 'FuncName' | 'FunctionCall' | 'Import' | 'ImportedFunction' | 'Method' | 'Model' | 'Signature' | 'ValueExpr' | 'Variable' | 'VariableReference' | 'Vars' | 'And' | 'BoolConst' | 'Comparison' | 'Equality' | 'IntConst' | 'MulOrDiv' | 'Not' | 'Or' | 'Parenthesis' | 'PlusOrMinus' | 'StringConst' | 'VarRef' | 'BooleanValueExpr' | 'NumberValueExpr' | 'StringValueExpr';
 
 export type HotDrinkDslAstReference = 'FunctionCall:args' | 'FunctionCall:funcRef' | 'VariableReference:ref' | 'VarRef:value';
 
 export class HotDrinkDslAstReflection implements AstReflection {
 
     getAllTypes(): string[] {
-        return ['Body', 'BoolConst', 'Component', 'Constraint', 'Expr', 'FuncName', 'FunctionCall', 'Import', 'ImportedFunction', 'IntConst', 'Method', 'Model', 'Signature', 'StringConst', 'ValueExpr', 'Variable', 'VariableReference', 'VarRef', 'Vars', 'And', 'Comparison', 'Equality', 'MulOrDiv', 'Not', 'Or', 'PlusOrMinus', 'BooleanValueExpr', 'NumberValueExpr', 'StringValueExpr'];
+        return ['Body', 'Component', 'Constraint', 'Expr', 'FuncName', 'FunctionCall', 'Import', 'ImportedFunction', 'Method', 'Model', 'Signature', 'ValueExpr', 'Variable', 'VariableReference', 'Vars', 'And', 'BoolConst', 'Comparison', 'Equality', 'IntConst', 'MulOrDiv', 'Not', 'Or', 'Parenthesis', 'PlusOrMinus', 'StringConst', 'VarRef', 'BooleanValueExpr', 'NumberValueExpr', 'StringValueExpr'];
     }
 
     isInstance(node: unknown, type: string): boolean {
@@ -358,12 +368,17 @@ export class HotDrinkDslAstReflection implements AstReflection {
         }
         switch (subtype) {
             case And:
+            case BoolConst:
             case Comparison:
             case Equality:
+            case IntConst:
             case MulOrDiv:
             case Not:
             case Or:
-            case PlusOrMinus: {
+            case Parenthesis:
+            case PlusOrMinus:
+            case StringConst:
+            case VarRef: {
                 return this.isSubtype(Expr, supertype);
             }
             case BooleanValueExpr:

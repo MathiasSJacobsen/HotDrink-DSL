@@ -1,24 +1,44 @@
 import fs from "fs";
 import colors from "colors"
-import { CompositeGeneratorNode, NL, processGeneratorNode } from "langium";
+import { CompositeGeneratorNode, NL, processGeneratorNode, Reference } from "langium";
 import {
-
-    BooleanValueExpr,
+    Body,
     Component,
     Constraint,
+    FunctionCall,
     Import,
     ImportedFunction,
     Method,
     Model,
-    NumberValueExpr,
-    StringValueExpr,
     Variable,
     VariableReference,
     Vars,
+    Expr,
+    isOr,
+    isParenthesis,
+    isNot,
+    isVarRef,
+    isIntConst,
+    isStringConst,
+    isBoolConst,
+    isMulOrDiv,
+    isPlusOrMinus,
+    isComparison,
+    isEquality,
+    isAnd,
+    isNumberValueExpr,
+    isStringValueExpr,
+    isBooleanValueExpr,
+    isExpr,
 } from "../language-server/generated/ast";
 import { extractDestinationAndName } from "./cli-util";
 import path from "path";
 import { NAMETAKEN, NONENAMEGIVEN, SpecPrefix, uid, usedVariableNames, variableIndex } from "../utils";
+
+
+// let to const og export components
+// lese på source map
+
 
 export function generateJavaScript(
     model: Model,
@@ -81,9 +101,6 @@ function generateComponent(components: Component[], fileNode: CompositeGenerator
         fileNode.append(NL)
 
         generateConstraints(component, fileNode, constrainSpecNames)
-        
-
-
      });
 }
 
@@ -99,24 +116,20 @@ function generateVariables(component:Component, fileNode: CompositeGeneratorNode
             fileNode.append(`let ${variable.name} = ${component.name}.emplaceVariable("${variable.name}"`)
             variableIndex.set(variable.name, arrayIdx++)
             if(variable.initValue) {
-                if(variable.initValue.$type === "NumberValueExpr") {
-                    const initValue = variable.initValue as NumberValueExpr 
-                    fileNode.append(`, ${initValue.digit}`)
-                    if(initValue.decimal){
-                        fileNode.append(`.${initValue.decimal}`)
+                if(isNumberValueExpr(variable.initValue)) {
+                    fileNode.append(`, ${variable.initValue.digit}`)
+                    if(variable.initValue.decimal){
+                        fileNode.append(`.${variable.initValue.decimal}`)
                     }
-                } else if (variable.initValue.$type === "StringValueExpr") {
-                    const initValue = variable.initValue as StringValueExpr 
-                    fileNode.append(`, ${initValue.val}`)
-                } else if (variable.initValue.$type === "BooleanValueExpr") {
-                    const initValue = variable.initValue as BooleanValueExpr 
-                    fileNode.append(`, ${initValue.val}`)
+                } else if (isStringValueExpr(variable.initValue)) {
+                    fileNode.append(`, ${variable.initValue.val}`)
+                } else if (isBooleanValueExpr(variable.initValue)) {
+                    fileNode.append(`, ${variable.initValue.val}`)
                 } else console.log(colors.red("Unknown init value type"))
             }
             fileNode.append(')', NL)
         })
     })
-    console.log(variableIndex);
 }
 
 /**
@@ -154,10 +167,32 @@ function generateMethod(method:Method, fileNode: CompositeGeneratorNode): string
     const ins = method.signature.inputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
     const outs = method.signature.outputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
     const promiseMask = ["MaskNone"]
-    const code = "Donno what to do her yet"
+    const inputVariables = method.signature.inputVariables.map(v => v.ref.ref?.name)
+    const code = makeCodeForMethod(method.body)
 
-    fileNode.append(`let ${methodName} = new Method(${nvars}, [${ins}], [${outs}], [${promiseMask}], "${code}")`, NL)
+    fileNode.append(`let ${methodName} = new Method(${nvars}, [${ins}], [${outs}], [${promiseMask}], (${inputVariables}) => ${code})`, NL)
     return methodName
+}
+
+function makeCodeForMethod(body: Body):string {
+    if (body.value){
+        if(body.value.$type === "FunctionCall") {
+            const functionCall = body.value as FunctionCall
+            const args = functionCall.args.map((refVariable: Reference<Variable>) => refVariable.ref?.name)
+            const functionName = functionCall.funcRef.$refText!
+            return `${functionName}(${args})`
+        } else if ( isExpr(body.value)) {
+            return  generateExpr(body.value)
+        } else {
+            console.error(body);
+            throw new Error("Cant read ");
+        }
+    } else if (body.values) {
+        return `[${body.values.map(makeCodeForMethod)}]`
+    } else {
+        console.error(body);
+        throw new Error("Cant read body");
+    }
 }
 
 /**
@@ -173,4 +208,35 @@ function generateConstraints(component:Component, fileNode: CompositeGeneratorNo
         const vrefs = constraint.methods[0].signature.inputVariables.map(v => v.ref.ref?.name).concat(constraint.methods[0].signature.outputVariables.map(v => v.ref.ref?.name))
         fileNode.append(`let ${constraintName} = ${component.name}.emplaceConstraint("${constraintName}", ${specNames[idx]}, [${vrefs}])`, NL, NL)
     })
+}
+
+function generateExpr(expr: Expr) : string {
+    if (isIntConst(expr)) {
+        return expr.value.toString()
+    } else if (isStringConst(expr)){
+        return `"${expr.value}"`
+    } else if (isBoolConst(expr)) {
+        return expr.value.toString()
+    } else if (isVarRef(expr)) {
+        return expr.value.ref?.name.toString()!
+    } else if (isParenthesis(expr)) {
+        return `(${generateExpr(expr.expression)})`
+    } else if (isNot(expr)) {
+        return `!${generateExpr(expr.expression)}`
+    } else if (isMulOrDiv(expr)) {
+        return generateExpr(expr.left)+ " " + expr.op + " " + generateExpr(expr.right)
+    } else if (isPlusOrMinus(expr)) {
+        return generateExpr(expr.left) + " " + expr.op + " " + generateExpr(expr.right)
+    } else if (isComparison(expr)) {
+        return generateExpr(expr.left) + " " + expr.op + " " + generateExpr(expr.right)
+    } else if (isEquality(expr)) {
+        return generateExpr(expr.left) + " " + expr.op + " " + generateExpr(expr.right)
+    } else if (isAnd(expr)) {
+        return generateExpr(expr.left) + " " + expr.op + " " + generateExpr(expr.right)
+    } else if (isOr(expr)) {
+        return generateExpr(expr.left) + " " + expr.op + " " + generateExpr(expr.right)
+    } else {
+        console.error(expr);
+        throw new Error("None known expr type");
+    }
 }
