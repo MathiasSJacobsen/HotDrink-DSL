@@ -69,7 +69,7 @@ function generateComponent(model: Model, fileNode: CompositeGeneratorNode) {
         generateVariables(component, fileNode)
         fileNode.append(NL)
 
-        generateConstraintSpec(component, component.variables, fileNode)
+        generateConstraintSpec(component, fileNode)
 
      });
 }
@@ -103,19 +103,28 @@ function generateVariables(component:Component, fileNode: CompositeGeneratorNode
     
 }
 
-function generateConstraintSpec(component:Component, vars: Vars[], fileNode: CompositeGeneratorNode) {
+function generateConstraintSpec(component:Component, fileNode: CompositeGeneratorNode) {
     component.constraints.forEach((constraint: Constraint) => {
-        constraint.methods.forEach((method: Method, idx: number) => {
-
-            const methodName = method.name || `${NONENAMEGIVEN}${uid()}`
-            const nvars = method.signature.inputVariables.length + method.signature.outputVariables.length
-            const ins = method.signature.inputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
-            const outs = method.signature.outputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
-            const promiseMask = ["MaskNone"]
-            const code = "Need fixing"
-            fileNode.append(`let ${methodName} = new Method(${nvars}, [${ins}], [${outs}], [${promiseMask}], "${code}")`, NL)
-
+        const constraintName = constraint.name || `c${NONENAMEGIVEN}${uid()}`
+        let methodNames: string[] = []
+        constraint.methods.forEach((method: Method) => {
+            methodNames = generateMethods(method, fileNode)
         })
+        fileNode.append(NL, NL)
+        fileNode.append(`let ${constraintName}Spec = new ConstraintSpec([${methodNames.map((name:string) => name)}])`, NL)
     })
 }
 
+function generateMethods(method:Method, fileNode: CompositeGeneratorNode): string[] {
+    const methodNames: string[] = []
+    const methodName = method.name || `m${NONENAMEGIVEN}${uid()}`
+    const nvars = method.signature.inputVariables.length + method.signature.outputVariables.length
+    const ins = method.signature.inputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
+    const outs = method.signature.outputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
+    const promiseMask = ["MaskNone"]
+    const code = "Need fixing"
+
+    fileNode.append(`let ${methodName} = new Method(${nvars}, [${ins}], [${outs}], [${promiseMask}], "${code}")`, NL)
+    methodNames.push(methodName)
+    return methodNames
+}
