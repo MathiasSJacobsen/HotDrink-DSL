@@ -18,7 +18,7 @@ import {
 } from "../language-server/generated/ast";
 import { extractDestinationAndName } from "./cli-util";
 import path from "path";
-import { NAMETAKEN, NONENAMEGIVEN, uid, usedVariableNames, variableIndex } from "../utils";
+import { NAMETAKEN, NONENAMEGIVEN, SpecPrefix, uid, usedVariableNames, variableIndex } from "../utils";
 
 export function generateJavaScript(
     model: Model,
@@ -62,14 +62,18 @@ function generateImports(imports: Import[], fileNode: CompositeGeneratorNode) {
 
 function generateComponent(model: Model, fileNode: CompositeGeneratorNode) {
     model.component.forEach((component: Component) => {
+        fileNode.append("// create a component and emplace some variables", NL)
         const compName = !usedVariableNames.has(component.name) ? component.name : `${NAMETAKEN}${uid()}`
         usedVariableNames.add(compName)
 
         fileNode.append(`let ${compName} = new Component("${compName}")`, NL)
         generateVariables(component, fileNode)
 
-        generateConstraintSpec(component, fileNode)
+        const constrainSpecNames = generateConstraintSpec(component, fileNode)
         fileNode.append(NL)
+
+        generateConstraints(component, fileNode, constrainSpecNames)
+        
 
 
      });
@@ -104,30 +108,40 @@ function generateVariables(component:Component, fileNode: CompositeGeneratorNode
     
 }
 
-function generateConstraintSpec(component:Component, fileNode: CompositeGeneratorNode) {
+function generateConstraintSpec(component:Component, fileNode: CompositeGeneratorNode): string[] {
+    const constrainSpecNames: string[] = []
     component.constraints.forEach((constraint: Constraint) => {
         fileNode.append(NL)
         fileNode.append(`// create a constraint spec`, NL)
-        const constraintName = constraint.name || `c${NONENAMEGIVEN}${uid()}`
+        const constraintName = constraint.name || `cs${NONENAMEGIVEN}${uid()}`
         let methodNames: string[] = []
         constraint.methods.forEach((method: Method) => {
-            methodNames = generateMethods(method, fileNode)
+            methodNames.push(generateMethod(method, fileNode))
         })
         fileNode.append(NL)
-        fileNode.append(`let ${constraintName}Spec = new ConstraintSpec([${methodNames.map((name:string) => name)}])`, NL)
+        fileNode.append(`let ${constraintName+SpecPrefix} = new ConstraintSpec([${methodNames.map((name:string) => name)}])`, NL)
+        constrainSpecNames.push(constraintName+SpecPrefix)
     })
+    return constrainSpecNames
 }
 
-function generateMethods(method:Method, fileNode: CompositeGeneratorNode): string[] {
-    const methodNames: string[] = []
+function generateMethod(method:Method, fileNode: CompositeGeneratorNode): string {
     const methodName = method.name || `m${NONENAMEGIVEN}${uid()}`
     const nvars = method.signature.inputVariables.length + method.signature.outputVariables.length
     const ins = method.signature.inputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
     const outs = method.signature.outputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
     const promiseMask = ["MaskNone"]
-    const code = "Need fixing"
+    const code = "Donno what to do her yet"
 
     fileNode.append(`let ${methodName} = new Method(${nvars}, [${ins}], [${outs}], [${promiseMask}], "${code}")`, NL)
-    methodNames.push(methodName)
-    return methodNames
+    return methodName
+}
+
+function generateConstraints(component:Component, fileNode: CompositeGeneratorNode, specNames: string[]) {
+    component.constraints.forEach((constraint: Constraint, idx:number) => {
+        fileNode.append(`// emplace a constraint built from the constraint spec`, NL)
+        const constraintName = specNames[idx].substring(0, specNames[idx].length-SpecPrefix.length)
+        const vrefs = constraint.methods[0].signature.inputVariables.map(v => v.ref.ref?.name).concat(constraint.methods[0].signature.outputVariables.map(v => v.ref.ref?.name))
+        fileNode.append(`let ${constraintName} = ${component.name}.emplaceConstraint("${constraintName}", ${specNames[idx]}, [${vrefs}])`, NL, NL)
+    })
 }
