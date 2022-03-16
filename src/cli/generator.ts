@@ -67,9 +67,10 @@ function generateComponent(model: Model, fileNode: CompositeGeneratorNode) {
 
         fileNode.append(`let ${compName} = new Component("${compName}")`, NL)
         generateVariables(component, fileNode)
-        fileNode.append(NL)
 
         generateConstraintSpec(component, fileNode)
+        fileNode.append(NL)
+
 
      });
 }
@@ -105,12 +106,14 @@ function generateVariables(component:Component, fileNode: CompositeGeneratorNode
 
 function generateConstraintSpec(component:Component, fileNode: CompositeGeneratorNode) {
     component.constraints.forEach((constraint: Constraint) => {
+        fileNode.append(NL)
+        fileNode.append(`// create a constraint spec`, NL)
         const constraintName = constraint.name || `c${NONENAMEGIVEN}${uid()}`
         let methodNames: string[] = []
         constraint.methods.forEach((method: Method) => {
             methodNames = generateMethods(method, fileNode)
         })
-        fileNode.append(NL, NL)
+        fileNode.append(NL)
         fileNode.append(`let ${constraintName}Spec = new ConstraintSpec([${methodNames.map((name:string) => name)}])`, NL)
     })
 }
