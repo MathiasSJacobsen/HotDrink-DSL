@@ -4,7 +4,7 @@ import { parseHelper } from "langium/lib/test"
 import { Model } from "../../language-server/generated/ast";
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
 
-const services = createHotDrinkDslServices();
+const services = createHotDrinkDslServices().hotdrinkDSL;
 const helper = parseHelper<Model>(services);
 describe("Variable validation", () => {
     it('gets a warning if variable have a uppercase starting letter as name', async () => {
@@ -16,7 +16,7 @@ describe("Variable validation", () => {
                                 }`;
         const expectation = [{ message: "Var name should start with lowercase.", severity: 2 }];
         const doc = await helper(documentContent);
-        const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+        const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
         expect(diagnostics[0]).toEqual(expect.objectContaining({
             message: expectation[0].message,
             severity: expectation[0].severity,
@@ -44,7 +44,7 @@ describe("Variable validation", () => {
             }
         ];
         const doc = await helper(documentContent);
-        const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+        const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
         
         expect(diagnostics.length).toBe(2)
         
@@ -66,7 +66,7 @@ describe("Variable validation", () => {
                                     }
                                 }`;
         const doc = await helper(documentContent);
-        const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+        const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
         expect(diagnostics.length).toBe(0)
     });
 })

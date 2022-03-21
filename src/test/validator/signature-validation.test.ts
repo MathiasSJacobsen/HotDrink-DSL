@@ -3,7 +3,7 @@ import { Model } from "../../language-server/generated/ast";
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
 import { ERRORSEVERITY, INFOSEVERITY } from "../test-utils";
 
-const services = createHotDrinkDslServices();
+const services = createHotDrinkDslServices().hotdrinkDSL;
 const helper = parseHelper<Model>(services);
 
 describe("Signature validation", () => {
@@ -23,7 +23,7 @@ describe("Signature validation", () => {
                 severity: ERRORSEVERITY
             };
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
             
             expect(diagnostics.length).toBe(1)
             
@@ -43,7 +43,7 @@ describe("Signature validation", () => {
                 severity: ERRORSEVERITY
             };
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
             
             expect(diagnostics.length).toBe(1)
             
@@ -65,7 +65,7 @@ describe("Signature validation", () => {
                 severity: INFOSEVERITY
             };
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
             
             expect(diagnostics.length).toBe(1)
             

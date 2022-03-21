@@ -30,6 +30,7 @@ import {
     isStringValueExpr,
     isBooleanValueExpr,
     isExpr,
+    BooleanValueExpr,
 } from "../language-server/generated/ast";
 import { extractDestinationAndName } from "./cli-util";
 import path from "path";
@@ -124,7 +125,7 @@ function generateVariables(component:Component, fileNode: CompositeGeneratorNode
                 } else if (isStringValueExpr(variable.initValue)) {
                     fileNode.append(`, ${variable.initValue.val}`)
                 } else if (isBooleanValueExpr(variable.initValue)) {
-                    fileNode.append(`, ${variable.initValue.val}`)
+                    fileNode.append(`, ${(variable.initValue as BooleanValueExpr).val}`)
                 } else console.log(colors.red("Unknown init value type"))
             }
             fileNode.append(')', NL)

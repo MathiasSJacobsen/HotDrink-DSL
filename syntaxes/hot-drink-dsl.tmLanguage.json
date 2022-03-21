@@ -13,8 +13,14 @@
       "match": "\\b(as|boolean|component|constraint|false|from|import|number|string|true|var)\\b"
     },
     {
-      "name": "keyword.symbol.hot-drink-dsl",
-      "match": "(\\-|\\->|\\,|\\;|\\:|\\!|\\!=|\\!==|\\.|\\(|\\)|\\[|\\]|\\{|\\}|\\*|\\/|\\&&|\\+|\\<|\\<=|\\=|\\==|\\===|\\=>|\\>|\\>=|\\$$)"
+      "name": "string.quoted.double.hot-drink-dsl",
+      "begin": "\"",
+      "end": "\""
+    },
+    {
+      "name": "string.quoted.single.hot-drink-dsl",
+      "begin": "'",
+      "end": "'"
     }
   ],
   "repository": {

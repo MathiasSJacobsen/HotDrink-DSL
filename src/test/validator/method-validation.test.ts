@@ -5,7 +5,7 @@ import { Model } from "../../language-server/generated/ast";
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
 import { WARNINGSEVERITY } from "../test-utils";
 
-const services = createHotDrinkDslServices();
+const services = createHotDrinkDslServices().hotdrinkDSL;
 const helper = parseHelper<Model>(services);
 describe("Method validation", () => {
     it('gets a warning if method name starts with uppercase letter', async () => {
@@ -24,7 +24,7 @@ describe("Method validation", () => {
             }
         ;
         const doc = await helper(documentContent);
-        const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+        const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
         
         expect(diagnostics.length).toBe(1)
         expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))

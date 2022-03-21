@@ -1,15 +1,14 @@
 grammar HotDrinkDsl
-hidden(WS, SL_COMMENT, ML_COMMENT)
 
-terminal WS: /\s+/;
+hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal INT returns number: /[0-9]+/;
 terminal STRING: /"[^"]*"|'[^']*'/;
 
-terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
-terminal SL_COMMENT: /\/\/[^\n\r]*/;
+hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
+hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
 
-Model:
+entry Model:
     (imports+=Import)*
     (components+=Component)*
     ;
@@ -81,35 +80,36 @@ VariableReference:
 Signature: 
     "(" inputVariables+=VariableReference ("," inputVariables+=VariableReference)* "->" outputVariables+=VariableReference ("," outputVariables+=VariableReference)* ")";
 
-Atomic returns Expr:
-    {IntConst} value=INT |
-    {StringConst} value=STRING |
-    {BoolConst} value=("true" | "false") |
-    {VarRef} value=[Variable]
+
+Atomic infers Expr:
+    {infer IntConst} value=INT |
+    {infer StringConst} value=STRING |
+    {infer BoolConst} value=("true" | "false") |
+    {infer VarRef} value=[Variable]
 ;
 
-Primary returns Expr:
-    {Parenthesis} "("expression=Expr")" |
-    {Not} "!" expression=Primary | 
+Primary infers Expr:
+    {infer Parenthesis} "("expression=Expr")" |
+    {infer Not} "!" expression=Primary | 
     Atomic
 ;
 
-MulOrDiv returns Expr:
-    Primary ({MulOrDiv.left=current} op=("*"|"/") right=Primary)*;
+MulOrDiv infers Expr:
+    Primary ({infer MulOrDiv.left=current} op=("*"|"/") right=Primary)*;
 
-PlusOrMinus returns Expr:
-    MulOrDiv ({PlusOrMinus.left=current} op=("+"|"-") right=MulOrDiv)*;
+PlusOrMinus infers Expr:
+    MulOrDiv ({infer PlusOrMinus.left=current} op=("+"|"-") right=MulOrDiv)*;
 
-Comparison returns Expr:
-    PlusOrMinus ({Comparison.left=current} op=(">="|"<="|">"|"<") right=PlusOrMinus)*;
+Comparison infers Expr:
+    PlusOrMinus ({infer Comparison.left=current} op=(">="|"<="|">"|"<") right=PlusOrMinus)*;
 
-Equality returns Expr: 
-    Comparison ({Equality.left=current} op=("=="|"!=" |"==="| "!==") right=Comparison)*;
+Equality infers Expr: 
+    Comparison ({infer Equality.left=current} op=("=="|"!=" |"==="| "!==") right=Comparison)*;
 
-And returns Expr:
-    Equality ({And.left=current} op=("&&") right=Equality)*;
+And infers Expr:
+    Equality ({infer And.left=current} op=("&&") right=Equality)*;
 
-Or returns Expr:
-    And ({Or.left=current} op=("$$") right=And)*;
+Or infers Expr:
+    And ({infer Or.left=current} op=("||") right=And)*;
 
 Expr: Or;
