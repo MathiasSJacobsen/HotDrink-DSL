@@ -4,7 +4,7 @@ import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-m
 
 describe('Parser test', () => {
     it("Parses the invoice hotdrink code", async () => {
-        const grammarServices = createHotDrinkDslServices()
+        const grammarServices = createHotDrinkDslServices().hotdrinkDSL
 
         const text = `
         import { func1, func2, func3 } from 'filethatdonstexist.js'
@@ -23,7 +23,7 @@ describe('Parser test', () => {
         }
         `;
 
-        const grammar = (await parseHelper<Model>(grammarServices)(text)).document.parseResult.parserErrors;
+        const grammar = (await parseHelper<Model>(grammarServices)(text)).parseResult.parserErrors;
         expect(grammar.length).toBe(0)
     })
 })

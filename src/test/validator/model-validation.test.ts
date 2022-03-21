@@ -3,9 +3,8 @@ import { Model } from "../../language-server/generated/ast";
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
 import { ERRORSEVERITY, WARNINGSEVERITY } from "../test-utils";
 
-
 const services = createHotDrinkDslServices();
-const helper = parseHelper<Model>(services);
+const helper = parseHelper<Model>(services.hotdrinkDSL);
 
 
 describe("Model validation", () => {
@@ -18,7 +17,7 @@ describe("Model validation", () => {
             }
                 ;
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+            const diagnostics = await services.hotdrinkDSL.validation.DocumentValidator.validateDocument(doc);
 
             expect(diagnostics.length).toBe(1)
 
@@ -28,7 +27,7 @@ describe("Model validation", () => {
             const documentContent = `import { t, k, t } from "test.js"`;
 
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+            const diagnostics = await services.hotdrinkDSL.validation.DocumentValidator.validateDocument(doc);
 
             expect(diagnostics.length).toBe(1)
 
@@ -67,7 +66,7 @@ describe("Model validation", () => {
     
 
                 const doc = await helper(documentContent);
-                const diagnostics = await services.validation.DocumentValidator.validateDocument(doc.document);
+                const diagnostics = await services.hotdrinkDSL.validation.DocumentValidator.validateDocument(doc);
                 
                 expect(diagnostics.length).toBe(1)
 

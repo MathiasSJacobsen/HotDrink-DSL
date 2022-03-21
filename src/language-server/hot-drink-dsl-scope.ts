@@ -6,7 +6,7 @@ import {
   getDocument,
   LangiumServices,
   Scope,
-  SimpleScope,
+  StreamScope,
   stream,
 } from "langium";
 import { isComponent, isMethod, isModel } from "./generated/ast";
@@ -27,7 +27,7 @@ export class HotDrinkDslScopeProvider extends DefaultScopeProvider {
         .map((v) =>
           this.descriptionProvider.createDescription(v, v.name, getDocument(v))
         );
-      return new SimpleScope(stream(descriptions));
+      return new StreamScope(stream(descriptions));
     }
 
     if (referenceId === "FunctionCall:funcRef") {
@@ -40,7 +40,7 @@ export class HotDrinkDslScopeProvider extends DefaultScopeProvider {
           }
           return this.descriptionProvider.createDescription(v, v.function.name, getDocument(v))
         });
-      return new SimpleScope(stream(descriptions));
+      return new StreamScope(stream(descriptions));
     }
 
     if (referenceId === "FunctionCall:args") {
@@ -54,7 +54,7 @@ export class HotDrinkDslScopeProvider extends DefaultScopeProvider {
             getDocument(v!)
           )
         );
-      return new SimpleScope(stream(descriptions));
+      return new StreamScope(stream(descriptions));
     }
     if (referenceId === "Atomic:value") {
       const methodNode = getContainerOfType(node, isMethod);
@@ -67,7 +67,7 @@ export class HotDrinkDslScopeProvider extends DefaultScopeProvider {
             getDocument(v!)
           )
         );
-      return new SimpleScope(stream(descriptions));
+      return new StreamScope(stream(descriptions));
     }
     
     if (referenceId === "VarRef:value") {
@@ -81,7 +81,7 @@ export class HotDrinkDslScopeProvider extends DefaultScopeProvider {
             getDocument(v!)
           )
         );
-      return new SimpleScope(stream(descriptions));
+      return new StreamScope(stream(descriptions));
     }
 
     return super.getScope(node, referenceId);
