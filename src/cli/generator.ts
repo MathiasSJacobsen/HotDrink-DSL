@@ -94,7 +94,7 @@ function generateComponent(components: Component[], fileNode: CompositeGenerator
         const compName = !usedVariableNames.has(component.name) ? component.name : `${NAMETAKEN}${uid()}`
         usedVariableNames.add(compName)
 
-        fileNode.append(`let ${compName} = new Component("${compName}")`, NL)
+        fileNode.append(`const ${compName} = new Component("${compName}")`, NL)
 
         generateVariables(component, fileNode)
 
@@ -114,7 +114,7 @@ function generateVariables(component:Component, fileNode: CompositeGeneratorNode
     let arrayIdx = 0;
     component.variables.forEach((vars: Vars) => {
         vars.vars.forEach((variable: Variable) => {
-            fileNode.append(`let ${variable.name} = ${component.name}.emplaceVariable("${variable.name}"`)
+            fileNode.append(`const ${variable.name} = ${component.name}.emplaceVariable("${variable.name}"`)
             variableIndex.set(variable.name, arrayIdx++)
             if(variable.initValue) {
                 if(isNumberValueExpr(variable.initValue)) {
@@ -150,7 +150,7 @@ function generateConstraintSpec(constraints: Constraint[], fileNode: CompositeGe
             methodNames.push(generateMethod(method, fileNode))
         })
         fileNode.append(NL)
-        fileNode.append(`let ${constraintName+SpecPrefix} = new ConstraintSpec([${methodNames.map((name:string) => name)}])`, NL)
+        fileNode.append(`const ${constraintName+SpecPrefix} = new ConstraintSpec([${methodNames.map((name:string) => name)}])`, NL)
         constrainSpecNames.push(constraintName+SpecPrefix)
     })
     return constrainSpecNames
@@ -171,7 +171,7 @@ function generateMethod(method:Method, fileNode: CompositeGeneratorNode): string
     const inputVariables = method.signature.inputVariables.map(v => v.ref.ref?.name)
     const code = makeCodeForMethod(method.body)
 
-    fileNode.append(`let ${methodName} = new Method(${nvars}, [${ins}], [${outs}], [${promiseMask}], (${inputVariables}) => ${code})`, NL)
+    fileNode.append(`const ${methodName} = new Method(${nvars}, [${ins}], [${outs}], [${promiseMask}], (${inputVariables}) => ${code})`, NL)
     return methodName
 }
 
@@ -207,7 +207,7 @@ function generateConstraints(component:Component, fileNode: CompositeGeneratorNo
         fileNode.append(`// emplace a constraint built from the constraint spec`, NL)
         const constraintName = specNames[idx].substring(0, specNames[idx].length-SpecPrefix.length)
         const vrefs = constraint.methods[0].signature.inputVariables.map(v => v.ref.ref?.name).concat(constraint.methods[0].signature.outputVariables.map(v => v.ref.ref?.name))
-        fileNode.append(`let ${constraintName} = ${component.name}.emplaceConstraint("${constraintName}", ${specNames[idx]}, [${vrefs}])`, NL, NL)
+        fileNode.append(`const ${constraintName} = ${component.name}.emplaceConstraint("${constraintName}", ${specNames[idx]}, [${vrefs}])`, NL, NL)
     })
 }
 
