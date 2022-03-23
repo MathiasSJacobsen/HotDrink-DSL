@@ -1,5 +1,4 @@
 import fs from "fs";
-import colors from "colors"
 import { CompositeGeneratorNode, NL, processGeneratorNode, Reference } from "langium";
 import {
     Body,
@@ -133,7 +132,13 @@ function generateVariables(component:Component, fileNode: CompositeGeneratorNode
                     fileNode.append(`, ${initValue.val}`)
                 } else if (isBooleanValueExpr(initValue)) {
                     fileNode.append(`, ${(initValue as BooleanValueExpr).val}`)
-                } else console.log(colors.red("Unknown init value type"))
+                } else {
+                    console.error(initValue);
+                    throw new Error("Cant handle initValue type");
+                }
+            } else {
+                console.error(variable);
+                throw new Error("Cant find variable initValue");
             }
             fileNode.append(')', NL)
         })
