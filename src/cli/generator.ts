@@ -121,16 +121,18 @@ function generateVariables(component:Component, fileNode: CompositeGeneratorNode
         vars.vars.forEach((variable: Variable) => {
             fileNode.append(`const ${variable.name} = ${component.name}.emplaceVariable("${variable.name}"`)
             variableIndex.set(variable.name, arrayIdx++)
+
             if(variable.initValue) {
-                if(isNumberValueExpr(variable.initValue)) {
-                    fileNode.append(`, ${variable.initValue.digit}`)
-                    if(variable.initValue.decimal){
-                        fileNode.append(`.${variable.initValue.decimal}`)
+                const initValue = variable.initValue
+                if(isNumberValueExpr(initValue)) {
+                    fileNode.append(`, ${initValue.digit}`)
+                    if(initValue.decimal){
+                        fileNode.append(`.${initValue.decimal}`)
                     }
-                } else if (isStringValueExpr(variable.initValue)) {
-                    fileNode.append(`, ${variable.initValue.val}`)
-                } else if (isBooleanValueExpr(variable.initValue)) {
-                    fileNode.append(`, ${(variable.initValue as BooleanValueExpr).val}`)
+                } else if (isStringValueExpr(initValue)) {
+                    fileNode.append(`, ${initValue.val}`)
+                } else if (isBooleanValueExpr(initValue)) {
+                    fileNode.append(`, ${(initValue as BooleanValueExpr).val}`)
                 } else console.log(colors.red("Unknown init value type"))
             }
             fileNode.append(')', NL)
