@@ -52,6 +52,7 @@ export function generateJavaScript(
     const fileNode = new CompositeGeneratorNode();
     fileNode.append('"use strict";', NL, NL);
 
+    generateHotDrinkImports(fileNode)
     generateImports(model.imports, fileNode);
     fileNode.append(NL);
 
@@ -62,6 +63,10 @@ export function generateJavaScript(
     }
     fs.writeFileSync(generatedFilePath, processGeneratorNode(fileNode));
     return generatedFilePath;
+}
+
+function generateHotDrinkImports(fileNode: CompositeGeneratorNode) {
+    fileNode.append("import { Component, Method, ConstraintSpec } from 'hotdrink';", NL, NL);
 }
 
 /**
@@ -94,7 +99,7 @@ function generateComponent(components: Component[], fileNode: CompositeGenerator
         const compName = !usedVariableNames.has(component.name) ? component.name : `${NAMETAKEN}${uid()}`
         usedVariableNames.add(compName)
 
-        fileNode.append(`const ${compName} = new Component("${compName}")`, NL)
+        fileNode.append(`export const ${compName} = new Component("${compName}")`, NL)
 
         generateVariables(component, fileNode)
 
