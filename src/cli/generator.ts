@@ -106,7 +106,7 @@ function generateComponent(components: Component[], fileNode: CompositeGenerator
         fileNode.append(NL)
 
         generateConstraints(component, fileNode, constrainSpecNames)
-     });
+    });
 }
 
 /**
@@ -136,10 +136,7 @@ function generateVariables(component:Component, fileNode: CompositeGeneratorNode
                     console.error(initValue);
                     throw new Error("Cant handle initValue type");
                 }
-            } else {
-                console.error(variable);
-                throw new Error("Cant find variable initValue");
-            }
+            } 
             fileNode.append(')', NL)
         })
     })
