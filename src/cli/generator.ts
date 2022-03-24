@@ -81,7 +81,7 @@ function generateImports(imports: Import[], fileNode: CompositeGeneratorNode) {
                     if(func.altName) return `${func.function.name} as ${func.altName.name}`
                     else return `${func.function.name}`
                 })
-                .join(", ")} } from ${_import.file};`,
+                .join(", ")} } from '${_import.file}';`,
             NL
         )
     );
