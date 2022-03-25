@@ -3,6 +3,7 @@ import {
     ValidationCheck,
     ValidationRegistry,
 } from "langium";
+
 import {
 
     Component,
@@ -54,6 +55,10 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
     }
 }
 
+export namespace IssueCodes {
+    export const VarNameUpperCase = 'var-name-uppercase';
+}
+
 /**
  * Implementation of custom validations.
  */
@@ -65,6 +70,7 @@ export class HotDrinkDslValidator {
                 accept("warning", "Var name should start with lowercase.", {
                     node: _var,
                     property: "name",
+                    code: IssueCodes.VarNameUpperCase,
                 });
             }
         }

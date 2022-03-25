@@ -1,5 +1,6 @@
 import { createDefaultModule, createDefaultSharedModule, DefaultSharedModuleContext, inject, LangiumServices, LangiumSharedServices, Module, PartialLangiumServices } from 'langium';
 import { HotDrinkDslGeneratedModule, HotDrinkDslGeneratedSharedModule } from './generated/module';
+import { HotDrinkDslActionProvider } from './hot-drink-dsl-code-actions';
 import { HotDrinkDslScopeProvider } from './hot-drink-dsl-scope';
 import { HotDrinkDslValidationRegistry, HotDrinkDslValidator } from './hot-drink-dsl-validator';
 
@@ -24,6 +25,9 @@ export type HotDrinkDslServices = LangiumServices & HotDrinkDslAddedServices
  * selected services, while the custom services must be fully specified.
  */
 export const HotDrinkDslModule: Module<HotDrinkDslServices, PartialLangiumServices & HotDrinkDslAddedServices> = {
+    lsp: {
+        CodeActionProvider: () => new HotDrinkDslActionProvider(),
+    },
     validation: {
         ValidationRegistry: (injector) => new HotDrinkDslValidationRegistry(injector),
         HotDrinkDslValidator: () => new HotDrinkDslValidator()
