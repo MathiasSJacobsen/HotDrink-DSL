@@ -37,6 +37,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
                 validator.checkConstraintStartWithLowercase,
                 validator.checkConstraintMethodsHaveUniqueName,
                 validator.checkConstraintMethodsUsesTheSameVars,
+                validator.hintToMakePermutations,
             ],
 
 
@@ -57,6 +58,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
 
 export namespace IssueCodes {
     export const VarNameUpperCase = 'var-name-uppercase';
+    export const Permutations = 'permutations';
 }
 
 /**
@@ -276,6 +278,21 @@ export class HotDrinkDslValidator {
                         property: "name",
                     })
                 }
+            })
+        }
+        
+    }
+    hintToMakePermutations(
+        constraint: Constraint,
+        accept: ValidationAcceptor
+    ): void {
+        if (constraint.methods.length === 1) {
+            console.log(constraint.$containerIndex);
+            accept("hint", "Able to make permutations", {
+                node: constraint.methods[0], 
+                property: "signature", 
+                code: IssueCodes.Permutations,
+                data: constraint.$containerIndex?.toString()!+ "." + constraint.$container.$containerIndex?.toString(), // trengs for quick fix, fant ingen bedre måte å gjøre det
             })
         }
     }
