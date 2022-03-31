@@ -52,6 +52,8 @@ describe("Model validation", () => {
     
                     constraint c1 {
                         method(a, c -> b) => true;
+                        (a, c -> b) => true;
+
                     }
                 }
                 component t {

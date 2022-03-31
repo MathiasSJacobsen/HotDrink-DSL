@@ -31,6 +31,7 @@ describe("Variable validation", () => {
 
                                     constraint c1 {
                                         method(A, C -> b) => true;
+
                                     }
                                 }`;
         const expectation = [
@@ -46,9 +47,9 @@ describe("Variable validation", () => {
         const doc = await helper(documentContent);
         const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
         
-        expect(diagnostics.length).toBe(2)
+        expect(diagnostics.length).toBe(3)
         
-        diagnostics.forEach((diagnostic, idx) => {
+        diagnostics.slice(0,-1).forEach((diagnostic, idx) => {
             expect(diagnostic).toEqual(expect.objectContaining({
                 message: expectation[idx].message,
                 severity: expectation[idx].severity,
@@ -63,6 +64,7 @@ describe("Variable validation", () => {
 
                                     constraint c1 {
                                         method(a, b -> c) => true;
+                                        (a, c -> b) => true;
                                     }
                                 }`;
         const doc = await helper(documentContent);

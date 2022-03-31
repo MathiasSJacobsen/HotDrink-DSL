@@ -15,7 +15,8 @@ describe("Method validation", () => {
             var c;
         
             constraint g {
-                Method(a, b -> c) => true;                
+                Method(a, b -> c) => true;  
+                m(a, c -> b) => true;
             }
         }`;
         const expectation = { 

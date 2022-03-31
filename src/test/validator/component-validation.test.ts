@@ -17,6 +17,8 @@ describe("Component validation", () => {
 
                 constraint c1 {
                     method(a -> b) => true;
+                    (a -> b) => true;
+
                 }
             }`;
             const expectation = {
@@ -26,8 +28,6 @@ describe("Component validation", () => {
                 ;
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-
-            expect(diagnostics.length).toBe(1)
 
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
@@ -41,9 +41,12 @@ describe("Component validation", () => {
 
                 constraint c1 {
                     method(a, b -> c) => true;
+                    (a, c -> b) => true;
+
                 }
                 constraint c1 {
                     method(a, b -> c) => false;
+                    (a, c -> b) => true;
                 }
             }`;
             const expectation = {
@@ -54,8 +57,6 @@ describe("Component validation", () => {
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
 
-
-            expect(diagnostics.length).toBe(1)
 
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
@@ -67,12 +68,18 @@ describe("Component validation", () => {
 
                 constraint c1 {
                     method(a, b -> c) => true;
+                    (a, c -> b) => true;
+
                 }
                 constraint c1 {
                     method(a, b -> c) => false;
+                    (a, c -> b) => true;
+
                 }
                 constraint c1 {
                     method(a, b -> c) => true;
+                    (a, c -> b) => true;
+
                 }
             }`;
             const expectation = {
@@ -82,8 +89,6 @@ describe("Component validation", () => {
                 ;
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-
-            expect(diagnostics.length).toBe(2)
 
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
             expect(diagnostics[1]).toEqual(expect.objectContaining(expectation))
@@ -99,6 +104,7 @@ describe("Component validation", () => {
 
                 constraint c1 {
                     method(a -> b) => true;
+                    (b -> a) => true;
                 }
             }`;
 
@@ -116,8 +122,6 @@ describe("Component validation", () => {
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-            
-            expect(diagnostics.length).toBe(1)
 
             expect(diagnostics[0]).toEqual(expect.objectContaining({
                 range: expect.objectContaining({
@@ -134,27 +138,29 @@ describe("Component validation", () => {
 
                 constraint c1 {
                     method(a, b -> c) => true;
+                    (a, c -> b) => true;
+
                 }
                 constraint c1 {
-                    method(a, b -> c) => false;
+                    (a, b -> c) => false;
+                    method(a, c -> b) => true;
+
                 }
             }`;
             const expectation = {
                 range: { 
                     start: { 
                         character: 27, 
-                        line: 8
+                        line: 10
                     },
                     end: {
                         character: 29, 
-                        line: 8 
+                        line: 10
                     } 
                 }
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-            
-            expect(diagnostics.length).toBe(1)
 
             expect(diagnostics[0]).toEqual(expect.objectContaining({
                 range: expect.objectContaining({
@@ -173,7 +179,8 @@ describe("Component validation", () => {
                 var p;
             
                 constraint c {
-                    method(a, b -> c) => true;
+                    method(a, c -> b) => true;
+                    m(a, b -> c) => true;
                 }
             }`;
             const expectation = {
@@ -197,6 +204,8 @@ describe("Component validation", () => {
             
                 constraint c {
                     method(a, b -> c) => false;
+                    (a, c -> b) => true;
+
                 }
             }`;
             const expectation = {
@@ -216,8 +225,6 @@ describe("Component validation", () => {
             
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-
-            expect(diagnostics.length).toBe(1)
 
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })

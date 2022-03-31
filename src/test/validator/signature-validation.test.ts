@@ -24,8 +24,9 @@ describe("Signature validation", () => {
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
+            console.log(diagnostics);
             
-            expect(diagnostics.length).toBe(1)
+            expect(diagnostics.length).toBe(2)
             
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
@@ -45,7 +46,7 @@ describe("Signature validation", () => {
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
             
-            expect(diagnostics.length).toBe(1)
+            expect(diagnostics.length).toBe(2)
             
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
@@ -57,7 +58,8 @@ describe("Signature validation", () => {
                 var c;
                 var b;
                 constraint c {
-                    method(a, b! -> c) => [true, false];
+                    method(a, b! -> c) => true;
+                    (a, c -> b) => false;
                 }
             }`;
             const expectation = { 
