@@ -24,7 +24,6 @@ describe("Signature validation", () => {
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-            console.log(diagnostics);
             
             expect(diagnostics.length).toBe(2)
             
