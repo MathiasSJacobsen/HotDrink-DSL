@@ -80,16 +80,16 @@ export class HotDrinkDslActionProvider implements CodeActionProvider {
         const outVariables = method.signature.outputVariables.map(v => v.ref.ref?.name) as string[];
         const variables = [...inputVariables, ...outVariables];
         
-        const l: string[][] = []
-        getArrayMutations(variables, l);
+        let perm: string[][] = []
+        getArrayMutations(variables, perm);
 
-        const perm = l.filter((v, i) => i % 2 === 0); // Do not need the same permutation with the same input variables
+        //perm = perm.filter((v, i) => i % 2 === 0); // Do not need the same permutation with the same input variables
         const inputs = perm.map(v => v.slice(0,-outVariables.length).join(", "));
         const outputs = perm.map(v => v.slice(-outVariables.length).join(", "));
+
         const title = inputs.map((v, i) => {
             return "    (" + v + " -> " + outputs[i] + ")" +  " => " + "'Implementation missing';"
         }).slice(1); // Slice on so we dont overwrite the first line that has already been written
-        
         return {
             title: 'Make permutations',
             kind: CodeActionKind.QuickFix,
