@@ -65,7 +65,7 @@ export function generateJavaScript(
 }
 
 function generateHotDrinkImports(fileNode: CompositeGeneratorNode) {
-    fileNode.append("import { Component, Method, ConstraintSpec } from 'hotdrink';", NL, NL);
+    fileNode.append("import { Component, Method, ConstraintSpec, MaskNone } from 'hotdrink';", NL, NL);
 }
 
 /**
