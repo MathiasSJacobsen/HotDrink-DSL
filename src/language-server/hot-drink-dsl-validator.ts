@@ -28,10 +28,16 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
         super(services);
         const validator = services.validation.HotDrinkDslValidator;
         const checks: HotDrinkDslChecks = {
-            Variable: validator.checkVarStartsWithLowercase,
+            Vars: [
+                validator.hintToInitializeVariablesToZero
+            ],
+            Variable: [
+                validator.checkVarStartsWithLowercase
+            ],
             Signature: [
                 validator.checkSignatureOnlyReferenceToVarOnce,
-                validator.checkSignatureForExclamationVariables],
+                validator.checkSignatureForExclamationVariables,
+            ],
             Method: validator.checkMethodStartsWithLowercase,
             Constraint: [
                 validator.checkConstraintStartWithLowercase,
@@ -39,14 +45,11 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
                 validator.checkConstraintMethodsUsesTheSameVars,
                 validator.hintToMakePermutations,
             ],
-
-
             Component: [
                 validator.checkComponentConstraintsHaveUniqueName,
                 validator.checkComponentVarsHaveUniqueName,
                 validator.checkComponentForUnusedVariables,
             ],
-
             Model: [
                 validator.checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement,
                 validator.checkModelComponentNameIsUnique,
@@ -59,6 +62,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
 export namespace IssueCodes {
     export const VarNameUpperCase = 'var-name-uppercase';
     export const Permutations = 'permutations';
+    export const InitiateVariablesToZero = 'initiate-variables-to-zero';
 }
 
 /**
@@ -292,6 +296,20 @@ export class HotDrinkDslValidator {
                 property: "signature", 
                 code: IssueCodes.Permutations,
                 data: constraint.$containerIndex?.toString()!+ "." + constraint.$container.$containerIndex?.toString(), // trengs for quick fix, fant ingen bedre måte å gjøre det
+            })
+        }
+    }
+
+    hintToInitializeVariablesToZero(
+        vars: Vars,
+        accept: ValidationAcceptor
+    ): void {
+        if (vars.vars.every(varRef => varRef.initValue === undefined)) {
+            accept("hint", "Able to initialize all variables to zero", {
+                node: vars,
+                property: "vars",
+                code: IssueCodes.InitiateVariablesToZero,
+                data: vars.$container.$containerIndex?.toString() + "." + vars.$containerIndex?.toString()  // trengs for quick fix, fant ingen bedre måte å gjøre det
             })
         }
     }
