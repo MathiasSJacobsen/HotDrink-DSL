@@ -218,7 +218,8 @@ export class HotDrinkDslValidator {
                     _var.vars.map(_v => {
                         if (!usedVariables.has(_v.name)) {
                             accept("warning", `Variable not in use.`, {
-                                node: _var
+                                node: _v,
+                                property: "name"
                             })
                         }
                     })
