@@ -3,7 +3,7 @@
 import { parseHelper } from "langium/lib/test"
 import { Model } from "../../language-server/generated/ast";
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
-import { ERRORSEVERITY, WARNINGSEVERITY } from "../test-utils";
+import { ERRORSEVERITY, HINTSERVERITY, WARNINGSEVERITY } from "../test-utils";
 
 const services = createHotDrinkDslServices().hotdrinkDSL;
 const helper = parseHelper<Model>(services);
@@ -49,8 +49,7 @@ describe("Constraint validation", () => {
                 }
             ;
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-        
+            const diagnostics = (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
             diagnostics.forEach((diagnostic) => {
                 expect(diagnostic).toEqual(expect.objectContaining(expectation))
             })
@@ -59,7 +58,6 @@ describe("Constraint validation", () => {
             const documentContent = `component T {
                 var a = true, b, c;
 
-            
                 constraint g {
                     method(a, b -> c) => true;
                     m(a, c -> b) => true;
@@ -71,7 +69,7 @@ describe("Constraint validation", () => {
                 }
             }`;
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
+            const diagnostics = (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
             
             expect(diagnostics.length).toBe(0)
         })
@@ -95,7 +93,7 @@ describe("Constraint validation", () => {
                 severity: WARNINGSEVERITY
             };
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
+            const diagnostics = await (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
             
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
@@ -115,7 +113,7 @@ describe("Constraint validation", () => {
                 severity: WARNINGSEVERITY
             };
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
+            const diagnostics = await (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
             
             expect(diagnostics.length).toBe(2)
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
@@ -134,7 +132,7 @@ describe("Constraint validation", () => {
             }`;
 
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
+            const diagnostics = (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
             
             expect(diagnostics.length).toBe(0)
         })
@@ -162,7 +160,7 @@ describe("Constraint validation", () => {
                 }
             };
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
+            const diagnostics = (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
             
             expect(diagnostics[0]).toEqual(expect.objectContaining({
                 range: expect.objectContaining({
@@ -188,10 +186,32 @@ describe("Constraint validation", () => {
                 severity: ERRORSEVERITY
             };
             const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
+            const diagnostics = (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === ERRORSEVERITY);
             
             expect(diagnostics.length).toBe(1)
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
     })
+    describe("hints", () => {
+        it("remove constraint hint", async()=> {
+            const documentContent = `component T {
+                var a = true, b, c;
+            
+                constraint g {
+                    method(a, b -> c) => true;
+                    m(a, c -> b) => false;
+                }
+            }`;
+
+            const expectation = { 
+                message: "Able to remove constraint", 
+                severity: HINTSERVERITY
+            };
+            const doc = await helper(documentContent);
+            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
+            
+            expect(diagnostics.length).toBe(1)
+            expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
+        })
+    });
 })

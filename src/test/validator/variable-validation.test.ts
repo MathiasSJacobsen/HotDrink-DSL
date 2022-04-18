@@ -81,8 +81,8 @@ describe("Variable validation", () => {
       const diagnostics =
         await services.validation.DocumentValidator.validateDocument(doc);
 
-      expect(diagnostics.length).toBe(3);
-
+      expect(diagnostics.length).toBe(4);
+      diagnostics.pop()
       expect(diagnostics.pop()).toEqual(
         expect.objectContaining(expectation.pop())
       );
@@ -134,7 +134,7 @@ describe("Variable validation", () => {
       const diagnostics =
         await services.validation.DocumentValidator.validateDocument(doc);
 
-      expect(diagnostics.length).toBe(1);
+      expect(diagnostics.length).toBe(2);
       expect(diagnostics[0]).toEqual(expect.objectContaining(expectation));
     });
   });

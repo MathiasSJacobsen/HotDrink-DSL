@@ -73,9 +73,7 @@ describe("Model validation", () => {
 
           const doc = await helper(documentContent);
           const diagnostics =
-            await services.hotdrinkDSL.validation.DocumentValidator.validateDocument(
-              doc
-            );
+            await (await services.hotdrinkDSL.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
 
           expect(diagnostics.length).toBe(1);
 

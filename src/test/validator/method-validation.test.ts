@@ -9,7 +9,7 @@ const services = createHotDrinkDslServices().hotdrinkDSL;
 const helper = parseHelper<Model>(services);
 describe("Method validation", () => {
   describe("hints", () => {
-    it("get a hint if only one method in a constraint", async () => {
+    it("get a hint to permute if only one method in a constraint", async () => {
       const documentContent = `component T {
                 var a = true, b, c;
                 
@@ -25,7 +25,7 @@ describe("Method validation", () => {
       const diagnostics =
         await services.validation.DocumentValidator.validateDocument(doc);
 
-      expect(diagnostics.length).toBe(1);
+      expect(diagnostics.length).toBe(2);
       expect(diagnostics[0]).toEqual(expect.objectContaining(expectation));
     });
   });
@@ -34,7 +34,6 @@ describe("Method validation", () => {
       const documentContent = `component T {
             var a = true, b, c;
 
-        
             constraint g {
                 Method(a, b -> c) => true;  
                 m(a, c -> b) => true;
@@ -46,7 +45,7 @@ describe("Method validation", () => {
       };
       const doc = await helper(documentContent);
       const diagnostics =
-        await services.validation.DocumentValidator.validateDocument(doc);
+        (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
 
       expect(diagnostics.length).toBe(1);
       expect(diagnostics[0]).toEqual(expect.objectContaining(expectation));

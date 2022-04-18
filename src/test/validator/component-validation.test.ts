@@ -1,7 +1,7 @@
 import { parseHelper } from "langium/lib/test"
 import { Model } from "../../language-server/generated/ast";
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
-import { ERRORSEVERITY, WARNINGSEVERITY } from "../test-utils";
+import { ERRORSEVERITY, HINTSERVERITY, WARNINGSEVERITY } from "../test-utils";
 
 const services = createHotDrinkDslServices().hotdrinkDSL;
 const helper = parseHelper<Model>(services);
@@ -178,17 +178,21 @@ describe("Component validation", () => {
                     m(a, b -> c) => true;
                 }
             }`;
-            const expectation = {
+            const expectation = [{
                 message: "Variable not in use.",
                 severity: WARNINGSEVERITY
+            }, {
+                message: "Able to remove constraint",
+                severity: HINTSERVERITY
             }
-                ;
+        ];
+            ;
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
 
-            expect(diagnostics.length).toBe(1)
+            expect(diagnostics.length).toBe(2)
 
-            expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
+            expect(diagnostics.pop()).toEqual(expect.objectContaining(expectation.pop()))
         })
         it("shows the waring at the right variable", async () => {
             const documentContent = `component T {
