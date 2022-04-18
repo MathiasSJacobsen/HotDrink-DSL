@@ -27,6 +27,8 @@ export class HotDrinkDslActionProvider implements CodeActionProvider {
                 return this.makePermutations(diagnostic, document)
             case IssueCodes.InitiateVariablesToZero:
                 return this.initiateVariablesToZero(diagnostic, document)
+            case IssueCodes.RemoveConstraint:
+                return this.removeConstraint(diagnostic, document)
             default:
                 return undefined;
         }
@@ -123,6 +125,24 @@ export class HotDrinkDslActionProvider implements CodeActionProvider {
                     [document.textDocument.uri]: [{
                         range,
                         newText: `var ${names.join(": number = 0, ")}: number = 0;`
+                    }]
+                }
+            }
+        };
+    }
+
+    private removeConstraint(diagnostic: Diagnostic, document: LangiumDocument): CodeAction {
+        const range = diagnostic.range;
+        return {
+            title: 'Remove constraint',
+            kind: CodeActionKind.QuickFix,
+            diagnostics: [diagnostic],
+            isPreferred: false,
+            edit: {
+                changes: {
+                    [document.textDocument.uri]: [{
+                        range,
+                        newText: ""
                     }]
                 }
             }

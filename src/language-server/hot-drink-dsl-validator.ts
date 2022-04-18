@@ -44,6 +44,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
                 validator.checkConstraintMethodsHaveUniqueName,
                 validator.checkConstraintMethodsUsesTheSameVars,
                 validator.hintToMakePermutations,
+                validator.hintToRemoveConstraint,
             ],
             Component: [
                 validator.checkComponentConstraintsHaveUniqueName,
@@ -63,6 +64,7 @@ export namespace IssueCodes {
     export const VarNameUpperCase = 'var-name-uppercase';
     export const Permutations = 'permutations';
     export const InitiateVariablesToZero = 'initiate-variables-to-zero';
+    export const RemoveConstraint = 'remove-constraint';
 }
 
 /**
@@ -311,6 +313,19 @@ export class HotDrinkDslValidator {
                 property: "vars",
                 code: IssueCodes.InitiateVariablesToZero,
                 data: vars.$container.$containerIndex?.toString() + "." + vars.$containerIndex?.toString()  // trengs for quick fix, fant ingen bedre måte å gjøre det
+            })
+        }
+    }
+
+    hintToRemoveConstraint(
+        constraint: Constraint, 
+        accept: ValidationAcceptor
+    ): void {
+        if (constraint) {
+            accept("hint", "Able to remove constraint", {
+                node: constraint,
+                code: IssueCodes.RemoveConstraint,
+                data: constraint.$container.$containerIndex?.toString() + "." + constraint.$containerIndex?.toString()
             })
         }
     }
