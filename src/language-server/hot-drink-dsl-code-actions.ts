@@ -62,7 +62,7 @@ export class HotDrinkDslActionProvider implements CodeActionProvider {
 
     private makePermutations(diagnostic: Diagnostic, document: LangiumDocument): CodeAction {
         const range = diagnostic.range;
-        function getArrayMutations(arr:string[], perms: string[][] = [], len = arr.length) {
+        function getArrayMutations(arr:string[], perms: string[][] = [], len = arr.length): string[][] {
             if (len === 1) perms.push(arr.slice(0))
           
             for (let i = 0; i < len; i++) {
