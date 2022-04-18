@@ -12,9 +12,7 @@ describe("Constraint validation", () => {
     describe("Name starts with lowercase", () => {
         it('gets a warning if constraint name starts with uppercase letter', async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
+                var a = true, b, c;
             
                 constraint G {
                     method(a, b -> c) => true;
@@ -33,9 +31,8 @@ describe("Constraint validation", () => {
         })
         it("gets two warnings if both constraints have a uppercase starting letter", async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
+                var a = true, b, c;
+
             
                 constraint G {
                     method(a, b -> c) => true;
@@ -60,9 +57,8 @@ describe("Constraint validation", () => {
         })
         it("gets get no waring if everything is ok", async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
+                var a = true, b, c;
+
             
                 constraint g {
                     method(a, b -> c) => true;
@@ -84,9 +80,8 @@ describe("Constraint validation", () => {
     describe("All methods inside a constraint should have a unique name", () => {
         it("gets a warning if two methods have the same name", async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
+                var a = true, b, c;
+
             
                 constraint g {
                     method(a, b -> c) => true;
@@ -106,9 +101,7 @@ describe("Constraint validation", () => {
         })
         it("gets two warnings if tree methods have the same name", async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
+                var a = true, b, c;
             
                 constraint g {
                     method(a, b -> c) => true;
@@ -131,9 +124,7 @@ describe("Constraint validation", () => {
         })
         it("gets nothing if all good", async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
+                var a = true, b, c;
             
                 constraint g {
                     method(a, b -> c) => true;
@@ -151,9 +142,7 @@ describe("Constraint validation", () => {
     describe('Range', () => {
         it('Methods', async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
+                var a = true, b, c;
             
                 constraint g {
                     m1(a, b -> c) => true;
@@ -164,11 +153,11 @@ describe("Constraint validation", () => {
                 range: { 
                     start: { 
                         character: 20, 
-                        line: 7
+                        line: 5
                     },
                     end: {
                         character: 22, 
-                        line: 7
+                        line: 5
                     } 
                 }
             };
@@ -186,9 +175,7 @@ describe("Constraint validation", () => {
     describe("All methods inside a constraint uses the same variables", () => {
         it("get a error if not all methods inside a constraint uses the same variables", async()=> {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
+                var a = true, b, c;
             
                 constraint g {
                     method(a, b -> c) => true;

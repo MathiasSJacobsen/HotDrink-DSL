@@ -11,9 +11,9 @@ describe("Component validation", () => {
     describe("Every var in a component must have a unique name", () => {
         it('gets a error if two vars have the same name property', async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var a;
+                var a = true;
+                var b = false;
+                var a = true;
 
                 constraint c1 {
                     method(a -> b) => true;
@@ -62,9 +62,7 @@ describe("Component validation", () => {
         })
         it('gets a warning if more then two constraint have the same name property', async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
+                var a = true, b, c;
 
                 constraint c1 {
                     method(a, b -> c) => true;
@@ -98,13 +96,13 @@ describe("Component validation", () => {
     describe('Range', () => {
         it('variable range', async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var a;
+                var a = true;
+                var b = false;
+                var a = true;
 
                 constraint c1 {
                     method(a -> b) => true;
-                    (b -> a) => true;
+                    (b -> a) => false;
                 }
             }`;
 
@@ -132,9 +130,7 @@ describe("Component validation", () => {
         })
         it('constraint range', async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
+                var a = true, b, c;
 
                 constraint c1 {
                     method(a, b -> c) => true;
@@ -151,11 +147,11 @@ describe("Component validation", () => {
                 range: { 
                     start: { 
                         character: 27, 
-                        line: 10
+                        line: 8
                     },
                     end: {
                         character: 29, 
-                        line: 10
+                        line: 8
                     } 
                 }
             };
@@ -173,10 +169,9 @@ describe("Component validation", () => {
     describe("Unused variables", () => {
         it('gets a warning when a variable is not in use by any method', async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
-                var p;
+                var a = true, b, c;
+
+                var p = 1;
             
                 constraint c {
                     method(a, c -> b) => true;
@@ -197,10 +192,9 @@ describe("Component validation", () => {
         })
         it("shows the waring at the right variable", async () => {
             const documentContent = `component T {
-                var a;
-                var b;
-                var c;
-                var p;
+                var a = true, b, c;
+
+                var p = 0;
             
                 constraint c {
                     method(a, b -> c) => false;
@@ -213,12 +207,12 @@ describe("Component validation", () => {
                 severity: WARNINGSEVERITY,
                 range: {
                     end: {
-                        character: 22,
-                        line: 4,
+                        character: 21,
+                        line: 3,
                     },
                     start: {
-                        character: 16,
-                        line: 4,
+                        character: 20,
+                        line: 3,
                     },
                 }
             };

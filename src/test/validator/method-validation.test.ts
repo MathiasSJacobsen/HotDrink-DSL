@@ -10,10 +10,8 @@ const helper = parseHelper<Model>(services);
 describe("Method validation", () => {
     it('get a hint if only one method in a constraint', async () => {
         const documentContent = `component T {
-            var a;
-            var b;
-            var c;
-        
+            var a = true, b, c;
+
             constraint g {
                 method(a, b -> c) => true;  
             }
@@ -31,9 +29,8 @@ describe("Method validation", () => {
     });
     it('gets a warning if method name starts with uppercase letter', async () => {
         const documentContent = `component T {
-            var a;
-            var b;
-            var c;
+            var a = true, b, c;
+
         
             constraint g {
                 Method(a, b -> c) => true;  

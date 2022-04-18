@@ -46,9 +46,7 @@ describe("Model validation", () => {
             it("gets a warning if two components have the same name", async () => {
                 const documentContent = `
                 component t {
-                    var a;
-                    var b;
-                    var c;
+                    var a = true, b, c;
     
                     constraint c1 {
                         method(a, c -> b) => true;

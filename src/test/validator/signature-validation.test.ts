@@ -11,8 +11,8 @@ describe("Signature validation", () => {
 
         it("gets a error if signature contains same variable twice (input)",async () => {
             const documentContent = `component T {
-                var a;
-                var c;
+                var a = true;
+                var c = false;
                 
                 constraint c {
                     method(a, a -> c) => true;
@@ -25,14 +25,12 @@ describe("Signature validation", () => {
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
             
-            expect(diagnostics.length).toBe(2)
-            
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
         it("gets a error if argument contains same variable twice (output)",async () => {
             const documentContent = `component t {
-                var a;
-                var c;
+                var a = true;
+                var c = false;
                 
                 constraint c {
                     method(a -> c, c) => [true, false];
@@ -45,17 +43,15 @@ describe("Signature validation", () => {
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
             
-            expect(diagnostics.length).toBe(2)
-            
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
     })
     describe('Variables inside a signature with <b>!</b> should be warned about', () => {
         it('gets a waring if ! in use', async () => {
             const documentContent = `component t {
-                var a;
-                var c;
-                var b;
+                var a = true;
+                var b = false;
+                var c = false;
                 constraint c {
                     method(a, b! -> c) => true;
                     (a, c -> b) => false;
@@ -67,8 +63,6 @@ describe("Signature validation", () => {
             };
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-            
-            expect(diagnostics.length).toBe(1)
             
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
