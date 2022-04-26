@@ -142,16 +142,16 @@
     "bin": {
         "hot-drink-dsl-cli": "./bin/cli"
     },
-    "main": "./webpackout/extension.js",
+    "main": "./pack/extension.js",
     "scripts": {
         "vscode:prepublish": "npm run build && npm run lint",
         "build": "tsc -b tsconfig.json",
+        "build:webpack": "webpack --mode=development",
         "watch": "tsc -b tsconfig.json --watch",
         "lint": "eslint src --ext ts",
         "langium:generate": "langium generate",
         "langium:watch": "langium generate --watch",
-        "test": "jest",
-        "build_wp": "webpack --mode=development"
+        "test": "jest"
     },
     "dependencies": {
         "reflect-metadata": "^0.1.13",

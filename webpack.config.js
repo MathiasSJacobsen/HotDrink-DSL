@@ -1,113 +1,114 @@
 // @ts-check
-const path = require('path');
+const path = require("path");
 
-const outputPath = path.resolve(__dirname, 'webpackout');
+const outputPath = path.resolve(__dirname, "pack");
 
 /**@type {import('webpack').Configuration}*/
 const webviewConfig = {
-    target: 'web',
+    watch: true,
+    target: "web",
 
-    entry: path.resolve(__dirname, 'src/webview/main.ts'),
+    entry: path.resolve(__dirname, "src/webview/main.ts"),
     output: {
-		filename: 'webview.js',
-        path: outputPath
+        filename: "webview.js",
+        path: outputPath,
     },
     //devtool: 'eval-source-map',
 
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: [".ts", ".tsx", ".js"],
     },
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: ['ts-loader']
+                use: ["ts-loader"],
             },
             /* {
-                test: /\.js$/,
-                use: ['source-map-loader'],
-                enforce: 'pre'
-            }, */
+                      test: /\.js$/,
+                      use: ['source-map-loader'],
+                      enforce: 'pre'
+                  }, */
             {
                 test: /\.css$/,
                 exclude: /\.useable\.css$/,
-                use: ['style-loader', 'css-loader']
+                use: ["style-loader", "css-loader"],
             },
             {
                 test: /\.(ttf)$/,
-                loader: 'file-loader',
+                loader: "file-loader",
                 options: {
-                    name: '[name].[ext]',
-                    outputPath: '',
-                    publicPath: '..',
+                    name: "[name].[ext]",
+                    outputPath: "",
+                    publicPath: "..",
                     postTransformPublicPath: (p) => `__webpack_public_path__ + ${p}`,
-                }
+                },
             },
-        ]
-    }
+        ],
+    },
 };
 
 /**@type {import('webpack').Configuration}*/
 const languageServerConfig = {
-    target: 'node',
-
-    entry: path.resolve(__dirname, 'src/language-server/main.ts'),
+    watch: true,
+    target: "node",
+    entry: path.resolve(__dirname, "src/language-server/main.ts"),
     output: {
-		filename: 'language-server.js',
-        path: outputPath
+        filename: "language-server.js",
+        path: outputPath,
     },
-    devtool: 'nosources-source-map',
+    devtool: "nosources-source-map",
 
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: [".ts", ".js"],
     },
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: ['ts-loader']
+                use: ["ts-loader"],
             },
             /* {
-                test: /\.js$/,
-                use: ['source-map-loader'],
-                enforce: 'pre'
-            } */
-        ]
-    }
+                      test: /\.js$/,
+                      use: ['source-map-loader'],
+                      enforce: 'pre'
+                  } */
+        ],
+    },
 };
 
 /**@type {import('webpack').Configuration}*/
 const extensionConfig = {
-    target: 'node', 
-
-    entry: path.resolve(__dirname, 'src/extension.ts'),
-    output: { 
+    watch: true,
+    target: "node",
+    entry: path.resolve(__dirname, "src/extension.ts"),
+    output: {
         path: outputPath,
-        filename: 'extension.js',
+        filename: "extension.js",
         libraryTarget: "commonjs2",
         devtoolModuleFilenameTemplate: "../[resource-path]",
     },
-    devtool: 'source-map',
+    devtool: "source-map",
     externals: {
-        vscode: "commonjs vscode"
+        vscode: "commonjs vscode",
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: [".ts", ".js"],
     },
     module: {
         rules: [
             {
                 test: /\.ts$/,
                 exclude: /node_modules/,
-                use: ['ts-loader']
+                use: ["ts-loader"],
             },
             /* {
-                test: /\.js$/,
-                enforce: 'pre',
-                use: ['source-map-loader'],
-            } */
-        ]
+                      test: /\.js$/,
+                      enforce: 'pre',
+                      use: ['source-map-loader'],
+                  } */
+        ],
     },
-}
+};
 
 module.exports = [webviewConfig, extensionConfig, languageServerConfig];

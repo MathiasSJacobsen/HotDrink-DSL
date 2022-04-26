@@ -1,5 +1,6 @@
 import path from "path";
 import { SprottyDiagramIdentifier, SprottyWebview } from "sprotty-vscode";
+import { SprottyLspWebview } from "sprotty-vscode/lib/lsp";
 import { SprottyLspEditVscodeExtension, LspLabelEditActionHandler, WorkspaceEditActionHandler } from "sprotty-vscode/lib/lsp/editing";
 import * as vscode from "vscode";
 import { CommonLanguageClient, LanguageClientOptions } from "vscode-languageclient";
@@ -25,13 +26,13 @@ export class HotDrinkDSLSprottyVscodeExtension extends SprottyLspEditVscodeExten
     }
 
     createWebView(identifier: SprottyDiagramIdentifier): SprottyWebview {
-        const webview =  new SprottyWebview({
+        const webview =  new SprottyLspWebview({
             extension: this,
             identifier,
             // Root paths from which the webview can load local resources using URIs
-            localResourceRoots: [this.getExtensionFileUri("webpackout")],
+            localResourceRoots: [this.getExtensionFileUri("pack")],
             // Path to the bundled webview implementation
-            scriptUri: this.getExtensionFileUri("webpackout", "webview.js"),
+            scriptUri: this.getExtensionFileUri("pack", "webview.js"),
             // Change this to `true` to enable a singleton view
             singleton: false,
         });
@@ -44,7 +45,7 @@ export class HotDrinkDSLSprottyVscodeExtension extends SprottyLspEditVscodeExten
     protected activateLanguageClient(
         context: vscode.ExtensionContext
     ): CommonLanguageClient {
-        const serverModule = context.asAbsolutePath(path.join('webpackout', 'language-server'));
+        const serverModule = context.asAbsolutePath(path.join('pack', 'language-server'));
         // The debug options for the server
         // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging.
         // By setting `process.env.DEBUG_BREAK` to a truthy value, the language server will wait until a debugger is attached.
