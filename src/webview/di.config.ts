@@ -13,7 +13,7 @@ import { CustomRouter } from './custom-edge-router';
 import { CreateTransitionPort, StatesEdge, StatesNode } from './model';
 import { PolylineArrowEdgeView, TriangleButtonView } from './views';
 
-const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
+const hotDrinkDSLDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
     rebind(TYPES.LogLevel).toConstantValue(LogLevel.warn);
     rebind(ManhattanEdgeRouter).to(CustomRouter).inSingletonScope();
@@ -41,10 +41,10 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     configureCommand(context, CreateElementCommand);
 });
 
-export function createStateDiagramContainer(widgetId: string): Container {
+export function createHotDrinkDSLDiagramContainer(widgetId: string): Container {
     const container = new Container();
     loadDefaultModules(container, { exclude: [ labelEditUiModule ] });
-    container.load(statesDiagramModule);
+    container.load(hotDrinkDSLDiagramModule);
     overrideViewerOptions(container, {
         needsClientLayout: true,
         needsServerLayout: true,

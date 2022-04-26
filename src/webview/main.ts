@@ -5,14 +5,14 @@ import { Container } from 'inversify';
 import { configureModelElement } from 'sprotty';
 import { SprottyDiagramIdentifier } from 'sprotty-vscode-webview';
 import { SprottyLspEditStarter } from 'sprotty-vscode-webview/lib/lsp/editing';
-import { createStateDiagramContainer } from './di.config';
+import { createHotDrinkDSLDiagramContainer } from './di.config';
 import { PaletteButtonView } from './html-views';
 import { PaletteButton } from 'sprotty-vscode-webview/lib/lsp/editing';
 
 export class StatesSprottyStarter extends SprottyLspEditStarter {
     
     createContainer(diagramIdentifier: SprottyDiagramIdentifier) {
-        return createStateDiagramContainer(diagramIdentifier.clientId);
+        return createHotDrinkDSLDiagramContainer(diagramIdentifier.clientId);
     }
 
     protected addVscodeBindings(container: Container, diagramIdentifier: SprottyDiagramIdentifier): void {
