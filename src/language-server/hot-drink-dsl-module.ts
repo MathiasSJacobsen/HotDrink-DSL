@@ -1,4 +1,6 @@
-import { createDefaultModule, createDefaultSharedModule, DefaultSharedModuleContext, inject, LangiumServices, LangiumSharedServices, Module, PartialLangiumServices } from 'langium';
+import { createDefaultModule, createDefaultSharedModule, DefaultSharedModuleContext, inject, LangiumServices, Module, PartialLangiumServices } from 'langium';
+import { LangiumSprottySharedServices, SprottyDiagramServices, SprottySharedModule } from 'langium-sprotty';
+import { HotDrinkDslDiagramGenerator } from '../sprotty/diagram-generator';
 import { HotDrinkDslGeneratedModule, HotDrinkDslGeneratedSharedModule } from './generated/module';
 import { HotDrinkDslActionProvider } from './hot-drink-dsl-code-actions';
 import { HotDrinkDslScopeProvider } from './hot-drink-dsl-scope';
@@ -24,7 +26,10 @@ export type HotDrinkDslServices = LangiumServices & HotDrinkDslAddedServices
  * declared custom services. The Langium defaults can be partially specified to override only
  * selected services, while the custom services must be fully specified.
  */
-export const HotDrinkDslModule: Module<HotDrinkDslServices, PartialLangiumServices & HotDrinkDslAddedServices> = {
+export const HotDrinkDslModule: Module<HotDrinkDslServices, PartialLangiumServices & HotDrinkDslAddedServices & SprottyDiagramServices> = {
+    diagram: {
+        DiagramGenerator: (services) => new HotDrinkDslDiagramGenerator(services),
+    },
     lsp: {
         CodeActionProvider: () => new HotDrinkDslActionProvider(),
     },
@@ -45,13 +50,14 @@ export const HotDrinkDslModule: Module<HotDrinkDslServices, PartialLangiumServic
  *  - Services specified in this file
  */
 export function createHotDrinkDslServices(context?: DefaultSharedModuleContext): {
-    shared: LangiumSharedServices,
+    shared: LangiumSprottySharedServices,
     hotdrinkDSL: HotDrinkDslServices
 } {
 
     const shared = inject(
         createDefaultSharedModule(context),
-        HotDrinkDslGeneratedSharedModule
+        HotDrinkDslGeneratedSharedModule,
+        SprottySharedModule
     )
 
     const hotdrinkDSL = inject(
