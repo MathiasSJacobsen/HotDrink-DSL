@@ -1,6 +1,6 @@
 import { GeneratorContext, LangiumDiagramGenerator } from "langium-sprotty";
 import { SModelRoot, SNode, SLabel, SPort, SEdge } from "sprotty-protocol";
-import { Component, Model, Variable } from "../language-server/generated/ast";
+import { Component, Model, NumberValueExpr, Variable } from "../language-server/generated/ast";
 
 
 export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
@@ -84,6 +84,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
         const targetId = idCache.getId(variable);
         console.log(`Adding edge between ${sourceId} and ${targetId}`)
         const edgeId = idCache.uniqueId(`${sourceId}:${variable.name}:${targetId}`, variable);
+        const text = variable.initValue?.$type ? (variable.initValue as NumberValueExpr).digit : "undefined"
         return {
             type: 'edge',
             id: edgeId,
@@ -93,10 +94,9 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
                 <SLabel>{
                     type: 'label:xref',
                     id: idCache.uniqueId(edgeId + '.label'),
-                    text: variable.name,
+                    text: text,
                 }
             ]
         };
-    
     }
 }
