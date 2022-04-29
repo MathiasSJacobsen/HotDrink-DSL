@@ -182,26 +182,4 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
             }
         };
     }
-/*
-    protected generateEdge(variable: Variable, { idCache }: GeneratorContext<Model>): SEdge {
-        const sourceId = idCache.getId(variable.$container.$container);
-        const targetId = idCache.getId(variable);
-        console.log(`Adding edge between ${sourceId} and ${targetId}`)
-        const edgeId = idCache.uniqueId(`${sourceId}:${variable.name}:${targetId}`, variable);
-        const text = variable.initValue?.$type ? (variable.initValue as NumberValueExpr).digit : "undefined"
-        return {
-            type: 'edge',
-            id: edgeId,
-            sourceId: sourceId!,
-            targetId: targetId!,
-            children: [
-                <SLabel>{
-                    type: 'label:xref',
-                    id: idCache.uniqueId(edgeId + '.label'),
-                    text: text,
-                }
-            ]
-        };
-    }
-    */
 }
