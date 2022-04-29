@@ -1,7 +1,7 @@
 import { AstNode } from "langium";
 import { GeneratorContext, IdCache, LangiumDiagramGenerator } from "langium-sprotty";
 import { SModelRoot, SNode, SLabel, SPort, SEdge } from "sprotty-protocol";
-import { Component, Constraint, isConstraint, isMethod, isVariable, isVariableReference, Method, Model, Variable } from "../language-server/generated/ast";
+import { Component, Constraint, isConstraint, isMethod, isVariableReference, Method, Model, Variable } from "../language-server/generated/ast";
 
 
 export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
