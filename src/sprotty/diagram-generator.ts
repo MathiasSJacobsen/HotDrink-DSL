@@ -19,7 +19,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
             ...model.components.flatMap(component => component.constraints.flatMap(constraint => this.generateEdge(constraint, args))),
             ...model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.map(method => this.generateEdge(method, args)))),
             ...model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.flatMap(method => method.signature.inputVariables.map(variableRef => this.generateEdge(variableRef, args))))),
-            ...model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.flatMap(method => method.signature.outputVariables.map(variableRef => this.generateEdge(variableRef, args))))),
+            ...model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.flatMap(method => method.signature.outputVariables.map(variableRef => this.generateEdge(variableRef, args, true))))),
         ]
         return {
             type: "graph",
@@ -34,8 +34,8 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
         };
     }
     
-        protected generateEdge<T extends AstNode>(node: T, { idCache }: GeneratorContext<Model>): SEdge {
-            const [sourceId, targetId] = this.generateSourceAndTargetIds(node, idCache );
+        protected generateEdge<T extends AstNode>(node: T, { idCache }: GeneratorContext<Model>, _switch?: boolean): SEdge {
+            const [sourceId, targetId] = this.generateSourceAndTargetIds(node, idCache, _switch);
             console.log(`Adding edge between ${sourceId} and ${targetId}`);
             const edgeId = idCache.uniqueId(`${sourceId}:${targetId}`, node);
 
@@ -54,7 +54,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
                 ]
             };
         }
-        private generateSourceAndTargetIds<T extends AstNode>(node: T, idCache: IdCache<AstNode>) {
+        private generateSourceAndTargetIds<T extends AstNode>(node: T, idCache: IdCache<AstNode>, _switch?: boolean): [string | undefined, string | undefined] {
             let sourceId: string | undefined;
             let targetId: string | undefined;
             if (isConstraint(node)) {
@@ -64,8 +64,13 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
                 sourceId = idCache.getId(node.$container)?.split(':')[1]; // Den overskriver node id'er når det lages en edge mellom; id til constraint bli component:constraint isteden for constraint 
                 targetId = idCache.getId(node);
             } else if (isVariableReference(node)) {
-                sourceId = idCache.getId(node.$container.$container)?.split(':')[1]; // samme som over
-                targetId = idCache.getId(node.ref.ref);
+                if(_switch){
+                    sourceId = idCache.getId(node.$container.$container)?.split(':')[1]; // samme som over
+                    targetId = idCache.getId(node.ref.ref);
+                } else {
+                    targetId = idCache.getId(node.$container.$container)?.split(':')[1]; // samme som over
+                    sourceId = idCache.getId(node.ref.ref);
+                }
             }
             
             return [sourceId, targetId];
