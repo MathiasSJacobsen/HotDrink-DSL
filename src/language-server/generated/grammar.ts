@@ -1015,6 +1015,17 @@ export const HotDrinkDslGrammar = (): Grammar => loadedHotDrinkDslGrammar ||(loa
               },
               {
                 "$type": "Assignment",
+                "feature": "negative",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "-"
+                },
+                "elements": [],
+                "cardinality": "?"
+              },
+              {
+                "$type": "Assignment",
                 "feature": "value",
                 "operator": "=",
                 "terminal": {
@@ -1088,6 +1099,17 @@ export const HotDrinkDslGrammar = (): Grammar => loadedHotDrinkDslGrammar ||(loa
                 "infer": true,
                 "type": "VarRef",
                 "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "negative",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "-"
+                },
+                "elements": [],
+                "cardinality": "?"
               },
               {
                 "$type": "Assignment",

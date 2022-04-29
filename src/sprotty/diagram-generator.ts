@@ -1,7 +1,7 @@
 import { AstNode } from "langium";
 import { GeneratorContext, IdCache, LangiumDiagramGenerator } from "langium-sprotty";
 import { SModelRoot, SNode, SLabel, SPort, SEdge } from "sprotty-protocol";
-import { Component, Constraint, isConstraint, isMethod, Method, Model, Variable } from "../language-server/generated/ast";
+import { Component, Constraint, isConstraint, isMethod, isVariable, isVariableReference, Method, Model, Variable } from "../language-server/generated/ast";
 
 
 export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
@@ -9,16 +9,17 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
     protected generateRoot(args: GeneratorContext<Model>): SModelRoot {
         const { document } = args;
         const model = document.parseResult.value;
-        console.log(`Generating diagram for ${model}`);
+        console.log(`Generating diagram for ${model.$type}`);
 
         const componentNodes = model.components.map(component => this.generateComponentNode(component, args));
         const constraintNodes = model.components.flatMap(component => component.constraints.map(constraint => this.generateConstraintNode(constraint, args)));
         const methodNodes = model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.map(method => this.generateMethodNode(method, args))));
-        // const variableNodes = model.components.flatMap(component => component.variables.flatMap(vars => vars.vars.map(variable => this.generateVariableNode(variable, args))))
-        // const edges = model.components.flatMap(component => component.variables.flatMap(vars => vars.vars.map(variable => this.generateEdge(variable, args))))
+        const variableNodes = model.components.flatMap(component => component.variables.flatMap(vars => vars.vars.map(variable => this.generateVariableNode(variable, args))))
         const edges = [
             ...model.components.flatMap(component => component.constraints.flatMap(constraint => this.generateEdge(constraint, args))),
-            ...model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.map(method => this.generateEdge(method, args))))
+            ...model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.map(method => this.generateEdge(method, args)))),
+            ...model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.flatMap(method => method.signature.inputVariables.map(variableRef => this.generateEdge(variableRef, args))))),
+            ...model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.flatMap(method => method.signature.outputVariables.map(variableRef => this.generateEdge(variableRef, args))))),
         ]
         return {
             type: "graph",
@@ -27,7 +28,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
                 ...componentNodes,
                 ...constraintNodes,
                 ...methodNodes,
-                // ...variableNodes,
+                ...variableNodes,
                 ...edges
             ],
         };
@@ -59,10 +60,12 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
             if (isConstraint(node)) {
                 sourceId = idCache.getId(node.$container);
                 targetId = idCache.getId(node);
-            } if (isMethod(node)) {
+            } else if (isMethod(node)) {
                 sourceId = idCache.getId(node.$container)?.split(':')[1]; // Den overskriver node id'er når det lages en edge mellom; id til constraint bli component:constraint isteden for constraint 
-                console.log(`Source id for ${node.name} is ${sourceId}`);  
                 targetId = idCache.getId(node);
+            } else if (isVariableReference(node)) {
+                sourceId = idCache.getId(node.$container.$container)?.split(':')[1]; // samme som over
+                targetId = idCache.getId(node.ref.ref);
             }
             
             return [sourceId, targetId];
