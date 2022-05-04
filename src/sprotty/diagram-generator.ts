@@ -21,6 +21,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
             ...model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.flatMap(method => method.signature.inputVariables.map(variableRef => this.generateEdge(variableRef, args))))),
             ...model.components.flatMap(component => component.constraints.flatMap(constraint => constraint.methods.flatMap(method => method.signature.outputVariables.map(variableRef => this.generateEdge(variableRef, args, true))))),
         ]
+        
         return {
             type: "graph",
             id: "root" ?? "root",
@@ -54,6 +55,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
                 ]
             };
         }
+
         private generateSourceAndTargetIds<T extends AstNode>(node: T, idCache: IdCache<AstNode>, _switch?: boolean): [string | undefined, string | undefined] {
             let sourceId: string | undefined;
             let targetId: string | undefined;
@@ -81,7 +83,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
         const nodeId = idCache.uniqueId(name, constraint);
         console.log(`Adding constraint node ${nodeId}`);
         return {
-            type: 'node',
+            type: 'node:constraint',
             id: nodeId,
             children: [
                 <SLabel>{
@@ -109,7 +111,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
         const nodeId = idCache.uniqueId(name, method);
         console.log(`Adding method node ${nodeId}`);
         return {
-            type: 'node',
+            type: 'node:method',
             id: nodeId,
             children: [
                 <SLabel>{
@@ -138,7 +140,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
         const nodeId = idCache.uniqueId(variable.name, variable);
         console.log(`Adding variable node ${nodeId}`)
         return {
-            type: 'node',
+            type: 'node:variable',
             id: nodeId,
             children: [
                 <SLabel>{
@@ -165,7 +167,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
         const nodeId = idCache.uniqueId(component.name, component);
         console.log(`Adding component node ${nodeId}`)
         return {
-            type: 'node',
+            type: 'node:component',
             id: nodeId,
             children: [
                 <SLabel>{

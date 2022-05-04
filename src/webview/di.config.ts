@@ -5,13 +5,14 @@ import { Container, ContainerModule } from 'inversify';
 import {
     configureCommand, configureModelElement, ConsoleLogger, CreateElementCommand, HtmlRoot,
     HtmlRootView, LogLevel, ManhattanEdgeRouter, overrideViewerOptions, PreRenderedElement,
-    PreRenderedView, RectangularNodeView, SGraphView, SLabelView, SModelRoot,
+    PreRenderedView, SGraphView, SLabelView, SModelRoot,
     SRoutingHandle, SRoutingHandleView, TYPES, loadDefaultModules, SGraph, SLabel,
     hoverFeedbackFeature, popupFeature, creatingOnDragFeature, editLabelFeature, labelEditUiModule
 } from 'sprotty';
 import { CustomRouter } from './custom-edge-router';
-import { CreateTransitionPort, StatesEdge, StatesNode } from './model';
+import { CreateTransitionPort, HotDrinkEdge, ComponentNode, ConstraintNode, MethodNode, VariableNode } from './model';
 import { PolylineArrowEdgeView, TriangleButtonView } from './views';
+import { ComponentDiamondNodeView, ConstraintCircularNodeView, MethodRectangularNodeView, VariableRectangularNodeView } from './HotDrinkNodeViws';
 
 const hotDrinkDSLDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
@@ -22,14 +23,17 @@ const hotDrinkDSLDiagramModule = new ContainerModule((bind, unbind, isBound, reb
     configureModelElement(context, 'graph', SGraph, SGraphView, {
         enable: [hoverFeedbackFeature, popupFeature]
     });
-    configureModelElement(context, 'node', StatesNode, RectangularNodeView);
+    configureModelElement(context, 'node:component', ComponentNode, ComponentDiamondNodeView);
+    configureModelElement(context, 'node:constraint', ConstraintNode, ConstraintCircularNodeView);
+    configureModelElement(context, 'node:method', MethodNode, MethodRectangularNodeView);
+    configureModelElement(context, 'node:variable', VariableNode, VariableRectangularNodeView);
     configureModelElement(context, 'label', SLabel, SLabelView, {
         enable: [editLabelFeature]
     });
     configureModelElement(context, 'label:xref', SLabel, SLabelView, {
         enable: [editLabelFeature]
     });
-    configureModelElement(context, 'edge', StatesEdge, PolylineArrowEdgeView);
+    configureModelElement(context, 'edge', HotDrinkEdge, PolylineArrowEdgeView);
     configureModelElement(context, 'html', HtmlRoot, HtmlRootView);
     configureModelElement(context, 'pre-rendered', PreRenderedElement, PreRenderedView);
     configureModelElement(context, 'palette', SModelRoot, HtmlRootView);

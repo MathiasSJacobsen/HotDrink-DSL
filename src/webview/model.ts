@@ -1,22 +1,41 @@
 import {
     CreateElementAction, CreatingOnDrag, EdgePlacement, ManhattanEdgeRouter, RectangularNode,
+    DiamondNode, CircularNode,
     RectangularPort, SEdge, SLabel, SRoutableElement
 } from 'sprotty';
 import { Action, SEdge as SEdgeSchema } from 'sprotty-protocol';
 
-export class StatesEdge extends SEdge {
+export class HotDrinkEdge extends SEdge {
     routerKind = ManhattanEdgeRouter.KIND;
     targetAnchorCorrection = Math.sqrt(5);
 }
 
-export class StatesEdgeLabel extends SLabel {
+export class HotDrinkEdgeLabel extends SLabel {
     edgePlacement = <EdgePlacement> {
         rotate: true,
         position: 0.6
     };
 }
 
-export class StatesNode extends RectangularNode {
+export class ComponentNode extends DiamondNode {
+    canConnect(routable: SRoutableElement, role: string) {
+        return true;
+    }
+}
+
+export class ConstraintNode extends CircularNode {
+    canConnect(routable: SRoutableElement, role: string) {
+        return true;
+    }
+}
+
+export class MethodNode extends RectangularNode {
+    canConnect(routable: SRoutableElement, role: string) {
+        return true;
+    }
+}
+
+export class VariableNode extends RectangularNode {
     canConnect(routable: SRoutableElement, role: string) {
         return true;
     }

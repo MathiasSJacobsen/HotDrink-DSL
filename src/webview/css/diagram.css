@@ -1,5 +1,21 @@
 .sprotty-node {
-    fill: var(--vscode-button-background)
+    fill: var(--vscode-button-background);
+}
+
+.sprotty-node#component {
+    fill: green;
+}
+
+.sprotty-node#constraint {
+    fill: rosybrown;
+}
+
+.sprotty-node#method {
+    fill: var(--vscode-button-background);
+}
+
+.sprotty-node#variable {
+    fill: orange;
 }
 
 .sprotty-node.selected {
