@@ -12,7 +12,7 @@ import {
 import { CustomRouter } from './custom-edge-router';
 import { CreateTransitionPort, HotDrinkEdge, ComponentNode, ConstraintNode, MethodNode, VariableNode } from './model';
 import { PolylineArrowEdgeView, TriangleButtonView } from './views';
-import { ComponentDiamondNodeView, ConstraintCircularNodeView, MethodRectangularNodeView, VariableRectangularNodeView } from './HotDrinkNodeViws';
+import { ComponentDiamondNodeView, ConstraintCircularNodeView, MethodRectangularNodeView, VariableRectangularNodeView } from './HotDrinkViews';
 
 const hotDrinkDSLDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
