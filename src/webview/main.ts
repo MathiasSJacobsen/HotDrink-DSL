@@ -9,7 +9,7 @@ import { createHotDrinkDSLDiagramContainer } from './di.config';
 import { PaletteButtonView } from './html-views';
 import { PaletteButton } from 'sprotty-vscode-webview/lib/lsp/editing';
 
-export class StatesSprottyStarter extends SprottyLspEditStarter {
+export class HotDrinkDSLSprottyStarter extends SprottyLspEditStarter {
     
     createContainer(diagramIdentifier: SprottyDiagramIdentifier) {
         return createHotDrinkDSLDiagramContainer(diagramIdentifier.clientId);
@@ -21,4 +21,4 @@ export class StatesSprottyStarter extends SprottyLspEditStarter {
     }
 }
 
-new StatesSprottyStarter();
+new HotDrinkDSLSprottyStarter();
