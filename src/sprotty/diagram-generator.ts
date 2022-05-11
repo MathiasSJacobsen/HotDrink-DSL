@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
 import { GeneratorContext, IdCache, LangiumDiagramGenerator } from "langium-sprotty";
-import { SModelRoot, SNode, SLabel, SPort, SEdge } from "sprotty-protocol";
+import { SModelRoot, SNode, SLabel, SEdge } from "sprotty-protocol";
 import { Component, Constraint, isConstraint, isMethod, isVariableReference, Method, Model, Variable } from "../language-server/generated/ast";
 
 
@@ -90,11 +90,11 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
                     type: 'label',
                     id: idCache.uniqueId(nodeId + '.label'),
                     text: name
-                },
+                },/* 
                 <SPort>{
                     type: 'port',
                     id: idCache.uniqueId(nodeId + '.newTransition')
-                }
+                } */
             ],
             layout: 'stack',
             layoutOptions: {
@@ -119,10 +119,12 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
                     id: idCache.uniqueId(nodeId + '.label'),
                     text: name
                 },
+                /*
                 <SPort>{
                     type: 'port',
                     id: idCache.uniqueId(nodeId + '.newTransition')
                 }
+                */
             ],
             layout: 'stack',
             layoutOptions: {
@@ -148,10 +150,10 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
                     id: idCache.uniqueId(nodeId + '.label'),
                     text: variable.name
                 },
-                <SPort>{
+                /* <SPort>{
                     type: 'port',
                     id: idCache.uniqueId(nodeId + '.newTransition')
-                }
+                } */
             ],
             layout: 'stack',
             layoutOptions: {
@@ -175,10 +177,10 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
                     id: idCache.uniqueId(nodeId + '.label'),
                     text: component.name
                 },
-                <SPort>{
+                /* <SPort>{
                     type: 'port',
                     id: idCache.uniqueId(nodeId + '.newTransition')
-                }
+                } */
             ],
             layout: 'stack',
             layoutOptions: {

@@ -7,11 +7,11 @@ import {
     HtmlRootView, LogLevel, ManhattanEdgeRouter, overrideViewerOptions, PreRenderedElement,
     PreRenderedView, SGraphView, SLabelView, SModelRoot,
     SRoutingHandle, SRoutingHandleView, TYPES, loadDefaultModules, SGraph, SLabel,
-    hoverFeedbackFeature, popupFeature, creatingOnDragFeature, editLabelFeature, labelEditUiModule
+    hoverFeedbackFeature, popupFeature, editLabelFeature, labelEditUiModule
 } from 'sprotty';
 import { CustomRouter } from './custom-edge-router';
-import { CreateTransitionPort, HotDrinkEdge, ComponentNode, ConstraintNode, MethodNode, VariableNode } from './model';
-import { PolylineArrowEdgeView, TriangleButtonView } from './views';
+import { HotDrinkEdge, ComponentNode, ConstraintNode, MethodNode, VariableNode } from './model';
+import { PolylineArrowEdgeView } from './views';
 import { ComponentDiamondNodeView, ConstraintCircularNodeView, MethodRectangularNodeView, VariableRectangularNodeView } from './HotDrinkViews';
 
 const hotDrinkDSLDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
@@ -39,9 +39,9 @@ const hotDrinkDSLDiagramModule = new ContainerModule((bind, unbind, isBound, reb
     configureModelElement(context, 'palette', SModelRoot, HtmlRootView);
     configureModelElement(context, 'routing-point', SRoutingHandle, SRoutingHandleView);
     configureModelElement(context, 'volatile-routing-point', SRoutingHandle, SRoutingHandleView);
-    configureModelElement(context, 'port', CreateTransitionPort, TriangleButtonView, {
+    /* configureModelElement(context, 'port', CreateTransitionPort, TriangleButtonView, {
         enable: [popupFeature, creatingOnDragFeature]
-    });
+    }); */
     configureCommand(context, CreateElementCommand);
 });
 
