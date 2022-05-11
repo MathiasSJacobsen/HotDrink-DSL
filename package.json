@@ -57,7 +57,7 @@
         "commander": "^9.2.0",
         "langium": "^0.3.0",
         "vscode-languageclient": "^8.0.0",
-        "vscode-languageserver": "^7.0.0"
+        "vscode-languageserver": "^8.0.0"
     },
     "devDependencies": {
         "@types/jest": "^27.5.0",
