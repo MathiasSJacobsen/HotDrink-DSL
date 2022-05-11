@@ -1,5 +1,5 @@
 /** @jsx svg */
-import { svg } from 'sprotty/lib/lib/jsx';
+import { svg } from 'sprotty/lib/lib/jsx';
 
 import { VNode } from "snabbdom";
 import { IViewArgs, RenderingContext } from "sprotty/lib/base/views/view";
@@ -10,7 +10,6 @@ import { ShapeView } from 'sprotty/lib/features/bounds/views';
 import { Hoverable } from 'sprotty/lib/features/hover/model';
 import { Selectable } from 'sprotty/lib/features/select/model';
 import { Diamond } from 'sprotty/lib/utils/geometry';
-
 import { injectable } from 'inversify';
 
 
