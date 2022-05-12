@@ -134,7 +134,7 @@ export class HotDrinkDslValidator {
             const numberOfElementsSignature = method.signature.outputVariables.length;
 
             if ((method.body.value && numberOfElementsSignature !== 1) ||  !method.body.value && method.body.values.length !== numberOfElementsSignature) {
-                accept("error", "The body of the method needs to return the same number of variables that there are output-variables", {
+                accept("error", "The body of the method needs to return the same number of variables that there are output-variables.", {
                     node: method.body
                 })
             }
