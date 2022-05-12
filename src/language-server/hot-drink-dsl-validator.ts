@@ -102,7 +102,7 @@ export class HotDrinkDslValidator {
             const inputVariablesRef = signature.inputVariables
             inputVariablesRef.forEach((element: VariableReference) => {
                 if (element.hasMark) {
-                    accept("info", "Experimental feature, may not work", { node: element, property: "hasMark" })
+                    accept("info", "<feature not implemented>", { node: element, property: "hasMark" })
                 }
             })
         }
