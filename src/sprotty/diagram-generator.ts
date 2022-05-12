@@ -4,6 +4,8 @@ import { SModelRoot, SNode, SLabel, SEdge } from "sprotty-protocol";
 import { Component, Constraint, isConstraint, isMethod, isVariableReference, Method, Model, Variable } from "../language-server/generated/ast";
 
 
+const NO_NAME = '<>';
+
 export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
 
     protected generateRoot(args: GeneratorContext<Model>): SModelRoot {
@@ -79,7 +81,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
         }
 
     protected generateConstraintNode(constraint: Constraint, { idCache }: GeneratorContext<Model>): SNode {
-        const name = constraint.name //? constraint.name : `c${HotDrinkDslDiagramGenerator.i++}`;
+        const name = constraint.name || NO_NAME;
         const nodeId = idCache.uniqueId(name, constraint);
         console.log(`Adding constraint node ${nodeId}`);
         return {
@@ -107,7 +109,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
     }
 
     protected generateMethodNode(method: Method, { idCache }: GeneratorContext<Model>): SNode {
-        const name = method.name // ? method.name : `m${HotDrinkDslDiagramGenerator.i++}`;
+        const name = method.name || NO_NAME;
         const nodeId = idCache.uniqueId(name, method);
         console.log(`Adding method node ${nodeId}`);
         return {
