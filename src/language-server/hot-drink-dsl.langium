@@ -14,7 +14,6 @@ entry Model:
     ;
 
 Import:
-    //"import" "{"  funcs+=ImportedFunction ("," funcs+=ImportedFunction)* "}" "from" file=STRING;
     "import" "{" imports+=ImportedFunction ("," imports+=ImportedFunction )* "}" "from" file=STRING;
 
 ImportedFunction:

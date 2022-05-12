@@ -25,6 +25,10 @@ export class HotDrinkDslActionProvider implements CodeActionProvider {
                 return this.makeLowerCase(diagnostic, document)
             case IssueCodes.Permutations:
                 return this.makePermutations(diagnostic, document)
+            case IssueCodes.InitiateVariablesToZero:
+                return this.initiateVariablesToZero(diagnostic, document)
+            case IssueCodes.RemoveConstraint:
+                return this.removeConstraint(diagnostic, document)
             default:
                 return undefined;
         }
@@ -58,9 +62,9 @@ export class HotDrinkDslActionProvider implements CodeActionProvider {
         };
     }
 
-    private makePermutations(diagnostic: Diagnostic, document: LangiumDocument): CodeAction | undefined {
+    private makePermutations(diagnostic: Diagnostic, document: LangiumDocument): CodeAction {
         const range = diagnostic.range;
-        function getArrayMutations(arr:string[], perms: string[][] = [], len = arr.length) {
+        function getArrayMutations(arr:string[], perms: string[][] = [], len = arr.length): string[][] {
             if (len === 1) perms.push(arr.slice(0))
           
             for (let i = 0; i < len; i++) {
@@ -100,6 +104,45 @@ export class HotDrinkDslActionProvider implements CodeActionProvider {
                     [document.textDocument.uri]: [{
                         range,
                         newText: document.textDocument.getText(range) + "\n" + title.join("\n")
+                    }]
+                }
+            }
+        };
+    }
+
+    private initiateVariablesToZero(diagnostic: Diagnostic, document: LangiumDocument): CodeAction {
+        const range = diagnostic.range;
+        const model = document.parseResult.value as Model;
+        const indexes = (diagnostic.data as string).split(".").map(v => parseInt(v)); // See hintToInitializeVariablesToZero in hot-drink-dsl-validator.ts
+        const names = model.components[indexes[0]].variables[indexes[1]].vars.map(v => v.name);
+        return {
+            title: 'Initiate variables to zero',
+            kind: CodeActionKind.QuickFix,
+            diagnostics: [diagnostic],
+            isPreferred: true,
+            edit: {
+                changes: {
+                    [document.textDocument.uri]: [{
+                        range,
+                        newText: `var ${names.join(": number = 0, ")}: number = 0;`
+                    }]
+                }
+            }
+        };
+    }
+
+    private removeConstraint(diagnostic: Diagnostic, document: LangiumDocument): CodeAction {
+        const range = diagnostic.range;
+        return {
+            title: 'Remove constraint',
+            kind: CodeActionKind.QuickFix,
+            diagnostics: [diagnostic],
+            isPreferred: false,
+            edit: {
+                changes: {
+                    [document.textDocument.uri]: [{
+                        range,
+                        newText: ""
                     }]
                 }
             }

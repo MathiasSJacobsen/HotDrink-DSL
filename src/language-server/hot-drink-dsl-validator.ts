@@ -28,25 +28,29 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
         super(services);
         const validator = services.validation.HotDrinkDslValidator;
         const checks: HotDrinkDslChecks = {
-            Variable: validator.checkVarStartsWithLowercase,
+            Vars: [
+                validator.hintToInitializeVariablesToZero
+            ],
+            Variable: [
+                validator.checkVarStartsWithLowercase
+            ],
             Signature: [
                 validator.checkSignatureOnlyReferenceToVarOnce,
-                validator.checkSignatureForExclamationVariables],
+                validator.checkSignatureForExclamationVariables,
+            ],
             Method: validator.checkMethodStartsWithLowercase,
             Constraint: [
                 validator.checkConstraintStartWithLowercase,
                 validator.checkConstraintMethodsHaveUniqueName,
                 validator.checkConstraintMethodsUsesTheSameVars,
                 validator.hintToMakePermutations,
+                validator.hintToRemoveConstraint,
             ],
-
-
             Component: [
                 validator.checkComponentConstraintsHaveUniqueName,
                 validator.checkComponentVarsHaveUniqueName,
                 validator.checkComponentForUnusedVariables,
             ],
-
             Model: [
                 validator.checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement,
                 validator.checkModelComponentNameIsUnique,
@@ -59,6 +63,8 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
 export namespace IssueCodes {
     export const VarNameUpperCase = 'var-name-uppercase';
     export const Permutations = 'permutations';
+    export const InitiateVariablesToZero = 'initiate-variables-to-zero';
+    export const RemoveConstraint = 'remove-constraint';
 }
 
 /**
@@ -214,7 +220,8 @@ export class HotDrinkDslValidator {
                     _var.vars.map(_v => {
                         if (!usedVariables.has(_v.name)) {
                             accept("warning", `Variable not in use.`, {
-                                node: _var
+                                node: _v,
+                                property: "name"
                             })
                         }
                     })
@@ -292,6 +299,33 @@ export class HotDrinkDslValidator {
                 property: "signature", 
                 code: IssueCodes.Permutations,
                 data: constraint.$containerIndex?.toString()!+ "." + constraint.$container.$containerIndex?.toString(), // trengs for quick fix, fant ingen bedre måte å gjøre det
+            })
+        }
+    }
+
+    hintToInitializeVariablesToZero(
+        vars: Vars,
+        accept: ValidationAcceptor
+    ): void {
+        if (vars.vars.every(varRef => varRef.initValue === undefined)) {
+            accept("hint", "Able to initialize all variables to zero", {
+                node: vars,
+                property: "vars",
+                code: IssueCodes.InitiateVariablesToZero,
+                data: vars.$container.$containerIndex?.toString() + "." + vars.$containerIndex?.toString()  // trengs for quick fix, fant ingen bedre måte å gjøre det
+            })
+        }
+    }
+
+    hintToRemoveConstraint(
+        constraint: Constraint, 
+        accept: ValidationAcceptor
+    ): void {
+        if (constraint) {
+            accept("hint", "Able to remove constraint", {
+                node: constraint,
+                code: IssueCodes.RemoveConstraint,
+                data: constraint.$container.$containerIndex?.toString() + "." + constraint.$containerIndex?.toString()
             })
         }
     }
