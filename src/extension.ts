@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-
 import { SprottyLspVscodeExtension } from 'sprotty-vscode/lib/lsp';
 import { HotDrinkDSLSprottyVscodeExtension } from './sprotty/hot-drink-dsl-sprotty-lsp-extension';
 

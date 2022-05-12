@@ -1,10 +1,9 @@
 import path from "path";
-import { SprottyDiagramIdentifier, SprottyWebview } from "sprotty-vscode";
-import { SprottyLspWebview } from "sprotty-vscode/lib/lsp";
-import { SprottyLspEditVscodeExtension, LspLabelEditActionHandler, WorkspaceEditActionHandler } from "sprotty-vscode/lib/lsp/editing";
 import * as vscode from "vscode";
-import { CommonLanguageClient, LanguageClientOptions } from "vscode-languageclient";
-import { ServerOptions, TransportKind, LanguageClient } from "vscode-languageclient/node";
+import { SprottyWebview } from "sprotty-vscode";
+import { SprottyLspWebview, SprottyDiagramIdentifier } from "sprotty-vscode/lib/lsp";
+import { SprottyLspEditVscodeExtension, LspLabelEditActionHandler, WorkspaceEditActionHandler } from "sprotty-vscode/lib/lsp/editing";
+import { ServerOptions, TransportKind, LanguageClient, LanguageClientOptions } from "vscode-languageclient/node";
 
 export class HotDrinkDSLSprottyVscodeExtension extends SprottyLspEditVscodeExtension {
 
@@ -44,7 +43,7 @@ export class HotDrinkDSLSprottyVscodeExtension extends SprottyLspEditVscodeExten
 
     protected activateLanguageClient(
         context: vscode.ExtensionContext
-    ): CommonLanguageClient {
+    ): LanguageClient { 
         const serverModule = context.asAbsolutePath(path.join('pack', 'language-server'));
         // The debug options for the server
         // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging.

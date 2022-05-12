@@ -167,7 +167,7 @@
         "style-loader": "^1.2.1",
         "ts-loader": "^9.2.6",
         "commander": "^9.2.0",
-        "vscode-languageclient": "^8.0.0",
+        "vscode-languageclient": "^7.0.0",
         "vscode-languageserver": "^7.0.0"
     },
     "devDependencies": {
