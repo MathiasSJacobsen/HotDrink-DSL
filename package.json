@@ -10,6 +10,18 @@
         "Programming Languages"
     ],
     "contributes": {
+        "taskDefinitions": [{
+            "type": "cli",
+				"required": [
+					"file"
+				],
+				"properties": {
+					"file": {
+						"type": "string",
+						"description": "The Rake file that provides the task."
+					}
+				}
+        }],
         "languages": [
             {
                 "id": "hot-drink-dsl",
