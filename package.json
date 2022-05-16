@@ -144,7 +144,7 @@
     },
     "main": "./pack/extension.js",
     "scripts": {
-        "vscode:prepublish": "npm run build && npm run lint",
+        "vscode:prepublish": "npm run build && npm run lint && npm test",
         "build": "tsc -b tsconfig.json",
         "build:webpack": "webpack --mode=development",
         "watch": "tsc -b tsconfig.json --watch",
