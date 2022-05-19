@@ -1,7 +1,7 @@
 {
     "name": "HotDrink-DSL",
     "displayName": "HotDrink-DSL",
-    "description": "Please enter a brief description here",
+    "description": "A development tool for the multiway dataflow constraint system library HotDrink",
     "version": "0.0.1",
     "engines": {
         "vscode": "^1.56.0"
@@ -10,18 +10,6 @@
         "Programming Languages"
     ],
     "contributes": {
-        "taskDefinitions": [{
-            "type": "cli",
-				"required": [
-					"file"
-				],
-				"properties": {
-					"file": {
-						"type": "string",
-						"description": "The Rake file that provides the task."
-					}
-				}
-        }],
         "languages": [
             {
                 "id": "hot-drink-dsl",
@@ -43,6 +31,10 @@
             }
         ],
         "commands": [
+            {
+                "command": "hot-drink-dsl.generate-javascript",
+                "title": "Generate JavaScript from the current HotDrink DSL file"
+            },
             {
                 "command": "hot-drink-dsl.diagram.open",
                 "title": "Open in Diagram",
@@ -72,6 +64,10 @@
         ],
         "menus": {
             "commandPalette": [
+                {
+                    "command": "hot-drink-dsl.generate-javascript",
+                    "when": "editorLangId == 'hot-drink-dsl'"
+                },
                 {
                     "command": "hot-drink-dsl.diagram.open",
                     "when": "editorLangId == 'hot-drink-dsl'"

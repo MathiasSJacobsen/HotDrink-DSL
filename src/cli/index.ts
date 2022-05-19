@@ -5,12 +5,14 @@ import { Model } from '../language-server/generated/ast';
 import { createHotDrinkDslServices } from '../language-server/hot-drink-dsl-module';
 import { extractAstNode } from './cli-util';
 import { generateJavaScript } from './generator';
+import { window } from 'vscode';
 
 export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createHotDrinkDslServices().hotdrinkDSL
     const model = await extractAstNode<Model>(fileName, HotDrinkDslLanguageMetaData.fileExtensions, services);
     const generatedFilePath = generateJavaScript(model, fileName, opts.destination);
-    console.log(colors.green(`JavaScript code generated successfully: ${generatedFilePath}`));
+    //console.log(colors.green(`JavaScript code generated successfully: ${generatedFilePath}`));
+    window.showInformationMessage(colors.green(`JavaScript code generated successfully: ${generatedFilePath}`))
 };
 
 export type GenerateOptions = {
