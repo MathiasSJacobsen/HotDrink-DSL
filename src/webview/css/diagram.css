@@ -7,11 +7,16 @@
 }
 
 .sprotty-node#constraint {
-    fill: rosybrown;
+    fill: green;
 }
 
 .sprotty-node#method {
     fill: var(--vscode-button-background);
+}
+
+#circleAtTheEnd {
+    fill: firebrick;
+    stroke: firebrick;
 }
 
 .sprotty-node#variable {

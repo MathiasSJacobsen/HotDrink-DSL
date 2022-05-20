@@ -10,6 +10,13 @@ export class HotDrinkEdge extends SEdge {
     targetAnchorCorrection = Math.sqrt(5);
 }
 
+export class HotDrinkEdgeWithOpacity extends SEdge {
+    routerKind = ManhattanEdgeRouter.KIND;
+    targetAnchorCorrection = Math.sqrt(5);
+    opacity: number = 0.4;
+}
+
+
 export class HotDrinkEdgeLabel extends SLabel {
     edgePlacement = <EdgePlacement> {
         rotate: true,

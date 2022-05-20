@@ -10,9 +10,8 @@ import {
     hoverFeedbackFeature, popupFeature, editLabelFeature, labelEditUiModule
 } from 'sprotty';
 import { CustomRouter } from './custom-edge-router';
-import { HotDrinkEdge, ComponentNode, ConstraintNode, MethodNode, VariableNode } from './model';
-import { PolylineArrowEdgeView } from './views';
-import { ComponentDiamondNodeView, ConstraintCircularNodeView, MethodRectangularNodeView, VariableRectangularNodeView } from './HotDrinkViews';
+import { HotDrinkEdge, ConstraintNode, MethodNode, VariableNode, HotDrinkEdgeWithOpacity, ComponentNode } from './model';
+import { ComponentDiamondNodeView, ConstraintCircularNodeView, MethodRectangularNodeView, MyPolylineEdgeView, PolylineArrowEdgeView, VariableRectangularNodeView } from './HotDrinkViews';
 
 const hotDrinkDSLDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
@@ -34,6 +33,7 @@ const hotDrinkDSLDiagramModule = new ContainerModule((bind, unbind, isBound, reb
         enable: [editLabelFeature]
     });
     configureModelElement(context, 'edge', HotDrinkEdge, PolylineArrowEdgeView);
+    configureModelElement(context, 'edge:constraint:method', HotDrinkEdgeWithOpacity, MyPolylineEdgeView);
     configureModelElement(context, 'html', HtmlRoot, HtmlRootView);
     configureModelElement(context, 'pre-rendered', PreRenderedElement, PreRenderedView);
     configureModelElement(context, 'palette', SModelRoot, HtmlRootView);
