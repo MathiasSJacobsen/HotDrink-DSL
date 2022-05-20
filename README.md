@@ -9,6 +9,7 @@ The code generation makes use if the npm package `hot-drink`. To install it to y
 npm install hotdrink
 ```
 
+To make the syntax highlighting work the file must have the ending `.hd`
 
 ## Features
 - Domain Specific Language (DSL) level syntax highlighting.
@@ -19,8 +20,29 @@ npm install hotdrink
 - Generation of JavaScript code from the DSL.
 
 
-## Release Notes
+### Syntax highlighting
+Adds syntax highlighting for the HotDrink DSL. Keywords are colored.
+![Picture of the syntax highlighted code](media/syntaxhig.png)
 
+### Validation
+Adds errors, hints, and warnings to the editor in the context of HotDrink code. Not all errors, hints, and warnings are implemented just a small set of them.
+![Picture showing error message from error](media/error.png)
+![Picture showing warning](media/warning.png)
+
+### Renaming by reference
+Should be able to rename variables in the DSL, and that would change all occurrences of that reference. Still experimental due to lack of proper testing.
+![Picture of the renamed variable](media/rename.png)
+
+### Graph view
+Adds a graph view of the multi-way dataflow constrain system made, provided by Sprotty.
+![Picture of the button to open graph view](media/diagramopen.png)
+![Picture of the graph view](media/diagramView.png)
+
+### Generation of JavaScript code from the HotDrink DSL
+The extension provides a command to generate JavaScript code from the HotDrink DSL. By pressing `cmd + shift + p` when a HotDrink file (.hd) is active. There is a menu item to generate the code. Type `Generate JavaScript from the current HotDrink DSL file` and click on it. This will generate the JavaScript file inside a folder called `<root>/generated`. The name of the file will be the same as the name of the HotDrink file, but with the extension `.js`.
+![Picture of the generated JavaScript file](media/generateJS.png)
+
+## Release Notes
 
 ### 0.1.0
 Initial release.

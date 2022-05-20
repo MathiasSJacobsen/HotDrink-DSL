@@ -4,13 +4,13 @@ import { func1 as tass, func1, func2,  func3 } from 'filethatdonstexist.js'
 component T {
     var income = 500000, percentage = 30, time = 12, finnmark: boolean = false, deduction, tax, net_income;
     
-    constraint e {
+    constraint noname {
         m21(income, percentage, deduction -> tax, net_income) => [func1(income, percentage, deduction), 4];
         m22(tax, net_income, deduction, percentage -> income) => func2(tax, net_income, deduction, percentage);
         m23(income, percentage, deduction -> tax, net_income) => [tass(income, percentage, deduction), 5];
     }
 
-    constraint {
+    constraint m{
         method(finnmark, time -> deduction, percentage) => [ func3(finnmark, time), func2() ]; 
     }
 }
@@ -20,9 +20,10 @@ component Te {
     var f: number = 0;
 
     var c;
+    
 
-    constraint grader {
-        m1(c -> f) => (c * 9/5 + 32);
-        m2(f -> c) => (f - 32) * 5/9;
+    constraint constr_degrees {
+        method_from_c_to_f(c -> f) => (c * 9/5 + 32);
+        method_from_f_to_c(f -> c) => (f - 32) * 5/9;
     }
 }
