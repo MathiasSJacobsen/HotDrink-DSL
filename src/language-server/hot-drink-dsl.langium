@@ -46,13 +46,9 @@ VarType returns string:
     ;
 
 ValueExpr:
-    StringValueExpr | NumberValueExpr | BooleanValueExpr;
-
-StringValueExpr: val=STRING;
-
-NumberValueExpr: digit=INT ("."decimal=INT)?;
-
-BooleanValueExpr: val=("true"|"false");
+    {infer StringValueExpr} val=STRING | 
+    {infer NumberValueExpr} (negative?="-")? digit=INT ("."decimal=INT)? | 
+    {infer BooleanValueExpr} val=("true"|"false");
 
 Constraint:
     "constraint" (name=ID)?"{" 

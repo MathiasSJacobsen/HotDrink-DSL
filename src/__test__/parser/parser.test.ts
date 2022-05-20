@@ -2,9 +2,10 @@ import { parseHelper } from "langium/lib/test";
 import { Model } from "../../language-server/generated/ast";
 import { createHotDrinkDslServices } from "../../language-server/hot-drink-dsl-module";
 
+const grammarServices = createHotDrinkDslServices().hotdrinkDSL
+
 describe('Parser test', () => {
     it("Parses the invoice hotdrink code", async () => {
-        const grammarServices = createHotDrinkDslServices().hotdrinkDSL
 
         const text = `
         import { func1, func2, func3 } from 'filethatdonstexist.js'
@@ -24,6 +25,20 @@ describe('Parser test', () => {
         `;
 
         const grammar = (await parseHelper<Model>(grammarServices)(text)).parseResult.parserErrors;
-        expect(grammar.length).toBe(0)
+        expect(grammar.length).toBe(0);
+    });
+    it('Parses negation', async () => {
+        const text = `
+        component negation {
+            var a = -1, b;
+        
+            constraint c1 {
+                (a -> b) => 2*a;
+            }
+        } 
+        `;
+
+        const grammar = (await parseHelper<Model>(grammarServices)(text)).parseResult.parserErrors;
+        expect(grammar.length).toBe(0);
     })
 })

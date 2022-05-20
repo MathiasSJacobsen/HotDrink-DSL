@@ -58,7 +58,7 @@ describe("Signature validation", () => {
                 }
             }`;
             const expectation = { 
-                message: "Experimental feature, may not work", 
+                message: "<feature not implemented>", 
                 severity: INFOSEVERITY
             };
             const doc = await helper(documentContent);

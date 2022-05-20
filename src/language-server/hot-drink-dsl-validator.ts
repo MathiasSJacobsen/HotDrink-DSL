@@ -5,7 +5,6 @@ import {
 } from "langium";
 
 import {
-
     Component,
     Constraint,
     HotDrinkDslAstType, ImportedFunction, Method, Model, Signature, Variable, VariableReference, Vars,
@@ -38,7 +37,10 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
                 validator.checkSignatureOnlyReferenceToVarOnce,
                 validator.checkSignatureForExclamationVariables,
             ],
-            Method: validator.checkMethodStartsWithLowercase,
+            Method: [
+                validator.checkMethodStartsWithLowercase,
+                validator.checkMethodBodyReturnsToRightNumberOfVariables,
+            ],
             Constraint: [
                 validator.checkConstraintStartWithLowercase,
                 validator.checkConstraintMethodsHaveUniqueName,
@@ -102,11 +104,12 @@ export class HotDrinkDslValidator {
             const inputVariablesRef = signature.inputVariables
             inputVariablesRef.forEach((element: VariableReference) => {
                 if (element.hasMark) {
-                    accept("info", "Experimental feature, may not work", { node: element, property: "hasMark" })
+                    accept("info", "<feature not implemented>", { node: element, property: "hasMark" })
                 }
             })
         }
     }
+
 
     checkMethodStartsWithLowercase(
         method: Method,
@@ -121,6 +124,22 @@ export class HotDrinkDslValidator {
                 });
             }
         }
+    }
+
+    checkMethodBodyReturnsToRightNumberOfVariables(
+        method: Method,
+        accept: ValidationAcceptor
+    ): void {
+        if (method.body) {
+            const numberOfElementsSignature = method.signature.outputVariables.length;
+
+            if ((method.body.value && numberOfElementsSignature !== 1) ||  !method.body.value && method.body.values.length !== numberOfElementsSignature) {
+                accept("error", "The body of the method needs to return the same number of variables that there are output-variables.", {
+                    node: method.body
+                })
+            }
+        }
+        
     }
 
     checkConstraintStartWithLowercase(

@@ -233,6 +233,7 @@ export interface NumberValueExpr extends AstNode {
     readonly $container: Variable;
     decimal: number
     digit: number
+    negative: boolean
 }
 
 export const NumberValueExpr = 'NumberValueExpr';

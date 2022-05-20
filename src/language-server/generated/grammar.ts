@@ -486,83 +486,51 @@ export const HotDrinkDslGrammar = (): Grammar => loadedHotDrinkDslGrammar ||(loa
         "$type": "Alternatives",
         "elements": [
           {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "StringValueExpr"
-            },
-            "elements": []
-          },
-          {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "NumberValueExpr"
-            },
-            "elements": []
-          },
-          {
-            "$type": "RuleCall",
-            "arguments": [],
-            "rule": {
-              "$refText": "BooleanValueExpr"
-            },
-            "elements": []
-          }
-        ]
-      }
-    },
-    {
-      "$type": "ParserRule",
-      "parameters": [],
-      "name": "StringValueExpr",
-      "hiddenTokens": [],
-      "alternatives": {
-        "$type": "Assignment",
-        "feature": "val",
-        "operator": "=",
-        "terminal": {
-          "$type": "RuleCall",
-          "arguments": [],
-          "rule": {
-            "$refText": "STRING"
-          }
-        },
-        "elements": []
-      }
-    },
-    {
-      "$type": "ParserRule",
-      "parameters": [],
-      "name": "NumberValueExpr",
-      "hiddenTokens": [],
-      "alternatives": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Assignment",
-            "feature": "digit",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refText": "INT"
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Action",
+                "infer": true,
+                "type": "StringValueExpr",
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "val",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "arguments": [],
+                  "rule": {
+                    "$refText": "STRING"
+                  }
+                }
               }
-            },
-            "elements": []
+            ]
           },
           {
             "$type": "Group",
             "elements": [
               {
-                "$type": "Keyword",
-                "value": ".",
+                "$type": "Action",
+                "infer": true,
+                "type": "NumberValueExpr",
                 "elements": []
               },
               {
                 "$type": "Assignment",
-                "feature": "decimal",
+                "feature": "negative",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "-"
+                },
+                "elements": [],
+                "cardinality": "?"
+              },
+              {
+                "$type": "Assignment",
+                "feature": "digit",
                 "operator": "=",
                 "terminal": {
                   "$type": "RuleCall",
@@ -571,37 +539,63 @@ export const HotDrinkDslGrammar = (): Grammar => loadedHotDrinkDslGrammar ||(loa
                     "$refText": "INT"
                   }
                 }
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": ".",
+                    "elements": []
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "decimal",
+                    "operator": "=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "arguments": [],
+                      "rule": {
+                        "$refText": "INT"
+                      }
+                    }
+                  }
+                ],
+                "cardinality": "?"
               }
-            ],
-            "cardinality": "?"
+            ]
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Action",
+                "infer": true,
+                "type": "BooleanValueExpr",
+                "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "val",
+                "operator": "=",
+                "terminal": {
+                  "$type": "Alternatives",
+                  "elements": [
+                    {
+                      "$type": "Keyword",
+                      "value": "true",
+                      "elements": []
+                    },
+                    {
+                      "$type": "Keyword",
+                      "value": "false"
+                    }
+                  ]
+                }
+              }
+            ]
           }
         ]
-      }
-    },
-    {
-      "$type": "ParserRule",
-      "parameters": [],
-      "name": "BooleanValueExpr",
-      "hiddenTokens": [],
-      "alternatives": {
-        "$type": "Assignment",
-        "feature": "val",
-        "operator": "=",
-        "terminal": {
-          "$type": "Alternatives",
-          "elements": [
-            {
-              "$type": "Keyword",
-              "value": "true",
-              "elements": []
-            },
-            {
-              "$type": "Keyword",
-              "value": "false"
-            }
-          ]
-        },
-        "elements": []
       }
     },
     {
@@ -1021,6 +1015,17 @@ export const HotDrinkDslGrammar = (): Grammar => loadedHotDrinkDslGrammar ||(loa
               },
               {
                 "$type": "Assignment",
+                "feature": "negative",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "-"
+                },
+                "elements": [],
+                "cardinality": "?"
+              },
+              {
+                "$type": "Assignment",
                 "feature": "value",
                 "operator": "=",
                 "terminal": {
@@ -1094,6 +1099,17 @@ export const HotDrinkDslGrammar = (): Grammar => loadedHotDrinkDslGrammar ||(loa
                 "infer": true,
                 "type": "VarRef",
                 "elements": []
+              },
+              {
+                "$type": "Assignment",
+                "feature": "negative",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "-"
+                },
+                "elements": [],
+                "cardinality": "?"
               },
               {
                 "$type": "Assignment",

@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true, 
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
     "target": "ES6",
     "module": "commonjs",
-    "lib": ["ESNext"],
-    "sourceMap": true,
     "outDir": "out",
     "strict": true,
     "noUnusedLocals": true,
@@ -11,11 +14,17 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true, 
+    "lib": [
+      "es6", 
+      "dom"
+    ],
+    "jsx": "react",
   },
   "include": [
      "src/**/*.ts"
-  ],
+, "src/**/*.tsx"  ],
   "exclude": [
      "out",
      "node_modules"
