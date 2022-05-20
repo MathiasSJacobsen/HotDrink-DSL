@@ -168,7 +168,7 @@
         "ts-loader": "^9.2.6",
         "commander": "^9.2.0",
         "vscode-languageclient": "^7.0.0",
-        "vscode-languageserver": "^7.0.0"
+        "vscode-languageserver": "^8.0.1"
     },
     "devDependencies": {
         "@types/jest": "^27.5.0",
