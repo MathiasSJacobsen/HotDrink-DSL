@@ -1,5 +1,8 @@
 # HotDrink
 
+[![vsmarketplacebadge](https://vsmarketplacebadge.apphb.com/version/MathiasSkallerudJacobsen.HotDrink-DSL.svg)](https://marketplace.visualstudio.com/items?itemName=MathiasSkallerudJacobsen.HotDrink-DSL)
+
+
 This extension adds language support for HotDrink, powered by a language server made in [Langium](https://langium.org). 
 
 ## Setup
