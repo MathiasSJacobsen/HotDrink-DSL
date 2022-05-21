@@ -12,7 +12,7 @@ npm install hotdrink
 To make the syntax highlighting work the file must have the ending `.hd`
 
 ## Features
-- Domain Specific Language (DSL) level syntax highlighting.
+- Domain Specific Language (DSL) for HotDrink.
 - Syntax highlighting for the DSL.
 - Validation of the DSL.
 - Renaming by reference in the DSL (experimental).
