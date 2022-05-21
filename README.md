@@ -44,11 +44,18 @@ The extension provides a command to generate JavaScript code from the HotDrink D
 
 ## Release Notes
 
+### 0.1.1
+Graph view:
+- Removed *Component* from the graph view.
+- Renewed the edge between *constraints* and *methods*. Now easier to differentiate between that type of edge, and dataflow edge between *constraints* and *variables*. Also the port between *constraints* and *methods* are red now.
+
+Readme:
+- Added more information about the extension.
+
 ### 0.1.0
 Initial release.
 
-
-***Part of the master theses at the University of Bergen, Informatics department, Software engineering; Development Of Tool Support For A Multiway Dataflow Constraint System Library***
+***Part of the master theses Development Of Tool Support For A Multiway Dataflow Constraint System Library, at the University of Bergen, Informatics department, Software engineering***
 
 Mathias Skallerud Jacobsen  
 [@MathiasSJacobsen](https://github.com/MathiasSJacobsen)
