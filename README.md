@@ -21,6 +21,7 @@ To make the syntax highlighting work the file must have the ending `.hd`
 - Renaming by reference in the DSL (experimental).
 - Graph view of the multi-way dataflow constrain system made, provided by Sprotty.
 - Generation of JavaScript code from the DSL.
+- Quick fixes for the DSL.
 
 
 ### Syntax highlighting
@@ -44,6 +45,12 @@ Adds a graph view of the multi-way dataflow constrain system made, provided by S
 ### Generation of JavaScript code from the HotDrink DSL
 The extension provides a command to generate JavaScript code from the HotDrink DSL. By pressing `cmd + shift + p` when a HotDrink file (.hd) is active. There is a menu item to generate the code. Type `Generate JavaScript from the current HotDrink DSL file` and click on it. This will generate the JavaScript file inside a folder called `<root>/generated`. The name of the file will be the same as the name of the HotDrink file, but with the extension `.js`.
 ![Picture of the generated JavaScript file](media/generateJS.png)
+
+### Quick fixes
+The extension adds quick fixes to some parts of the code. 
+![Picture of the the textbox with quick fix text](media/textboxQuickFix.png)
+![Picture of after the quick fix happened](media/afterQuickFix.png)
+
 
 ## Release Notes
 
