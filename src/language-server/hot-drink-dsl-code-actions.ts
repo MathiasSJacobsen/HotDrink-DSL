@@ -92,7 +92,7 @@ export class HotDrinkDslActionProvider implements CodeActionProvider {
         const outputs = perm.map(v => v.slice(-outVariables.length).join(", "));
 
         const title = inputs.map((v, i) => {
-            return "    (" + v + " -> " + outputs[i] + ")" +  " => " + "'Implementation missing';"
+            return "        (" + v + " -> " + outputs[i] + ")" +  " => " + "'Implementation missing';"
         }).slice(1); // Slice on so we dont overwrite the first line that has already been written
         return {
             title: 'Make permutations',
