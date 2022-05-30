@@ -177,7 +177,7 @@ export class HotDrinkDslValidator {
         constraint: Constraint,
         accept: ValidationAcceptor
     ): void {
-        if (constraint.methods) {
+        if (constraint?.methods[-1]?.signature?.inputVariables && constraint?.methods[-1]?.signature?.outputVariables) {
             const unique = constraint.methods[0].signature.inputVariables.map((e) => e.ref.ref?.name).concat(constraint.methods[0].signature.outputVariables.map((e) => e.ref?.ref?.name)).sort();
             constraint.methods.forEach(method => {
                 const unique2 = method.signature.inputVariables.map((e) => e.ref.ref?.name).concat(method.signature.outputVariables.map((e) => e.ref?.ref?.name)).sort();
