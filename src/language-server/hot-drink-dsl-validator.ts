@@ -84,10 +84,10 @@ export class HotDrinkDslValidator {
                 });
             }
         }
-    } 
+    }
 
     checkSignatureOnlyReferenceToVarOnce(signature: Signature, accept: ValidationAcceptor): void {
-        
+
         if (signature.inputVariables && signature.outputVariables) {
             try {
                 const s = new Set(signature.inputVariables.map(e => e.ref.ref?.name));
@@ -195,10 +195,9 @@ export class HotDrinkDslValidator {
                     }
                 })
             } catch (error) {
-                    
+                // Vanskelig med lister i ifen
             }
         }
-        
     }
 
     checkComponentConstraintsHaveUniqueName(
