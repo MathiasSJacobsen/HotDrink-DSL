@@ -62,24 +62,25 @@ export class HotDrinkDslActionProvider implements CodeActionProvider {
         };
     }
 
-    private makePermutations(diagnostic: Diagnostic, document: LangiumDocument): CodeAction {
+    private makePermutations(diagnostic: Diagnostic, document: LangiumDocument): CodeAction | undefined {
         const range = diagnostic.range;
         function getArrayMutations(arr:string[], perms: string[][] = [], len = arr.length): string[][] {
             if (len === 1) perms.push(arr.slice(0))
-          
+        
             for (let i = 0; i < len; i++) {
-              getArrayMutations(arr, perms, len - 1)
-          
-              len % 2 // parity dependent adjacent elements swap
+            getArrayMutations(arr, perms, len - 1)
+        
+            len % 2 // parity dependent adjacent elements swap
                 ? [arr[0], arr[len - 1]] = [arr[len - 1], arr[0]]
                 : [arr[i], arr[len - 1]] = [arr[len - 1], arr[i]]
             }
-          
             return perms
-          }
+        }
+        
         const model = document.parseResult.value as Model;
-        const indexes = (diagnostic.data as string).split("."); // See hintToMakePermutations in hot-drink-dsl-validator.ts
-        const method = model.components[parseInt(indexes[1])].constraints[parseInt(indexes[0])].methods[0];
+        const [constraintIdx, componentIdx] = (diagnostic.data as string).split("."); // See hintToMakePermutations in hot-drink-dsl-validator.ts
+    
+        const method = model.components[parseInt(componentIdx)].constraints[parseInt(constraintIdx)].methods[0];
         const inputVariables = method.signature.inputVariables.map(v => v.ref.ref?.name) as string[];
         const outVariables = method.signature.outputVariables.map(v => v.ref.ref?.name) as string[];
         const variables = [...inputVariables, ...outVariables];

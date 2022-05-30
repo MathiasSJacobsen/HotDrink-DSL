@@ -312,7 +312,7 @@ export class HotDrinkDslValidator {
         constraint: Constraint,
         accept: ValidationAcceptor
     ): void {
-        if (constraint.methods.length === 1) {
+        if (constraint.methods.length === 1 && constraint.methods[0]?.signature?.inputVariables && constraint.methods[0]?.signature?.outputVariables && constraint.methods[0]?.body) {
             accept("hint", "Able to make permutations", {
                 node: constraint.methods[0], 
                 property: "signature", 
