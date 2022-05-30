@@ -84,17 +84,22 @@ export class HotDrinkDslValidator {
                 });
             }
         }
-    }
+    } 
 
     checkSignatureOnlyReferenceToVarOnce(signature: Signature, accept: ValidationAcceptor): void {
-        if (signature.inputVariables[-1]?.ref?.ref && signature.outputVariables[-1]?.ref?.ref) {
-            const s = new Set(signature.inputVariables.map(e => e.ref.ref?.name));
-            if (s.size !== signature.inputVariables.length) {
-                accept("error", "Can not use the same variable more then once in a signature.", { node: signature, property: "inputVariables" }) // TODO: Should be shown on the last variable of the
-            }
-            const s1 = new Set(signature.outputVariables.map(e => e.ref?.ref?.name));
-            if (s1.size !== signature.outputVariables.length) {
-                accept("error", "Can not use the same variable more then once in a signature.", { node: signature, property: "outputVariables" }) // TODO: Should be shown on the last variable of the 
+        
+        if (signature.inputVariables && signature.outputVariables) {
+            try {
+                const s = new Set(signature.inputVariables.map(e => e.ref.ref?.name));
+                if (s.size !== signature.inputVariables.length) {
+                    accept("error", "Can not use the same variable more then once in a signature.", { node: signature, property: "inputVariables" }) // TODO: Should be shown on the last variable of the
+                }
+                const s1 = new Set(signature.outputVariables.map(e => e.ref?.ref?.name));
+                if (s1.size !== signature.outputVariables.length) {
+                    accept("error", "Can not use the same variable more then once in a signature.", { node: signature, property: "outputVariables" }) // TODO: Should be shown on the last variable of the 
+                }
+            } catch (error) {
+                // Vanskelig med lister i ifen
             }
         }
     }
@@ -177,18 +182,23 @@ export class HotDrinkDslValidator {
         constraint: Constraint,
         accept: ValidationAcceptor
     ): void {
-        if (constraint?.methods[-1]?.signature?.inputVariables && constraint?.methods[-1]?.signature?.outputVariables) {
-            const unique = constraint.methods[0].signature.inputVariables.map((e) => e.ref.ref?.name).concat(constraint.methods[0].signature.outputVariables.map((e) => e.ref?.ref?.name)).sort();
-            constraint.methods.forEach(method => {
-                const unique2 = method.signature.inputVariables.map((e) => e.ref.ref?.name).concat(method.signature.outputVariables.map((e) => e.ref?.ref?.name)).sort();
-                if (unique.length !== unique2.length || unique.join(",") !== unique2.join(",")) {
-                    accept("error", `All methods inside a given constraint needs to reference all the same variables.`, {
-                        node: constraint,
-                        property: "methods",
-                    });
-                }
-            })
+        if (constraint.methods) {
+            try {
+                const unique = constraint.methods[0].signature.inputVariables.map((e) => e.ref.ref?.name).concat(constraint.methods[0].signature.outputVariables.map((e) => e.ref?.ref?.name)).sort();
+                constraint.methods.forEach(method => {
+                    const unique2 = method.signature.inputVariables.map((e) => e.ref.ref?.name).concat(method.signature.outputVariables.map((e) => e.ref?.ref?.name)).sort();
+                    if (unique.length !== unique2.length || unique.join(",") !== unique2.join(",")) {
+                        accept("error", `All methods inside a given constraint needs to reference all the same variables.`, {
+                            node: constraint,
+                            property: "methods",
+                        });
+                    }
+                })
+            } catch (error) {
+                    
+            }
         }
+        
     }
 
     checkComponentConstraintsHaveUniqueName(
