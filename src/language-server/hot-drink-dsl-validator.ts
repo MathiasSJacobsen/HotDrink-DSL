@@ -257,9 +257,13 @@ export class HotDrinkDslValidator {
         constraints.forEach(constraint => {
             const methods = constraint.methods
             methods.forEach(method => {
-                const vars = method.signature.inputVariables.map(varRef => varRef.ref.ref!.name).concat(...method.signature.outputVariables.map(varRef => varRef.ref!.ref!.name))
-                if (vars) {
-                    allVariablesInUse = new Set([...allVariablesInUse, ...vars])
+                try {
+                    const vars = method.signature.inputVariables.map(varRef => varRef.ref.ref!.name).concat(...method.signature.outputVariables.map(varRef => varRef.ref!.ref!.name))
+                    if (vars) {
+                        allVariablesInUse = new Set([...allVariablesInUse, ...vars])
+                    }
+                } catch (error) {
+                    // Fant ingen bedre løsning
                 }
             });
         });
