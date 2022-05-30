@@ -62,6 +62,9 @@ Graph view:
 Readme:
 - Added more information about the extension.
 
+Bug fixes:
+- Removed some of the output errors, the extension now tolerates more invalid states of the document.
+
 ### 0.1.0
 Initial release.
 
