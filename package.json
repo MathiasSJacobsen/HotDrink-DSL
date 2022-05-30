@@ -181,7 +181,7 @@
         "sprotty-vscode-webview": "^0.2.0",
         "style-loader": "^3.3.1",
         "ts-loader": "^9.3.0",
-        "commander": "^9.2.0",
+        "commander": "^9.3.0",
         "vscode-languageclient": "^7.0.0",
         "vscode-languageserver": "^7.0.0"
     },
