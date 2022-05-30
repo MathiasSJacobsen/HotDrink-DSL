@@ -133,13 +133,13 @@ export class HotDrinkDslValidator {
         if (method.body) {
             const numberOfElementsSignature = method.signature.outputVariables.length;
 
-            if ((method.body.value && numberOfElementsSignature !== 1) ||  !method.body.value && method.body.values.length !== numberOfElementsSignature) {
+            if ((method.body.value && numberOfElementsSignature !== 1) || !method.body.value && method.body.values.length !== numberOfElementsSignature) {
                 accept("error", "The body of the method needs to return the same number of variables that there are output-variables.", {
                     node: method.body
                 })
             }
         }
-        
+
     }
 
     checkConstraintStartWithLowercase(
@@ -277,8 +277,8 @@ export class HotDrinkDslValidator {
         if (model.imports) {
             const listOfImports = model.imports;
             listOfImports.forEach(importStatement => {
-                const listOfImportedFunctions = importStatement.imports.map((importedFunction:ImportedFunction) => {
-                    if (importedFunction.altName){
+                const listOfImportedFunctions = importStatement.imports.map((importedFunction: ImportedFunction) => {
+                    if (importedFunction.altName) {
                         return importedFunction.altName.name
                     } else return importedFunction.function.name
                 })
@@ -310,7 +310,7 @@ export class HotDrinkDslValidator {
                 }
             })
         }
-        
+
     }
     hintToMakePermutations(
         constraint: Constraint,
@@ -318,10 +318,10 @@ export class HotDrinkDslValidator {
     ): void {
         if (constraint.methods.length === 1 && constraint.methods[0]?.signature?.inputVariables && constraint.methods[0]?.signature?.outputVariables && constraint.methods[0]?.body) {
             accept("hint", "Able to make permutations", {
-                node: constraint.methods[0], 
-                property: "signature", 
+                node: constraint.methods[0],
+                property: "signature",
                 code: IssueCodes.Permutations,
-                data: constraint.$containerIndex?.toString()!+ "." + constraint.$container.$containerIndex?.toString(), // trengs for quick fix, fant ingen bedre måte å gjøre det
+                data: constraint.$containerIndex?.toString()! + "." + constraint.$container.$containerIndex?.toString(), // trengs for quick fix, fant ingen bedre måte å gjøre det
             })
         }
     }
@@ -341,7 +341,7 @@ export class HotDrinkDslValidator {
     }
 
     hintToRemoveConstraint(
-        constraint: Constraint, 
+        constraint: Constraint,
         accept: ValidationAcceptor
     ): void {
         if (constraint) {
