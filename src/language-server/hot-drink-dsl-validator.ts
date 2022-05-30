@@ -87,7 +87,7 @@ export class HotDrinkDslValidator {
     }
 
     checkSignatureOnlyReferenceToVarOnce(signature: Signature, accept: ValidationAcceptor): void {
-        if (signature.inputVariables) {
+        if (signature.inputVariables[-1]?.ref?.ref && signature.outputVariables[-1]?.ref?.ref) {
             const s = new Set(signature.inputVariables.map(e => e.ref.ref?.name));
             if (s.size !== signature.inputVariables.length) {
                 accept("error", "Can not use the same variable more then once in a signature.", { node: signature, property: "inputVariables" }) // TODO: Should be shown on the last variable of the
