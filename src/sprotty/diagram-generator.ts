@@ -84,7 +84,7 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
         }
 
     protected generateConstraintNode(constraint: Constraint, { idCache }: GeneratorContext<Model>): SNode {
-        const name = constraint.name ? constraint.name + '.' +constraint.$container.name : NO_NAME + '.' +constraint.$container.name ;
+        const name = constraint.name ? constraint.$container.name + '.' + constraint.name : constraint.$container.name + '.' + NO_NAME;
         const nodeId = idCache.uniqueId(name, constraint);
         console.log(`Adding constraint node ${nodeId}`);
         return {
