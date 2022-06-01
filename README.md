@@ -41,6 +41,7 @@ Should be able to rename variables in the DSL, and that would change all occurre
 Adds a graph view of the multi-way dataflow constrain system made, provided by Sprotty.
 ![Picture of the button to open graph view](media/diagramopen.png)
 ![Picture of the graph view](media/diagramView.png)
+Green nodes are named *component.constraint*. Blue nodes are method names. Orange nodes are variables. Lines with red dots in each end is a method-to-constraint connection, while the arrows are the dataflow in and out of the method.  
 
 ### Generation of JavaScript code from the HotDrink DSL
 The extension provides a command to generate JavaScript code from the HotDrink DSL. By pressing `cmd + shift + p` when a HotDrink file (.hd) is active. There is a menu item to generate the code. Type `Generate JavaScript from the current HotDrink DSL file` and click on it. This will generate the JavaScript file inside a folder called `<root>/generated`. The name of the file will be the same as the name of the HotDrink file, but with the extension `.js`.
@@ -57,7 +58,7 @@ The extension adds quick fixes to some parts of the code.
 ### 0.1.1
 Graph view:
 - Removed *Component* from the graph view.
-- Renewed the edge between *constraints* and *methods*. Now easier to differentiate between that type of edge, and dataflow edge between *constraints* and *variables*. Also the port between *constraints* and *methods* are red now.
+- Renewed the edge between *constraints* and *methods*. Now easier to differentiate between that type of edge, and dataflow edge between *constraints* and *variables*. Also the port between *constraints* and *methods* are red now. 
 
 Readme:
 - Added more information about the extension.
