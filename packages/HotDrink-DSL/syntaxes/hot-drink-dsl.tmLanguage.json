@@ -1,0 +1,57 @@
+{
+  "name": "hot-drink-dsl",
+  "scopeName": "source.hot-drink-dsl",
+  "fileTypes": [
+    ".hd"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "keyword.control.hot-drink-dsl",
+      "match": "\\b(as|boolean|component|constraint|false|from|import|number|string|true|var)\\b"
+    },
+    {
+      "name": "string.quoted.double.hot-drink-dsl",
+      "begin": "\"",
+      "end": "\""
+    },
+    {
+      "name": "string.quoted.single.hot-drink-dsl",
+      "begin": "'",
+      "end": "'"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.hot-drink-dsl",
+          "begin": "/\\*",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.hot-drink-dsl"
+            }
+          },
+          "end": "\\*/",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.hot-drink-dsl"
+            }
+          }
+        },
+        {
+          "begin": "//",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.hot-drink-dsl"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.hot-drink-dsl"
+        }
+      ]
+    }
+  }
+}
