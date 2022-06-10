@@ -19,8 +19,7 @@ jobs:
       - name: Setup node 12
         uses: actions/setup-node@v2
         with:
-          node-version: 12.x
-          cache: npm
+          node-version: '16'
       - name: Installing dependencies
         run: npm ci
       - name: Generate AST
