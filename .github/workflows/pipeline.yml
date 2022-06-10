@@ -16,12 +16,12 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
-      - name: Setup node 12
+      - name: Setup node
         uses: actions/setup-node@v2
         with:
           node-version: '16'
       - name: Installing dependencies
-        run: npm ci
+        run: yarn
       - name: Generate AST
         run: npm run langium:generate
       - name: Lint
