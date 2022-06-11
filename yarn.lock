@@ -4575,6 +4575,7 @@ langium-cli@^0.3.0:
     langium "~0.3.0"
     lodash "^4.17.21"
 
+
 langium-sprotty@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/langium-sprotty/-/langium-sprotty-0.4.0.tgz#72a68823f22c521e360f7bb2732721b2399139d4"
@@ -4602,7 +4603,6 @@ langium@~0.4.0:
     vscode-languageserver "^7.0.0"
     vscode-languageserver-textdocument "^1.0.1"
     vscode-uri "^3.0.2"
-
 lerna@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-5.1.1.tgz#f2f2a2e89283d2b67075c680df8796922effc1a7"
