@@ -65,7 +65,7 @@ export function generateJavaScript(
 }
 
 function generateHotDrinkImports(fileNode: CompositeGeneratorNode) {
-    fileNode.append("import { Component, Method, ConstraintSpec, MaskNone } from 'hotdrink';", NL, NL);
+    fileNode.append("import { Component, Method, ConstraintSpec, maskNone } from 'hotdrink';", NL, NL);
 }
 
 /**
@@ -176,7 +176,7 @@ function generateMethod(method:Method, fileNode: CompositeGeneratorNode): string
     const nvars = method.signature.inputVariables.length + method.signature.outputVariables.length
     const ins = method.signature.inputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
     const outs = method.signature.outputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
-    const promiseMask = ["MaskNone"]
+    const promiseMask = ["maskNone"]
     const inputVariables = method.signature.inputVariables.map(v => v.ref.ref?.name)
     const code = makeCodeForMethod(method.body)
 
