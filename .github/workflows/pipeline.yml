@@ -16,18 +16,17 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
-      - name: Setup node 12
+      - name: Setup node
         uses: actions/setup-node@v2
         with:
-          node-version: 12.x
-          cache: npm
+          node-version: '16'
       - name: Installing dependencies
-        run: npm ci
+        run: yarn
       - name: Generate AST
-        run: npm run langium:generate
+        run: yarn --cwd packages/HotDrink-DSL langium:generate
       - name: Lint
-        run: npm run lint
+        run: yarn --cwd packages/HotDrink-DSL lint
       - name: Run tests
-        run: npm test
+        run: yarn --cwd packages/HotDrink-DSL test
       - name: Build
-        run: npm run build
+        run: yarn --cwd packages/HotDrink-DSL build
