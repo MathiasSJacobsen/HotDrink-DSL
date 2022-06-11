@@ -55,7 +55,7 @@ The extension adds quick fixes to some parts of the code.
 
 ## Release Notes
 
-### 0.1.1
+### 0.2.0
 Graph view:
 - Removed *Component* from the graph view.
 - Renewed the edge between *constraints* and *methods*. Now easier to differentiate between that type of edge, and dataflow edge between *constraints* and *variables*. Also the port between *constraints* and *methods* are red now. 
