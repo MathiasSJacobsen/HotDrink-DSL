@@ -40,7 +40,7 @@ import { NAMETAKEN, NONENAMEGIVEN, SpecPrefix, uid, usedVariableNames, variableI
 // lese på source map
 
 
-export function generateJavaScript(
+export function generateJavaScriptFile(
     model: Model,
     filePath: string,
     destination: string | undefined
