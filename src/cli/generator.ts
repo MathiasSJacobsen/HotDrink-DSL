@@ -36,10 +36,6 @@ import path from "path";
 import { NAMETAKEN, NONENAMEGIVEN, SpecPrefix, uid, usedVariableNames, variableIndex } from "../utils";
 
 
-// let to const og export components
-// lese på source map
-
-
 export function generateJavaScriptFile(
     model: Model,
     filePath: string,
