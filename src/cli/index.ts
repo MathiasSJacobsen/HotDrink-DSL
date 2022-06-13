@@ -4,17 +4,27 @@ import { HotDrinkDslLanguageMetaData } from '../language-server/generated/module
 import { Model } from '../language-server/generated/ast';
 import { createHotDrinkDslServices } from '../language-server/hot-drink-dsl-module';
 import { extractAstNode } from './cli-util';
-import { generateJavaScriptFile } from './generator';
+
 import { window } from 'vscode';
+import { generateJavaScriptFile } from './generatorJavaScript';
+import { generateHTMLdemo } from './generatorDemo';
 
 export const generateJavaScript = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createHotDrinkDslServices().hotdrinkDSL
     const model = await extractAstNode<Model>(fileName, HotDrinkDslLanguageMetaData.fileExtensions, services);
     const generatedFilePath = generateJavaScriptFile(model, fileName, opts.destination);
-    //console.log(colors.green(`JavaScript code generated successfully: ${generatedFilePath}`));
-    window.showInformationMessage(colors.green(`JavaScript code generated successfully: ${generatedFilePath}`))
+    console.log(colors.green(`JavaScript code generated successfully: ${generatedFilePath}`));
+    window.showInformationMessage(`JavaScript code generated successfully: ${generatedFilePath}`)
 };
 
+export const generateDemo = async (fileName: string, opts: GenerateOptions): Promise<void> => {
+    const services = createHotDrinkDslServices().hotdrinkDSL;
+    const model = await extractAstNode<Model>(fileName, HotDrinkDslLanguageMetaData.fileExtensions, services);
+    const [generatedFilePathJavaScript, generatedFilePathHTML] = generateHTMLdemo(model, fileName, opts.destination);
+
+    //console.log(colors.green(`JavaScript code generated successfully: ${generatedFilePath}`));
+    window.showInformationMessage(`JavaScript code generated successfully: ${generatedFilePathJavaScript} & ${generatedFilePathHTML}`);
+};
 
 export type GenerateOptions = {
     destination?: string;

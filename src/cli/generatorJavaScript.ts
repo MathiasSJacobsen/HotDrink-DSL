@@ -88,7 +88,7 @@ function generateImports(imports: Import[], fileNode: CompositeGeneratorNode) {
  * @param components The components that should be added to the file.
  * @param fileNode The file-node that are being appended to.
  */
-function generateComponent(components: Component[], fileNode: CompositeGeneratorNode) {
+export function generateComponent(components: Component[], fileNode: CompositeGeneratorNode) {
     components.forEach((component: Component) => {
         fileNode.append("// create a component and emplace some variables", NL)
         const compName = !usedVariableNames.has(component.name) ? component.name : `${NAMETAKEN}${uid()}`
@@ -110,7 +110,7 @@ function generateComponent(components: Component[], fileNode: CompositeGenerator
  * @param component The component holding the variables.
  * @param fileNode The file-node that are being appended to.
  */
-function generateVariables(component:Component, fileNode: CompositeGeneratorNode) {
+function generateVariables(component: Component, fileNode: CompositeGeneratorNode) {
     let arrayIdx = 0;
     component.variables.forEach((vars: Vars) => {
         vars.vars.forEach((variable: Variable) => {

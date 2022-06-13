@@ -3,7 +3,7 @@
     "displayName": "HotDrink Development Tool",
     "description": "A development tool for the multiway dataflow constraint system library HotDrink",
     "publisher": "MathiasSkallerudJacobsen",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "engines": {
         "vscode": "^1.67.0"
     },
@@ -12,7 +12,7 @@
         "url": "https://github.com/MathiasSJacobsen/HotDrink-DSL"
     },
     "categories": [
-        "Programming Languages", 
+        "Programming Languages",
         "Linters",
         "Visualization"
     ],
@@ -38,6 +38,10 @@
             }
         ],
         "commands": [
+            {
+                "command": "hot-drink-dsl.generate-demo",
+                "title": "Generate Demo"
+            },
             {
                 "command": "hot-drink-dsl.generate-javascript",
                 "title": "Generate JavaScript from the current HotDrink DSL file"
@@ -170,8 +174,10 @@
     },
     "dependencies": {
         "colors": "^1.4.0",
+        "commander": "^9.3.0",
         "css-loader": "^6.5.1",
         "file-loader": "^6.2.0",
+        "hotdrink": "^0.1.1",
         "langium": "^0.3.0",
         "langium-sprotty": "^0.3.0",
         "reflect-metadata": "^0.1.13",
@@ -181,7 +187,6 @@
         "sprotty-vscode-webview": "^0.2.0",
         "style-loader": "^3.3.1",
         "ts-loader": "^9.3.0",
-        "commander": "^9.3.0",
         "vscode-languageclient": "^7.0.0",
         "vscode-languageserver": "^7.0.0"
     },
@@ -195,8 +200,8 @@
         "jest": "^27.5.1",
         "langium-cli": "^0.3.0",
         "ts-jest": "^27.1.4",
+        "typescript": "^4.7.2",
         "webpack": "^5.72.1",
-        "webpack-cli": "^4.9.1",
-        "typescript": "^4.7.2"
+        "webpack-cli": "^4.9.1"
     }
 }

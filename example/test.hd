@@ -1,4 +1,4 @@
-
+/*
 import { func1 as tass, func1, func2,  func3 } from 'filethatdonstexist.js'
         
 component T {
@@ -14,7 +14,7 @@ component T {
         method(finnmark, time -> deduction, percentage) => [ func3(finnmark, time), func2() ]; 
     }
 }
-
+*/
 component Te {
     //var c = 10.1, f; 
     var f: number = 0;
