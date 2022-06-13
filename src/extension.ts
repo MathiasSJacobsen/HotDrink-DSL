@@ -13,7 +13,7 @@ export function activate(context: vscode.ExtensionContext): void {
     extension.context.subscriptions.push(
         vscode.commands.registerCommand("hot-drink-dsl.generate-javascript", () => {
             try {
-                generateAction(vscode.window.activeTextEditor?.document.uri.fsPath!, {
+                generateJavaScript(vscode.window.activeTextEditor?.document.uri.fsPath!, {
                     destination:
                         vscode.workspace.workspaceFolders![0].uri.fsPath + "/generated",
                 });
