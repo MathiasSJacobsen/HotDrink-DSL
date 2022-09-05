@@ -71,5 +71,10 @@ Initial release.
 
 ***Part of the master theses Development Of Tool Support For A Multiway Dataflow Constraint System Library, at the University of Bergen, Informatics department, Software engineering***
 
+
+## Bugs
+- If your project filepath contains `-` (example `"the-path"`), and you run the command to generate JavaScript files from the specification this will make a JavaScript file in the directory named the same with out `-` (example `"thepath"`).
+
+
 Mathias Skallerud Jacobsen  
 [@MathiasSJacobsen](https://github.com/MathiasSJacobsen)
