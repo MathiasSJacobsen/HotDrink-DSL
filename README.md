@@ -26,21 +26,21 @@ To make the syntax highlighting work the file must have the ending `.hd`
 
 ### Syntax highlighting
 Adds syntax highlighting for the HotDrink DSL. Keywords are colored.
-![Picture of the syntax highlighted code](media/syntaxhig.png)
+![Picture of the syntax highlighted code](./media/syntaxhig.png)
 
 ### Validation
 Adds errors, hints, and warnings to the editor in the context of HotDrink code. Not all errors, hints, and warnings are implemented just a small set of them.
-![Picture showing error message from error](media/error.png)
-![Picture showing warning](media/warning.png)
+![Picture showing error message from error](./media/error.png)
+![Picture showing warning](./media/warning.png)
 
 ### Renaming by reference
 Should be able to rename variables in the DSL, and that would change all occurrences of that reference. Still experimental due to lack of proper testing.
-![Picture of the renamed variable](media/rename.png)
+![Picture of the renamed variable](./media/rename.png)
 
 ### Graph view
 Adds a graph view of the multi-way dataflow constrain system made, provided by Sprotty.
-![Picture of the button to open graph view](media/diagramopen.png)
-![Picture of the graph view](media/diagramView.png)
+![Picture of the button to open graph view](./media/diagramopen.png)
+![Picture of the graph view](./media/diagramView.png)
 Green nodes are named *component.constraint*. Blue nodes are method names. Orange nodes are variables. Lines with red dots in each end is a method-to-constraint connection, while the arrows are the dataflow in and out of the method.  
 
 ### Generation of JavaScript code from the HotDrink DSL
@@ -49,8 +49,8 @@ The extension provides a command to generate JavaScript code from the HotDrink D
 
 ### Quick fixes
 The extension adds quick fixes to some parts of the code. 
-![Picture of the the textbox with quick fix text](media/textboxQuickFix.png)
-![Picture of after the quick fix happened](media/afterQuickFix.png)
+![Picture of the the textbox with quick fix text](./media/textboxQuickFix.png)
+![Picture of after the quick fix happened](./media/afterQuickFix.png)
 
 
 ## Release Notes
@@ -70,6 +70,11 @@ Bug fixes:
 Initial release.
 
 ***Part of the master theses Development Of Tool Support For A Multiway Dataflow Constraint System Library, at the University of Bergen, Informatics department, Software engineering***
+
+
+## Bugs
+- If your project filepath contains `-` (example `"the-path"`), and you run the command to generate JavaScript files from the specification this will make a JavaScript file in the directory named the same with out `-` (example `"thepath"`).
+
 
 Mathias Skallerud Jacobsen  
 [@MathiasSJacobsen](https://github.com/MathiasSJacobsen)
