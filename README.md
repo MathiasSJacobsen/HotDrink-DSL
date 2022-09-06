@@ -45,7 +45,7 @@ Green nodes are named *component.constraint*. Blue nodes are method names. Orang
 
 ### Generation of JavaScript code from the HotDrink DSL
 The extension provides a command to generate JavaScript code from the HotDrink DSL. By pressing `cmd + shift + p` when a HotDrink file (.hd) is active. There is a menu item to generate the code. Type `Generate JavaScript from the current HotDrink DSL file` and click on it. This will generate the JavaScript file inside a folder called `<root>/generated`. The name of the file will be the same as the name of the HotDrink file, but with the extension `.js`.
-![Picture of the generated JavaScript file](media/generateJS.png)
+![Picture of the generated JavaScript file](./media/generateJS.png)
 
 ### Quick fixes
 The extension adds quick fixes to some parts of the code. 
@@ -55,7 +55,10 @@ The extension adds quick fixes to some parts of the code.
 
 ## Release Notes
 
-### 0.1.1
+### 0.3.0
+- Fixed that pictures now shows in the README
+
+### 0.2.0
 Graph view:
 - Removed *Component* from the graph view.
 - Renewed the edge between *constraints* and *methods*. Now easier to differentiate between that type of edge, and dataflow edge between *constraints* and *variables*. Also the port between *constraints* and *methods* are red now. 
@@ -70,10 +73,6 @@ Bug fixes:
 Initial release.
 
 ***Part of the master theses Development Of Tool Support For A Multiway Dataflow Constraint System Library, at the University of Bergen, Informatics department, Software engineering***
-
-
-## Bugs
-- If your project filepath contains `-` (example `"the-path"`), and you run the command to generate JavaScript files from the specification this will make a JavaScript file in the directory named the same with out `-` (example `"thepath"`).
 
 
 Mathias Skallerud Jacobsen  

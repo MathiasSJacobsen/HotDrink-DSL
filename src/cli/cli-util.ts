@@ -42,7 +42,7 @@ interface FilePathData {
 }
 
 export function extractDestinationAndName(filePath: string, destination: string | undefined): FilePathData {
-    filePath = filePath.replace(/\..*$/, '').replace(/[.-]/g, '');
+    filePath = filePath.replace(/\..*$/, '')//.replace(/[.-]/g, '');
     return {
         destination: destination ?? path.join(path.dirname(filePath), 'generated'),
         name: path.basename(filePath)
