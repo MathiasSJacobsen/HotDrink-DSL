@@ -317,7 +317,7 @@ export interface Variable extends AstNode {
     readonly $container: Vars;
     initValue: ValueExpr
     name: string
-    type: boolean
+    type: VarType
 }
 
 export const Variable = 'Variable';

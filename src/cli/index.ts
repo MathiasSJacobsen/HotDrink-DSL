@@ -20,10 +20,10 @@ export const generateJavaScript = async (fileName: string, opts: GenerateOptions
 export const generateDemo = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createHotDrinkDslServices().hotdrinkDSL;
     const model = await extractAstNode<Model>(fileName, HotDrinkDslLanguageMetaData.fileExtensions, services);
-    const [generatedFilePathJavaScript, generatedFilePathHTML] = generateHTMLdemo(model, fileName, opts.destination);
-
-    //console.log(colors.green(`JavaScript code generated successfully: ${generatedFilePath}`));
-    window.showInformationMessage(`JavaScript code generated successfully: ${generatedFilePathJavaScript} & ${generatedFilePathHTML}`);
+    const t = generateHTMLdemo(model, fileName, opts.destination);
+    if (t) {
+        window.showInformationMessage(`Code generated successfully: ${t.generatedFilePathJavaScript} & ${t.generatedFilePathHTML} & ${t.binderPath}`);
+    }
 };
 
 export type GenerateOptions = {

@@ -35,7 +35,7 @@ Vars:
 ;
 
 Variable:
-    name=ID (":" type?=VarType)? ("=" initValue=ValueExpr)?;
+    name=ID (":" type=VarType)? ("=" initValue=ValueExpr)?;
 
 VarType returns string:
     'string'

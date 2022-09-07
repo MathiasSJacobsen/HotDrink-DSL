@@ -33,7 +33,7 @@ import {
 } from "../language-server/generated/ast";
 import { extractDestinationAndName } from "./cli-util";
 import path from "path";
-import { NAMETAKEN, NONENAMEGIVEN, SpecPrefix, uid, usedVariableNames, variableIndex } from "../utils";
+import {NONENAMEGIVEN, SpecPrefix, uid, variableIndex } from "../utils";
 
 
 export function generateJavaScriptFile(
@@ -88,17 +88,15 @@ function generateImports(imports: Import[], fileNode: CompositeGeneratorNode) {
  * @param components The components that should be added to the file.
  * @param fileNode The file-node that are being appended to.
  */
-export function generateComponent(components: Component[], fileNode: CompositeGeneratorNode) {
+export function generateComponent(components: Component[], fileNode: CompositeGeneratorNode, demo?: boolean) {
     components.forEach((component: Component) => {
         fileNode.append("// create a component and emplace some variables", NL)
-        const compName = !usedVariableNames.has(component.name) ? component.name : `${NAMETAKEN}${uid()}`
-        usedVariableNames.add(compName)
 
-        fileNode.append(`export const ${compName} = new Component("${compName}")`, NL)
+        fileNode.append(`export const ${component.name} = new ${demo ? 'hd.':''}Component("${component.name}")`, NL)
 
         generateVariables(component, fileNode)
 
-        const constrainSpecNames = generateConstraintSpec(component.constraints, fileNode)
+        const constrainSpecNames = generateConstraintSpec(component.constraints, fileNode, demo)
         fileNode.append(NL)
 
         generateConstraints(component, fileNode, constrainSpecNames)
@@ -110,7 +108,7 @@ export function generateComponent(components: Component[], fileNode: CompositeGe
  * @param component The component holding the variables.
  * @param fileNode The file-node that are being appended to.
  */
-function generateVariables(component: Component, fileNode: CompositeGeneratorNode) {
+export function generateVariables(component: Component, fileNode: CompositeGeneratorNode) {
     let arrayIdx = 0;
     component.variables.forEach((vars: Vars) => {
         vars.vars.forEach((variable: Variable) => {
@@ -144,7 +142,7 @@ function generateVariables(component: Component, fileNode: CompositeGeneratorNod
  * @param fileNode The file-node that are being appended to.
  * @returns The variable names of all the constraint specifications.
  */
-function generateConstraintSpec(constraints: Constraint[], fileNode: CompositeGeneratorNode): string[] {
+export function generateConstraintSpec(constraints: Constraint[], fileNode: CompositeGeneratorNode, demo?: boolean): string[] {
     const constrainSpecNames: string[] = []
     constraints.forEach((constraint: Constraint) => {
         fileNode.append(NL)
@@ -152,10 +150,10 @@ function generateConstraintSpec(constraints: Constraint[], fileNode: CompositeGe
         const constraintName = constraint.name || `cs${NONENAMEGIVEN}${uid()}`
         let methodNames: string[] = []
         constraint.methods.forEach((method: Method) => {
-            methodNames.push(generateMethod(method, fileNode))
+            methodNames.push(generateMethod(method, fileNode, demo))
         })
         fileNode.append(NL)
-        fileNode.append(`const ${constraintName+SpecPrefix} = new ConstraintSpec([${methodNames.map((name:string) => name)}])`, NL)
+        fileNode.append(`const ${constraintName+SpecPrefix} = new ${demo ? 'hd.':''}ConstraintSpec([${methodNames.map((name:string) => name)}])`, NL)
         constrainSpecNames.push(constraintName+SpecPrefix)
     })
     return constrainSpecNames
@@ -167,7 +165,7 @@ function generateConstraintSpec(constraints: Constraint[], fileNode: CompositeGe
  * @param fileNode The file-node that are being appended to.
  * @returns The variable name of the method.
  */
-function generateMethod(method:Method, fileNode: CompositeGeneratorNode): string {
+export function generateMethod(method:Method, fileNode: CompositeGeneratorNode, demo?:boolean): string {
     const methodName = method.name || `m${NONENAMEGIVEN}${uid()}`
     const nvars = method.signature.inputVariables.length + method.signature.outputVariables.length
     const ins = method.signature.inputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
@@ -176,7 +174,7 @@ function generateMethod(method:Method, fileNode: CompositeGeneratorNode): string
     const inputVariables = method.signature.inputVariables.map(v => v.ref.ref?.name)
     const code = makeCodeForMethod(method.body)
 
-    fileNode.append(`const ${methodName} = new Method(${nvars}, [${ins}], [${outs}], [${promiseMask}], (${inputVariables}) => ${code})`, NL)
+    fileNode.append(`const ${methodName} = new ${demo ? 'hd.':''}Method(${nvars}, [${ins}], [${outs}], [${demo ? 'hd.':''}${promiseMask}], (${inputVariables}) => ${code})`, NL)
     return methodName
 }
 
@@ -207,7 +205,7 @@ function makeCodeForMethod(body: Body):string {
  * @param fileNode The file-node that are being appended to.
  * @param specNames The variable names of the constraint specifications in the component.
  */
-function generateConstraints(component:Component, fileNode: CompositeGeneratorNode, specNames: string[]) {
+export function generateConstraints(component:Component, fileNode: CompositeGeneratorNode, specNames: string[]) {
     component.constraints.forEach((constraint: Constraint, idx:number) => {
         fileNode.append(`// emplace a constraint built from the constraint spec`, NL)
         const constraintName = specNames[idx].substring(0, specNames[idx].length-SpecPrefix.length)
