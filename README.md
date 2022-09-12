@@ -22,6 +22,7 @@ To make the syntax highlighting work the file must have the ending `.hd`
 - Graph view of the multi-way dataflow constrain system made, provided by Sprotty.
 - Generation of JavaScript code from the DSL.
 - Quick fixes for the DSL.
+- Demo generation of a HotDrink specification.
 
 
 ### Syntax highlighting
@@ -52,8 +53,22 @@ The extension adds quick fixes to some parts of the code.
 ![Picture of the the textbox with quick fix text](./media/textboxQuickFix.png)
 ![Picture of after the quick fix happened](./media/afterQuickFix.png)
 
+### Demo generation of a HotDrink specification
+The extension provides a command to generate a demo HotDrink specification. By pressing `cmd + shift + p` when a HotDrink file (.hd) is active. There is a menu item to generate the code. Type `Generate a demo HotDrink specification` and click on it. This will generate the JavaScript and HTML files inside a folder called `<root>/generated`. After that folder is made you need to add [this file](https://github.com/MathiasSJacobsen/HotDrink-DSL/blob/master/hotdrink.js) to the generated folder for the demo to work. 
+
+Then you have to start a web server in the generated folder. If you have python installed you can run the following command in the generated folder:
+```zsh
+python -m http.server 8000
+```
+Then you can open the generated HTML file in a browser and see the demo in the browser.
+
 
 ## Release Notes
+
+### 1.0.0
+- Initial release of HotDrink plugin for VSCode.
+- Fixed bug where JavaScript code generation would not have the right index on methods.
+- Now a demo can be made from the HotDrink specification.
 
 ### 0.3.0
 - Fixed that pictures now shows in the README

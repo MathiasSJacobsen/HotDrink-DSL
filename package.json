@@ -3,7 +3,7 @@
     "displayName": "HotDrink Development Tool",
     "description": "A development tool for the multiway dataflow constraint system library HotDrink",
     "publisher": "MathiasSkallerudJacobsen",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "engines": {
         "vscode": "^1.67.0"
     },
@@ -40,7 +40,8 @@
         "commands": [
             {
                 "command": "hot-drink-dsl.generate-demo",
-                "title": "Generate Demo"
+                "title": "Generate Demo",
+                "category": "HotDrink DSL Demo"
             },
             {
                 "command": "hot-drink-dsl.generate-javascript",
