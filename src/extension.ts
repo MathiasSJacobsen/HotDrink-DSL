@@ -25,19 +25,18 @@ export function activate(context: vscode.ExtensionContext): void {
 
     extension.context.subscriptions.push(
         vscode.commands.registerCommand("hot-drink-dsl.generate-demo", async () => {
+            /*
             const temp = await vscode.window.showInputBox({
                 title: "Enter the name of the file to generate",
                 placeHolder: "demo.html",
                 value: "demo.html",
             });
+            */
             try {
                 generateDemo(vscode.window.activeTextEditor?.document.uri.fsPath!,{})
             } catch (error: any) {
                 vscode.window.showErrorMessage(error.message);
             }
-                
-          console.log(temp);
-            
         })
     );
 }
