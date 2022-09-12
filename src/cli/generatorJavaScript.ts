@@ -150,7 +150,7 @@ export function generateConstraintSpec(constraints: Constraint[], fileNode: Comp
         const constraintName = constraint.name || `cs${NONENAMEGIVEN}${uid()}`
         let methodNames: string[] = []
         constraint.methods.forEach((method: Method) => {
-            methodNames.push(generateMethod(method, fileNode, demo))
+            methodNames.push(generateMethod(constraint, method, fileNode, demo))
         })
         fileNode.append(NL)
         fileNode.append(`const ${constraintName+SpecPrefix} = new ${demo ? 'hd.':''}ConstraintSpec([${methodNames.map((name:string) => name)}])`, NL)
@@ -165,16 +165,20 @@ export function generateConstraintSpec(constraints: Constraint[], fileNode: Comp
  * @param fileNode The file-node that are being appended to.
  * @returns The variable name of the method.
  */
-export function generateMethod(method:Method, fileNode: CompositeGeneratorNode, demo?:boolean): string {
+export function generateMethod(constraint: Constraint, method:Method, fileNode: CompositeGeneratorNode, demo?:boolean): string {
     const methodName = method.name || `m${NONENAMEGIVEN}${uid()}`
     const nvars = method.signature.inputVariables.length + method.signature.outputVariables.length
-    const ins = method.signature.inputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
-    const outs = method.signature.outputVariables.map((variableRef: VariableReference) => variableIndex.get(variableRef.ref.ref?.name!))
+    const ins = method.signature.inputVariables.map((variableRef: VariableReference) => variableRef.ref.ref?.name)
+    const outs = method.signature.outputVariables.map((variableRef: VariableReference) => variableRef.ref.ref?.name)
     const promiseMask = ["maskNone"]
     const inputVariables = method.signature.inputVariables.map(v => v.ref.ref?.name)
     const code = makeCodeForMethod(method.body)
+    const indexOfVariablesInConstraintSpec = constraint.methods[0].signature.inputVariables.map(v => v.ref.ref?.name).concat(constraint.methods[0].signature.outputVariables.map(v => v.ref.ref?.name))
 
-    fileNode.append(`const ${methodName} = new ${demo ? 'hd.':''}Method(${nvars}, [${ins}], [${outs}], [${demo ? 'hd.':''}${promiseMask}], (${inputVariables}) => ${code})`, NL)
+    const insIdx = ins.map((name : string | undefined) => indexOfVariablesInConstraintSpec.indexOf(name))
+    const outsIdx = outs.map((name : string | undefined) => indexOfVariablesInConstraintSpec.indexOf(name))
+
+    fileNode.append(`const ${methodName} = new ${demo ? 'hd.':''}Method(${nvars}, [${insIdx}], [${outsIdx}], [${demo ? 'hd.':''}${promiseMask}], (${inputVariables}) => ${code})`, NL)
     return methodName
 }
 

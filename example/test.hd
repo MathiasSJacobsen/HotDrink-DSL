@@ -14,28 +14,24 @@ component T {
     }
 } 
  */
-/* component Te {
-    //var c = 10.1, f; 
-    var f: number = 0;
-
-    var c:number;
-
-    constraint constr_degrees {
-        method_from_c_to_f(c -> f) => (c * 9/5 + 32);
-        method_from_f_to_c(f -> c) => (f - 32) * 5/9;
-    }
-} */
 component Te {
-    var income:number = 500000, percentage:number = 30, time:number = 12, deduction:number, tax:number, net_income:number;
+    //var c = 10.1, f; 
+    var e: number;
 
-    constraint c1{
-            (income, percentage, deduction -> tax, net_income) => [(income * percentage / 100) - deduction, income - (income * percentage / 100) - deduction];
-            (tax, net_income, deduction, percentage -> income) => net_income + tax;
-            
-        }
+    var g: number;
+    var h: number;
+    var i: number;
+    var j: number;
+    var f: number = 0;
+    var c: number = 0;
+    var d: number;
+
+    constraint constr_degrees1 {
+        method_from_c_to_g(c -> g) => (c * 9/5 + 32);
+        method_from_g_to_c(g -> c) => (g - 32) * 5/9;
+    }
+
+    constraint constr_degrees2 {
+        me(c->d) => c*2;
+    }
 }
-        /* 
-        constraint {
-            (finnmark, time -> deduction) => 9163 * time + 20000;
-            }
-} */
