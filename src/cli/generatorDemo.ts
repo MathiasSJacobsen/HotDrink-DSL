@@ -27,7 +27,7 @@ export function generateHTMLdemo(
     const fileNodeBinders = new CompositeGeneratorNode();
     const fileNodeMagic = new CompositeGeneratorNode();
 
-    const HTMLGenerated = generateHTML(fileNodeHTML, data.name, model.components);
+    const HTMLGenerated = generateHTML(fileNodeHTML, model.components);
     if(!HTMLGenerated) return;
 
     generateComponent(model.components, fileNodeJavaScript, true);
@@ -47,7 +47,7 @@ export function generateHTMLdemo(
     return {generatedFilePathJavaScript, generatedFilePathHTML, binderPath}
 }
 
-function generateHTML(fileNode: CompositeGeneratorNode, javascriptFileName: string, components: Component[]) {
+function generateHTML(fileNode: CompositeGeneratorNode, components: Component[]) {
     let noneType;
     components.map(components => components.variables.map(variable => variable.vars.map(v => {
 
@@ -71,7 +71,7 @@ function generateHTML(fileNode: CompositeGeneratorNode, javascriptFileName: stri
 
 <body>
 <h1>
-    Convert between celcius and fahrenheit
+    Demo App
 </h1>
 <tbody>
     <table>

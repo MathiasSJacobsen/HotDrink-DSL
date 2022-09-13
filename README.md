@@ -65,6 +65,9 @@ Then you can open the generated HTML file in a browser and see the demo in the b
 
 ## Release Notes
 
+### 1.0.1
+- Small fix in the title of demo generation command.
+
 ### 1.0.0
 - Initial release of HotDrink plugin for VSCode.
 - Fixed bug where JavaScript code generation would not have the right index on methods.
