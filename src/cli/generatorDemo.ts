@@ -76,7 +76,6 @@ function generateHTML(fileNode: CompositeGeneratorNode, components: Component[])
 <tbody>
     <table>
 ${components.map(components => components.variables.map(variable => variable.vars.map(v => {
-    console.log(v.type);
     
     if (!v.type) vscode.window.showErrorMessage("All variables need types for this command to work, file was made but it is missing type on input field.");
     return '        <tr><td>' + v.name + ':</td>\n        <td><input type="' + v.type + '" id="' + v.name + '"></td></tr>\n'
