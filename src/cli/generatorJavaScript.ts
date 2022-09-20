@@ -123,7 +123,7 @@ export function generateVariables(component: Component, fileNode: CompositeGener
                         fileNode.append(`.${initValue.decimal}`)
                     }
                 } else if (isStringValueExpr(initValue)) {
-                    fileNode.append(`, ${initValue.val}`)
+                    fileNode.append(`, "${initValue.val}"`)
                 } else if (isBooleanValueExpr(initValue)) {
                     fileNode.append(`, ${(initValue as BooleanValueExpr).val}`)
                 } else {

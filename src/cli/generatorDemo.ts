@@ -2,7 +2,7 @@ import fs from "fs";
 import * as vscode from "vscode";
 import { CompositeGeneratorNode, processGeneratorNode } from "langium";
 import path from "path";
-import { Component, Model } from "../language-server/generated/ast";
+import { Component, Model, Variable, VarType } from "../language-server/generated/ast";
 import { extractDestinationAndName } from "./cli-util";
 import { generateComponent } from "./generatorJavaScript";
 
@@ -78,7 +78,8 @@ function generateHTML(fileNode: CompositeGeneratorNode, components: Component[])
 ${components.map(components => components.variables.map(variable => variable.vars.map(v => {
     
     if (!v.type) vscode.window.showErrorMessage("All variables need types for this command to work, file was made but it is missing type on input field.");
-    return '        <tr><td>' + v.name + ':</td>\n        <td><input type="' + v.type + '" id="' + v.name + '"></td></tr>\n'
+    const type = findtypeHTMLForInputElement(v.type);
+    return '        <tr><td>' + v.name + ':</td>\n        <td><input ' + type + ' id="' + v.name + '"></td></tr>\n'
 
     }).join("")).join(""))}
     
@@ -89,6 +90,17 @@ ${components.map(components => components.variables.map(variable => variable.var
 </html>
     `)
     return true;
+}
+
+function findtypeHTMLForInputElement(type: VarType) {
+    switch (type) {
+        case "number":
+            return `type="number"`;
+        case "boolean":
+            return `type="checkbox"`;
+        default:
+            return"";
+    }
 }
 
 function generateBinders(fileNode: CompositeGeneratorNode) {
@@ -110,14 +122,9 @@ function generateBinders(fileNode: CompositeGeneratorNode) {
         binder(element, value, "value");
     }
 
-    export function innerTextBinder(text, value) {
-        value.value.subscribe({
-            next: val => {
-                if (val.hasOwnProperty('value')) {
-                    text.innerText = value.value.value;
-                }
-            }
-        })
+
+    export function checkedBinder(element, value) {
+        binder(element, value, "checked");
     }
     `)
 }
@@ -125,19 +132,23 @@ function generateBinders(fileNode: CompositeGeneratorNode) {
 function generateMagic(fileNode: CompositeGeneratorNode, components: Component[], javascriptPath: string) {
     
     fileNode.append(`
-        import { valueBinder } from "./binders.js";
+        import { valueBinder, checkedBinder } from "./binders.js";
         import { ${components.map(comp => {return comp.name})} } from "./${javascriptPath}Demo.js";
 
         const system = new hd.ConstraintSystem();
 
         window.onload = () => {
-${components.map(comp => {return "            system.addComponent("+ comp.name +");\n            " + comp.variables.map(variable => variable.vars.map(v => {return "            valueBinder(document.getElementById('" + v.name + "'), "+ comp.name +".vs." + v.name + ");\n";}).join("")).join("")})}
+${components.map(comp => {return "            system.addComponent("+ comp.name +");\n            " + comp.variables.map(variable => variable.vars.map(v => {
+    const functionName=checkIfTypeBool(v) ? "checkedBinder" : "valueBinder";
+    return "            "+ functionName+"(document.getElementById('" + v.name + "'), "+ comp.name +".vs." + v.name + ");\n";}).join("")).join("")})}
             system.update();
-            /* 
-${components.map(components => components.variables.map(variable => variable.vars.map(v => {
-                return "            valueBinder(document.getElementById('" + v.name + "'), comp.vs." + v.name + ");\n";
-            }).join("")).join(""))
-        } */
     }
     `)
+}
+
+function checkIfTypeBool(v:Variable) {
+    if(v.type == "boolean") {
+        return true;
+    }
+    return false;
 }
