@@ -45,7 +45,8 @@
             },
             {
                 "command": "hot-drink-dsl.generate-javascript",
-                "title": "Generate JavaScript from the current HotDrink DSL file"
+                "title": "Generate JavaScript from the current HotDrink DSL file",
+                "category": "HotDrink DSL"
             },
             {
                 "command": "hot-drink-dsl.diagram.open",
@@ -76,6 +77,10 @@
         ],
         "menus": {
             "commandPalette": [
+                {
+                    "command": "hot-drink-dsl.generate-demo",
+                    "when": "editorLangId == 'hot-drink-dsl'"
+                },
                 {
                     "command": "hot-drink-dsl.generate-javascript",
                     "when": "editorLangId == 'hot-drink-dsl'"

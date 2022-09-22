@@ -4,7 +4,7 @@ import { CompositeGeneratorNode, processGeneratorNode } from "langium";
 import path from "path";
 import { Component, Model, Variable, VarType } from "../language-server/generated/ast";
 import { extractDestinationAndName } from "./cli-util";
-import { generateComponent } from "./generatorJavaScript";
+import { generateComponent, generateImports } from "./generatorJavaScript";
 
 export function generateHTMLdemo(
     model: Model,
@@ -29,6 +29,8 @@ export function generateHTMLdemo(
 
     const HTMLGenerated = generateHTML(fileNodeHTML, model.components);
     if(!HTMLGenerated) return;
+
+    generateImports(model.imports, fileNodeJavaScript);
 
     generateComponent(model.components, fileNodeJavaScript, true);
 

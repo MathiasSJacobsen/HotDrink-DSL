@@ -13,25 +13,28 @@ component T {
         method(finnmark, time -> deduction, percentage) => [ func3(finnmark, time), func2() ]; 
     }
 } 
- */
-component Te {
-    //var c = 10.1, f; 
-    var e: number;
+ 
 
-    var g: number;
-    var h: number;
-    var i: number;
-    var j: number;
-    var f: number = 0;
-    var c: number = 0;
-    var d: number;
+component TemperaturConversion {
+    
+    var celsius:number = 10.1, fahrenheit:number;
 
-    constraint constr_degrees1 {
-        method_from_c_to_g(c -> g) => (c * 9/5 + 32);
-        method_from_g_to_c(g -> c) => (g - 32) * 5/9;
+    constraint constr_degrees {
+        method_from_c_to_f(celsius -> fahrenheit) => (celsius * 9/5 + 32);
+        method_from_f_to_c(fahrenheit -> celsius) => (fahrenheit - 32) * 5/9;
     }
+}
+*/
+import { foo } from './temp.js'
 
-    constraint constr_degrees2 {
-        me(c->d) => c*2;
+component test {
+    var a:number, b:number=1;
+
+
+    constraint te {
+
+        method2(a -> b) => foo(a);
+        method3(b -> a) => b*2;
+
     }
 }

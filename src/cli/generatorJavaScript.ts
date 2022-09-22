@@ -69,7 +69,7 @@ function generateHotDrinkImports(fileNode: CompositeGeneratorNode) {
  * @param imports The imports that should be added to the file.
  * @param fileNode The file-node that are being appended to.
  */
-function generateImports(imports: Import[], fileNode: CompositeGeneratorNode) {
+export function generateImports(imports: Import[], fileNode: CompositeGeneratorNode) {
     imports.forEach((_import: Import) =>
         fileNode.append(
             `import { ${_import.imports
