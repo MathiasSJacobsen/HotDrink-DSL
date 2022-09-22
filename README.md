@@ -65,6 +65,9 @@ Then you can open the generated HTML file in a browser and see the demo in the b
 
 ## Release Notes
 
+### 1.0.3
+- Bug in generation of imports fixed
+
 ### 1.0.2
 - Demo now works for all basic data types (number, string, boolean).
 - Also small fix when making string variables with API code.

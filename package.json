@@ -3,7 +3,7 @@
     "displayName": "HotDrink Development Tool",
     "description": "A development tool for the multiway dataflow constraint system library HotDrink",
     "publisher": "MathiasSkallerudJacobsen",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "engines": {
         "vscode": "^1.67.0"
     },
