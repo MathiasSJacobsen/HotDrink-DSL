@@ -7,7 +7,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { AstNode, AstReflection, Reference, isAstNode } from 'langium';
 
-export type Expr = And | BoolConst | Comparison | Equality | IntConst | MulOrDiv | Not | Or | Parenthesis | PlusOrMinus | StringConst | VarRef;
+export type Expr = And | BoolConst | Comparison | Equality | MulOrDiv | Not | NumberConst | Or | Parenthesis | PlusOrMinus | StringConst | VarRef;
 
 export const Expr = 'Expr';
 
@@ -170,17 +170,6 @@ export function isImportedFunction(item: unknown): item is ImportedFunction {
     return reflection.isInstance(item, ImportedFunction);
 }
 
-export interface IntConst extends AstNode {
-    readonly $container: And | Body | Comparison | Equality | MulOrDiv | Not | Or | Parenthesis | PlusOrMinus;
-    value: number
-}
-
-export const IntConst = 'IntConst';
-
-export function isIntConst(item: unknown): item is IntConst {
-    return reflection.isInstance(item, IntConst);
-}
-
 export interface Method extends AstNode {
     readonly $container: Constraint;
     body: Body
@@ -227,6 +216,19 @@ export const Not = 'Not';
 
 export function isNot(item: unknown): item is Not {
     return reflection.isInstance(item, Not);
+}
+
+export interface NumberConst extends AstNode {
+    readonly $container: And | Body | Comparison | Equality | MulOrDiv | Not | Or | Parenthesis | PlusOrMinus;
+    decimal: number
+    digit: number
+    negative: boolean
+}
+
+export const NumberConst = 'NumberConst';
+
+export function isNumberConst(item: unknown): item is NumberConst {
+    return reflection.isInstance(item, NumberConst);
 }
 
 export interface NumberValueExpr extends AstNode {
@@ -360,14 +362,14 @@ export function isVars(item: unknown): item is Vars {
     return reflection.isInstance(item, Vars);
 }
 
-export type HotDrinkDslAstType = 'And' | 'Body' | 'BoolConst' | 'BooleanValueExpr' | 'Comparison' | 'Component' | 'Constraint' | 'Equality' | 'Expr' | 'FuncName' | 'FunctionCall' | 'Import' | 'ImportedFunction' | 'IntConst' | 'Method' | 'Model' | 'MulOrDiv' | 'Not' | 'NumberValueExpr' | 'Or' | 'Parenthesis' | 'PlusOrMinus' | 'Signature' | 'StringConst' | 'StringValueExpr' | 'ValueExpr' | 'VarRef' | 'Variable' | 'VariableReference' | 'Vars';
+export type HotDrinkDslAstType = 'And' | 'Body' | 'BoolConst' | 'BooleanValueExpr' | 'Comparison' | 'Component' | 'Constraint' | 'Equality' | 'Expr' | 'FuncName' | 'FunctionCall' | 'Import' | 'ImportedFunction' | 'Method' | 'Model' | 'MulOrDiv' | 'Not' | 'NumberConst' | 'NumberValueExpr' | 'Or' | 'Parenthesis' | 'PlusOrMinus' | 'Signature' | 'StringConst' | 'StringValueExpr' | 'ValueExpr' | 'VarRef' | 'Variable' | 'VariableReference' | 'Vars';
 
 export type HotDrinkDslAstReference = 'FunctionCall:args' | 'FunctionCall:funcRef' | 'VariableReference:ref' | 'VarRef:value';
 
 export class HotDrinkDslAstReflection implements AstReflection {
 
     getAllTypes(): string[] {
-        return ['And', 'Body', 'BoolConst', 'BooleanValueExpr', 'Comparison', 'Component', 'Constraint', 'Equality', 'Expr', 'FuncName', 'FunctionCall', 'Import', 'ImportedFunction', 'IntConst', 'Method', 'Model', 'MulOrDiv', 'Not', 'NumberValueExpr', 'Or', 'Parenthesis', 'PlusOrMinus', 'Signature', 'StringConst', 'StringValueExpr', 'ValueExpr', 'VarRef', 'Variable', 'VariableReference', 'Vars'];
+        return ['And', 'Body', 'BoolConst', 'BooleanValueExpr', 'Comparison', 'Component', 'Constraint', 'Equality', 'Expr', 'FuncName', 'FunctionCall', 'Import', 'ImportedFunction', 'Method', 'Model', 'MulOrDiv', 'Not', 'NumberConst', 'NumberValueExpr', 'Or', 'Parenthesis', 'PlusOrMinus', 'Signature', 'StringConst', 'StringValueExpr', 'ValueExpr', 'VarRef', 'Variable', 'VariableReference', 'Vars'];
     }
 
     isInstance(node: unknown, type: string): boolean {
@@ -383,9 +385,9 @@ export class HotDrinkDslAstReflection implements AstReflection {
             case BoolConst:
             case Comparison:
             case Equality:
-            case IntConst:
             case MulOrDiv:
             case Not:
+            case NumberConst:
             case Or:
             case Parenthesis:
             case PlusOrMinus:

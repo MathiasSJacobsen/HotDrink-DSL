@@ -1010,12 +1010,23 @@ export const HotDrinkDslGrammar = (): Grammar => loadedHotDrinkDslGrammar ||(loa
               {
                 "$type": "Action",
                 "infer": true,
-                "type": "IntConst",
+                "type": "NumberConst",
                 "elements": []
               },
               {
                 "$type": "Assignment",
-                "feature": "value",
+                "feature": "negative",
+                "operator": "?=",
+                "terminal": {
+                  "$type": "Keyword",
+                  "value": "-"
+                },
+                "elements": [],
+                "cardinality": "?"
+              },
+              {
+                "$type": "Assignment",
+                "feature": "digit",
                 "operator": "=",
                 "terminal": {
                   "$type": "RuleCall",
@@ -1024,6 +1035,29 @@ export const HotDrinkDslGrammar = (): Grammar => loadedHotDrinkDslGrammar ||(loa
                     "$refText": "INT"
                   }
                 }
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": ".",
+                    "elements": []
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "decimal",
+                    "operator": "=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "arguments": [],
+                      "rule": {
+                        "$refText": "INT"
+                      }
+                    }
+                  }
+                ],
+                "cardinality": "?"
               }
             ]
           },

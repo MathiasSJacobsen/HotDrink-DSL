@@ -17,7 +17,6 @@ import {
     isParenthesis,
     isNot,
     isVarRef,
-    isIntConst,
     isStringConst,
     isBoolConst,
     isMulOrDiv,
@@ -30,6 +29,7 @@ import {
     isBooleanValueExpr,
     isExpr,
     BooleanValueExpr,
+    isNumberConst,
 } from "../language-server/generated/ast";
 import { extractDestinationAndName } from "./cli-util";
 import path from "path";
@@ -219,8 +219,9 @@ export function generateConstraints(component:Component, fileNode: CompositeGene
 }
 
 function generateExpr(expr: Expr) : string {
-    if (isIntConst(expr)) {
-        return expr.value.toString()
+    if (isNumberConst(expr)) {
+        const negation = expr.negative ? '-' : ''
+        return `${negation}${expr.digit}.${expr.decimal}`
     } else if (isStringConst(expr)){
         return `"${expr.value}"`
     } else if (isBoolConst(expr)) {

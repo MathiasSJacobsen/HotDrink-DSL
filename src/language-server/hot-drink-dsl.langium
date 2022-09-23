@@ -77,7 +77,7 @@ Signature:
 
 
 Atomic infers Expr:
-    {infer IntConst} value=INT |
+    {infer NumberConst} (negative?="-")? digit=INT ("."decimal=INT)? |
     {infer StringConst} value=STRING |
     {infer BoolConst} value=("true" | "false") |
     {infer VarRef} value=[Variable]
