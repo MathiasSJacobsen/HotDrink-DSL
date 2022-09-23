@@ -24,7 +24,7 @@ component TemperaturConversion {
         method_from_f_to_c(fahrenheit -> celsius) => (fahrenheit - 32) * 5/9;
     }
 }
-*/
+
 import { foo } from './temp.js'
 
 component test {
@@ -38,3 +38,62 @@ component test {
 
     }
 }
+*/
+import { baseSumFunc, baseSumFunc2, weekendFunc, weekendFunc2, discountFunc2, discountFunc, placeToNorwayPriceFunction, NorwayPriceToPricekWhFunction2} from './temp.js'
+component power {
+
+
+    var mounth: string, place: string;
+
+    var weekendFeeBool:boolean = false, basePriceBool: boolean = false, discountBool:boolean = false;
+
+    var weekendFee:number, kWh: number = 100, nettleie: number = 1200, basePrice: number, discountPercent: number, total: number, norwayBasePricekHw: number, pricekWh:number, salary: number, prosentSalary:number;
+
+    var discountedPrice: number;
+    /*
+    constraint constr_pricekWh {
+        m1(norwayBasePricekHw -> pricekWh) => norwayBasePricekHw / 1.25;
+        m2(pricekWh -> norwayBasePricekHw) => pricekWh * 1.25;
+    }
+    */
+
+    constraint constr_salary {
+        m3(salary, total -> prosentSalary) => total / salary * 100;
+    }
+
+    constraint constr_total {
+        m4(kWh, norwayBasePricekHw, nettleie, basePrice, weekendFee -> total) => kWh * norwayBasePricekHw + nettleie + basePrice + weekendFee;
+        m5(total, norwayBasePricekHw, nettleie, basePrice, weekendFee -> kWh) => (total - nettleie - basePrice - weekendFee) / norwayBasePricekHw;
+        m6(total, norwayBasePricekHw, nettleie, kWh, weekendFee -> basePrice) => total- weekendFee - nettleie - kWh * norwayBasePricekHw;
+        m7(total, basePrice, nettleie, kWh, weekendFee -> norwayBasePricekHw) => (total - nettleie - basePrice - weekendFee) / kWh;
+        m8(total, basePrice, norwayBasePricekHw, kWh, weekendFee -> nettleie) => total- weekendFee - basePrice - kWh * norwayBasePricekHw;
+        m13(total, basePrice, norwayBasePricekHw, nettleie, kWh -> weekendFee) => total - basePrice - nettleie - kWh * norwayBasePricekHw;
+    }
+
+    constraint constr_basePrice {
+        m9(basePriceBool -> basePrice) => baseSumFunc(basePriceBool);
+        m10(basePrice -> basePriceBool) => baseSumFunc2(basePrice);
+    }
+
+    constraint constr_weekend {
+        m11(weekendFeeBool -> weekendFee) => weekendFunc(weekendFeeBool);
+        m12(weekendFee -> weekendFeeBool) => weekendFunc2(weekendFee);
+    }
+
+    constraint constr_discountedPrice {
+        m16(total, discountPercent -> discountedPrice) => total - total * discountPercent / 100;
+        m17(discountedPrice, discountPercent -> total) => discountedPrice + discountedPrice * discountPercent / 100;
+        m18(discountedPrice, total -> discountPercent) => (total - discountedPrice) / total * 100;
+    }
+    
+    constraint constr_discount {
+        m14(discountPercent -> discountBool) => discountFunc2(discountPercent);
+        m15(discountBool -> discountPercent) => discountFunc(discountBool);
+    }
+
+    constraint constr_place {
+        m19(place, pricekWh -> norwayBasePricekHw) => placeToNorwayPriceFunction(place, pricekWh);
+        m20(norwayBasePricekHw, place -> pricekWh) => NorwayPriceToPricekWhFunction2(norwayBasePricekHw, place);
+    }
+}
+
