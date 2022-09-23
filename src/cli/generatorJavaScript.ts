@@ -221,7 +221,8 @@ export function generateConstraints(component:Component, fileNode: CompositeGene
 function generateExpr(expr: Expr) : string {
     if (isNumberConst(expr)) {
         const negation = expr.negative ? '-' : ''
-        return `${negation}${expr.digit}.${expr.decimal}`
+        const decimal = expr.decimal ? `.${expr.decimal}` : ''
+        return `${negation}${expr.digit}${decimal}`
     } else if (isStringConst(expr)){
         return `"${expr.value}"`
     } else if (isBoolConst(expr)) {
