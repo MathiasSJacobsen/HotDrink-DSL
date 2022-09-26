@@ -43,7 +43,7 @@ import { baseSumFunc, baseSumFunc2, weekendFunc, weekendFunc2, discountFunc2, di
 component power {
 
 
-    var mounth: string, place: string="";
+    var place: string = "";
 
     var weekendFeeBool:boolean = false, basePriceBool: boolean = false, discountBool:boolean = false;
 
@@ -61,7 +61,7 @@ component power {
         m6(totalWithoutDiscount, norwayBasePricekHw, nettleie, kWh, weekendFee -> basePrice) => totalWithoutDiscount - weekendFee - nettleie - kWh * norwayBasePricekHw;
         m7(totalWithoutDiscount, basePrice, nettleie, kWh, weekendFee -> norwayBasePricekHw) => (totalWithoutDiscount - nettleie - basePrice - weekendFee) / kWh;
         m8(totalWithoutDiscount, basePrice, norwayBasePricekHw, kWh, weekendFee -> nettleie) => totalWithoutDiscount - weekendFee - basePrice - kWh * norwayBasePricekHw;
-        m13(totalWithoutDiscount, basePrice, norwayBasePricekHw, nettleie, kWh -> weekendFee) => totalWithoutDiscount - basePrice - nettleie - kWh * norwayBasePricekHw;
+        m1(totalWithoutDiscount, basePrice, norwayBasePricekHw, nettleie, kWh -> weekendFee) => totalWithoutDiscount - basePrice - nettleie - kWh * norwayBasePricekHw;
     }
 
     constraint constr_basePrice {

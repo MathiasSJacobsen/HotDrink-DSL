@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import {
     ValidationAcceptor,
     ValidationCheck,
@@ -56,6 +57,7 @@ export class HotDrinkDslValidationRegistry extends ValidationRegistry {
             Model: [
                 validator.checkModelImpFunctionIsntImportedMoreThenOnceInOnceStatement,
                 validator.checkModelComponentNameIsUnique,
+                validator.checkModelForUniqueMethodNames
             ],
         };
         this.register(checks, validator);
@@ -321,6 +323,37 @@ export class HotDrinkDslValidator {
         }
 
     }
+
+    checkModelForUniqueMethodNames(
+        model: Model,
+        accept: ValidationAcceptor
+    ): void {
+        if (model.components) {
+            let listOfMethods: string[]= [];
+            model.components.forEach((component: Component) => {
+                if (component.constraints) {
+                    component.constraints.forEach((constraint: Constraint) => {
+                        if (constraint.methods) {
+                            constraint.methods.forEach((method: Method) => {
+                                listOfMethods.push(method.name)
+                                listOfMethods.filter(s => s !== undefined)
+                                const unique = new Set(listOfMethods);
+                                if (listOfMethods.length !== unique.size && method.name !== undefined) { 
+                                    listOfMethods.push(randomUUID()) // For å unngå at den blir feilmeldt flere ganger
+                                    listOfMethods = [...unique]
+                                    accept("warning", "Method names must be unique, for generation features to work", {
+                                        node: method,
+                                        property: "name",
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    }
+
     hintToMakePermutations(
         constraint: Constraint,
         accept: ValidationAcceptor
