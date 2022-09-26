@@ -120,10 +120,13 @@ function generateBinders(fileNode: CompositeGeneratorNode) {
         });
     }
 
-    export function valueBinder(element, value) {
+    export function stringBinder(element, value) {
         binder(element, value, "value");
     }
 
+    export function numberBinder(element, value) {
+        binder(element, value, "valueAsNumber");
+    }
 
     export function checkedBinder(element, value) {
         binder(element, value, "checked");
@@ -134,15 +137,15 @@ function generateBinders(fileNode: CompositeGeneratorNode) {
 function generateMagic(fileNode: CompositeGeneratorNode, components: Component[], javascriptPath: string) {
     
     fileNode.append(`
-        import { valueBinder, checkedBinder } from "./binders.js";
+        import { stringBinder, numberBinder, checkedBinder } from "./binders.js";
         import { ${components.map(comp => {return comp.name})} } from "./${javascriptPath}Demo.js";
 
         const system = new hd.ConstraintSystem();
 
         window.onload = () => {
 ${components.map(comp => {return "            system.addComponent("+ comp.name +");\n            " + comp.variables.map(variable => variable.vars.map(v => {
-    const functionName=checkIfTypeBool(v) ? "checkedBinder" : "valueBinder";
-    return "            "+ functionName+"(document.getElementById('" + v.name + "'), "+ comp.name +".vs." + v.name + ");\n";}).join("")).join("")})}
+    const functionName=checkIfTypeBool(v);
+    return "            "+ functionName +"(document.getElementById('" + v.name + "'), "+ comp.name +".vs." + v.name + ");\n";}).join("")).join("")})}
             system.update();
     }
     `)
@@ -150,7 +153,10 @@ ${components.map(comp => {return "            system.addComponent("+ comp.name +
 
 function checkIfTypeBool(v:Variable) {
     if(v.type == "boolean") {
-        return true;
+        return "checkedBinder";
+    } else if (v.type == "number") {
+        return "numberBinder";
+    } else {
+        return "stringBinder";
     }
-    return false;
 }

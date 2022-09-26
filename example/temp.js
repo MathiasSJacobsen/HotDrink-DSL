@@ -30,6 +30,7 @@ export function sumFunc(nettleie, discount, weekendFee, kWh, priceOfkWh) {
 }
 
 export function placeToNorwayPriceFunction(place, pricekWh) {
+  pricekWh = parseInt(pricekWh);
   switch (place.toLowerCase()) {
     case "nord":
       return 1.1*pricekWh;
@@ -45,6 +46,7 @@ export function placeToNorwayPriceFunction(place, pricekWh) {
 }
 
 export function NorwayPriceToPricekWhFunction2(norwayPrice, place) {
+  norwayPrice = parseInt(norwayPrice);
   switch (place.toLowerCase()) {
     case "nord":
       return norwayPrice/1.1;
