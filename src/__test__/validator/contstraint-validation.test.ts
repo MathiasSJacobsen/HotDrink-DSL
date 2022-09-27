@@ -16,7 +16,7 @@ describe("Constraint validation", () => {
             
                 constraint G {
                     method(a, b -> c) => true;
-                    (a, c -> b) => true;
+                    m(a, c -> b) => true;
                 }
             }`;
             const expectation = { 
@@ -36,11 +36,11 @@ describe("Constraint validation", () => {
             
                 constraint G {
                     method(a, b -> c) => true;
-                    (a, c -> b) => true;
+                    m2(a, c -> b) => true;
                 }
                 constraint A {
                     m(a, b -> c) => true;
-                    (a, c -> b) => true;
+                    m4(a, c -> b) => true;
                 }
             }`;
             const expectation = { 
@@ -60,7 +60,7 @@ describe("Constraint validation", () => {
 
                 constraint g {
                     method(a, b -> c) => true;
-                    m(a, c -> b) => true;
+                    m2(a, c -> b) => true;
 
                 }
                 constraint a {
@@ -95,7 +95,7 @@ describe("Constraint validation", () => {
             const doc = await helper(documentContent);
             const diagnostics = await (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
             
-            expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
+            expect(diagnostics[1]).toEqual(expect.objectContaining(expectation))
         })
         it("gets two warnings if tree methods have the same name", async () => {
             const documentContent = `component T {
@@ -107,17 +107,16 @@ describe("Constraint validation", () => {
                     method(a, c -> b) => false;
                 }
             }`;
-
+            /*
             const expectation = { 
                 message: "Constraint methods should have unique names.", 
                 severity: WARNINGSEVERITY
             };
+            */
             const doc = await helper(documentContent);
             const diagnostics = await (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
             
-            expect(diagnostics.length).toBe(2)
-            expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
-            expect(diagnostics[1]).toEqual(expect.objectContaining(expectation))
+            expect(diagnostics.length).toBe(4)
 
         })
         it("gets nothing if all good", async () => {

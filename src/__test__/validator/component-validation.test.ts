@@ -32,67 +32,6 @@ describe("Component validation", () => {
             expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
         })
     })
-    describe('Every constraint in a component must have a unique name', () => {
-        it('gets a warning if two constraint have the same name property', async () => {
-            const documentContent = `component T {
-                var a;
-                var b;
-                var c;
-
-                constraint c1 {
-                    method(a, b -> c) => true;
-                    (a, c -> b) => true;
-
-                }
-                constraint c1 {
-                    method(a, b -> c) => false;
-                    (a, c -> b) => true;
-                }
-            }`;
-            const expectation = {
-                message: "Component constraints should have unique names.",
-                severity: WARNINGSEVERITY
-            }
-                ;
-            const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-
-
-            expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
-        })
-        it('gets a warning if more then two constraint have the same name property', async () => {
-            const documentContent = `component T {
-                var a = true, b, c;
-
-                constraint c1 {
-                    method(a, b -> c) => true;
-                    (a, c -> b) => true;
-
-                }
-                constraint c1 {
-                    method(a, b -> c) => false;
-                    (a, c -> b) => true;
-
-                }
-                constraint c1 {
-                    method(a, b -> c) => true;
-                    (a, c -> b) => true;
-
-                }
-            }`;
-            const expectation = {
-                message: "Component constraints should have unique names.",
-                severity: WARNINGSEVERITY
-            }
-                ;
-            const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-
-            expect(diagnostics[0]).toEqual(expect.objectContaining(expectation))
-            expect(diagnostics[1]).toEqual(expect.objectContaining(expectation))
-
-        })
-    })
     describe('Range', () => {
         it('variable range', async () => {
             const documentContent = `component T {
@@ -158,7 +97,7 @@ describe("Component validation", () => {
             const doc = await helper(documentContent);
             const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
 
-            expect(diagnostics[0]).toEqual(expect.objectContaining({
+            expect(diagnostics[1]).toEqual(expect.objectContaining({
                 range: expect.objectContaining({
                     start: expectation.range.start, 
                     end: expectation.range.end
