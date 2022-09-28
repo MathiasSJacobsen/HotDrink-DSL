@@ -76,27 +76,6 @@ describe("Constraint validation", () => {
     })
 
     describe("All methods inside a constraint should have a unique name", () => {
-        it("gets a warning if two methods have the same name", async () => {
-            const documentContent = `component T {
-                var a = true, b, c;
-
-            
-                constraint g {
-                    method(a, b -> c) => true;
-                    method(a, c -> b) => false;
-                }
-                
-            }`;
-
-            const expectation = { 
-                message: "Constraint methods should have unique names.", 
-                severity: WARNINGSEVERITY
-            };
-            const doc = await helper(documentContent);
-            const diagnostics = await (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
-            
-            expect(diagnostics[1]).toEqual(expect.objectContaining(expectation))
-        })
         it("gets two warnings if tree methods have the same name", async () => {
             const documentContent = `component T {
                 var a = true, b, c;
@@ -116,7 +95,7 @@ describe("Constraint validation", () => {
             const doc = await helper(documentContent);
             const diagnostics = await (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
             
-            expect(diagnostics.length).toBe(4)
+            expect(diagnostics.length).toBe(2)
 
         })
         it("gets nothing if all good", async () => {
@@ -134,39 +113,6 @@ describe("Constraint validation", () => {
             const diagnostics = (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
             
             expect(diagnostics.length).toBe(0)
-        })
-    })
-    describe('Range', () => {
-        it('Methods', async () => {
-            const documentContent = `component T {
-                var a = true, b, c;
-            
-                constraint g {
-                    m1(a, b -> c) => true;
-                    m1(a, c -> b) => false;
-                }
-            }`;
-            const expectation = {
-                range: { 
-                    start: { 
-                        character: 20, 
-                        line: 5
-                    },
-                    end: {
-                        character: 22, 
-                        line: 5
-                    } 
-                }
-            };
-            const doc = await helper(documentContent);
-            const diagnostics = (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
-            
-            expect(diagnostics[0]).toEqual(expect.objectContaining({
-                range: expect.objectContaining({
-                    start: expectation.range.start, 
-                    end: expectation.range.end
-                })
-            }))
         })
     })
     describe("All methods inside a constraint uses the same variables", () => {

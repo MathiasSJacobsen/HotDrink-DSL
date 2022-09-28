@@ -67,43 +67,6 @@ describe("Component validation", () => {
                 })
             }))
         })
-        it('constraint range', async () => {
-            const documentContent = `component T {
-                var a = true, b, c;
-
-                constraint c1 {
-                    method(a, b -> c) => true;
-                    (a, c -> b) => true;
-
-                }
-                constraint c1 {
-                    (a, b -> c) => false;
-                    method(a, c -> b) => true;
-
-                }
-            }`;
-            const expectation = {
-                range: { 
-                    start: { 
-                        character: 27, 
-                        line: 8
-                    },
-                    end: {
-                        character: 29, 
-                        line: 8
-                    } 
-                }
-            };
-            const doc = await helper(documentContent);
-            const diagnostics = await services.validation.DocumentValidator.validateDocument(doc);
-
-            expect(diagnostics[1]).toEqual(expect.objectContaining({
-                range: expect.objectContaining({
-                    start: expectation.range.start, 
-                    end: expectation.range.end
-                })
-            }))
-        })
     })
     describe("Unused variables", () => {
         it('gets a warning when a variable is not in use by any method', async () => {
