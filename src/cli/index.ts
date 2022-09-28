@@ -8,10 +8,15 @@ import { extractAstNode } from './cli-util';
 import { window } from 'vscode';
 import { generateJavaScriptFile } from './generatorJavaScript';
 import { generateHTMLdemo } from './generatorDemo';
+import { ERRORSEVERITY } from '../__test__/test-utils';
 
 export const generateJavaScript = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createHotDrinkDslServices().hotdrinkDSL
     const model = await extractAstNode<Model>(fileName, HotDrinkDslLanguageMetaData.fileExtensions, services);
+    if (modelHasErrors(model)) {
+        window.showErrorMessage(`There is a error in the model. Please fix it before generating the code.`);
+        return
+    }
     const generatedFilePath = generateJavaScriptFile(model, fileName, opts.destination);
     console.log(colors.green(`JavaScript code generated successfully: ${generatedFilePath}`));
     window.showInformationMessage(`JavaScript code generated successfully: ${generatedFilePath}`)
@@ -20,11 +25,19 @@ export const generateJavaScript = async (fileName: string, opts: GenerateOptions
 export const generateDemo = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createHotDrinkDslServices().hotdrinkDSL;
     const model = await extractAstNode<Model>(fileName, HotDrinkDslLanguageMetaData.fileExtensions, services);
+    if (modelHasErrors(model)) {
+        window.showErrorMessage(`There is a error in the model. Please fix it before generating the code.`);
+        return
+    }
     const t = generateHTMLdemo(model, fileName, opts.destination);
     if (t) {
         window.showInformationMessage(`Code generated successfully: ${t.generatedFilePathJavaScript} & ${t.generatedFilePathHTML} & ${t.binderPath}`);
     }
 };
+
+function modelHasErrors(model:Model) {
+    return model.$document?.diagnostics?.filter(d => d.severity === ERRORSEVERITY).length !== 0
+}
 
 export type GenerateOptions = {
     destination?: string;
