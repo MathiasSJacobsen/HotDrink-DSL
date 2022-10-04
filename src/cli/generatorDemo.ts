@@ -141,6 +141,7 @@ function generateMagic(fileNode: CompositeGeneratorNode, components: Component[]
         import { ${components.map(comp => {return comp.name})} } from "./${javascriptPath}Demo.js";
 
         const system = new hd.ConstraintSystem();
+        window.constraintSystem = system;
 
         window.onload = () => {
 ${components.map(comp => {return "            system.addComponent("+ comp.name +");\n            " + comp.variables.map(variable => variable.vars.map(v => {

@@ -53,6 +53,8 @@ component power {
 
     constraint constr_salary {
         m3(salary, totalWithoutDiscount -> prosentSalary) => totalWithoutDiscount / salary * 100;
+        m22(prosentSalary, salary -> totalWithoutDiscount) => salary * prosentSalary / 100;
+        m21(prosentSalary, totalWithoutDiscount -> salary) => totalWithoutDiscount / prosentSalary * 100;
     }
 
     constraint constr_total {
@@ -79,7 +81,7 @@ component power {
         m17(discountedPrice, discountPercent -> totalWithoutDiscount) => discountedPrice + discountedPrice * discountPercent / 100;
         m18(discountedPrice, totalWithoutDiscount -> discountPercent) => (totalWithoutDiscount - discountedPrice) / totalWithoutDiscount * 100;
     }
-    
+
     constraint constr_discount {
         m14(discountPercent -> discountBool) => discountFunc2(discountPercent);
         m15(discountBool -> discountPercent) => discountFunc(discountBool);
