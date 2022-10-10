@@ -64,6 +64,8 @@ Then you can open the generated HTML file in a browser and see the demo in the b
 
 
 ## Release Notes
+### 1.0.4
+- Bugfix in demo generation and JavaScript generation.
 
 ### 1.0.3
 - Bug in generation of imports fixed
