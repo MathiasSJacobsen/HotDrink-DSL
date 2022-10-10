@@ -76,28 +76,6 @@ describe("Constraint validation", () => {
     })
 
     describe("All methods inside a constraint should have a unique name", () => {
-        it("gets two warnings if tree methods have the same name", async () => {
-            const documentContent = `component T {
-                var a = true, b, c;
-            
-                constraint g {
-                    method(a, b -> c) => true;
-                    method(a, c -> b) => false;
-                    method(a, c -> b) => false;
-                }
-            }`;
-            /*
-            const expectation = { 
-                message: "Constraint methods should have unique names.", 
-                severity: WARNINGSEVERITY
-            };
-            */
-            const doc = await helper(documentContent);
-            const diagnostics = await (await services.validation.DocumentValidator.validateDocument(doc)).filter(d => d.severity === WARNINGSEVERITY);
-            
-            expect(diagnostics.length).toBe(2)
-
-        })
         it("gets nothing if all good", async () => {
             const documentContent = `component T {
                 var a = true, b, c;
