@@ -1,3 +1,4 @@
+
 /* 
         
 component T {
@@ -47,7 +48,7 @@ component power {
 
     var weekendFeeBool:boolean = false, basePriceBool: boolean = false, discountBool:boolean = false;
 
-    var weekendFee:number, kWh: number = 100, serviceExtras: number = 1200, basePrice: number, discountPercent: number, totalWithoutDiscount: number, norwayBasePricekHw: number, pricekWh:number, salary: number, prosentSalary:number;
+    var weekendFee:number, kWh: number = 100, serviceExtras: number = 1200, basePrice: number, discountPercent: number, totalWithoutDiscount: number, norwayBasePricekWh: number, pricekWh:number, salary: number, prosentSalary:number;
 
     var discountedPrice: number;
 
@@ -58,17 +59,17 @@ component power {
     }
 
     constraint constr_total {
-        m4(kWh, norwayBasePricekHw, serviceExtras, basePrice, weekendFee -> totalWithoutDiscount) => kWh * norwayBasePricekHw + serviceExtras + basePrice + weekendFee;
-        m5(totalWithoutDiscount, norwayBasePricekHw, serviceExtras, basePrice, weekendFee -> kWh) => (totalWithoutDiscount - serviceExtras - basePrice - weekendFee) / norwayBasePricekHw;
-        m6(totalWithoutDiscount, norwayBasePricekHw, serviceExtras, kWh, weekendFee -> basePrice) => totalWithoutDiscount - weekendFee - serviceExtras - kWh * norwayBasePricekHw;
-        m7(totalWithoutDiscount, basePrice, serviceExtras, kWh, weekendFee -> norwayBasePricekHw) => (totalWithoutDiscount - serviceExtras - basePrice - weekendFee) / kWh;
-        m8(totalWithoutDiscount, basePrice, norwayBasePricekHw, kWh, weekendFee -> serviceExtras) => totalWithoutDiscount - weekendFee - basePrice - kWh * norwayBasePricekHw;
-        m9(totalWithoutDiscount, basePrice, norwayBasePricekHw, serviceExtras, kWh -> weekendFee) => totalWithoutDiscount - basePrice - serviceExtras - kWh * norwayBasePricekHw;
+        m4(kWh, norwayBasePricekWh, serviceExtras, basePrice, weekendFee -> totalWithoutDiscount) => kWh * norwayBasePricekWh + serviceExtras + basePrice + weekendFee;
+        m5(totalWithoutDiscount, norwayBasePricekWh, serviceExtras, basePrice, weekendFee -> kWh) => (totalWithoutDiscount - serviceExtras - basePrice - weekendFee) / norwayBasePricekWh;
+        m6(totalWithoutDiscount, norwayBasePricekWh, serviceExtras, kWh, weekendFee -> basePrice) => totalWithoutDiscount - weekendFee - serviceExtras - kWh * norwayBasePricekWh;
+        m7(totalWithoutDiscount, basePrice, serviceExtras, kWh, weekendFee -> norwayBasePricekWh) => (totalWithoutDiscount - serviceExtras - basePrice - weekendFee) / kWh;
+        m8(totalWithoutDiscount, basePrice, norwayBasePricekWh, kWh, weekendFee -> serviceExtras) => totalWithoutDiscount - weekendFee - basePrice - kWh * norwayBasePricekWh;
+        m9(totalWithoutDiscount, basePrice, norwayBasePricekWh, serviceExtras, kWh -> weekendFee) => totalWithoutDiscount - basePrice - serviceExtras - kWh * norwayBasePricekWh;
     }
 
     constraint constr_basePrice {
         m10(basePriceBool -> basePrice) => 1000;
-        m11(basePrice -> basePriceBool) => basePrice > 0;
+        m11(basePrice -> basePriceBool) => basePrice != 0;
     }
 
     constraint constr_weekend {
@@ -88,8 +89,8 @@ component power {
     }
 
     constraint constr_place {
-        m19(place, pricekWh -> norwayBasePricekHw) => placeToNorwayPriceFunction(place, pricekWh);
-        m20(norwayBasePricekHw, place -> pricekWh) => NorwayPriceToPricekWhFunction2(norwayBasePricekHw, place);
+        m19(place, pricekWh -> norwayBasePricekWh) => placeToNorwayPriceFunction(place, pricekWh);
+        m20(norwayBasePricekWh, place -> pricekWh) => NorwayPriceToPricekWhFunction2(norwayBasePricekWh, place);
     }
 }
 

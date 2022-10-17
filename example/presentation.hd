@@ -1,0 +1,15 @@
+import { sqrt1 } from './temp.js'  
+component whap {
+    var A:number=100, w:number, h:number, p:number;
+
+    constraint Pwh {
+        m1(w, h -> p) => 2 * (w + h);
+        m2(p, w -> h) => p / 2 - w;
+        m3(p, h -> w) => p / 2 - h;
+    }
+
+    constraint Awh{
+        n1(w, h -> A) => w * h;
+        n2(A -> w, h) => [sqrt1(A), sqrt1(A)] ;
+    }
+}
