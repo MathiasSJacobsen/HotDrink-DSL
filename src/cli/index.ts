@@ -9,6 +9,7 @@ import { window } from 'vscode';
 import { generateJavaScriptFile } from './generatorJavaScript';
 import { generateHTMLdemo } from './generatorDemo';
 import { ERRORSEVERITY } from '../__test__/test-utils';
+import { generateWGraph } from './generateWebGraph';
 
 export const generateJavaScript = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createHotDrinkDslServices().hotdrinkDSL
@@ -33,6 +34,16 @@ export const generateDemo = async (fileName: string, opts: GenerateOptions): Pro
     if (t) {
         window.showInformationMessage(`Code generated successfully: ${t.generatedFilePathJavaScript} & ${t.generatedFilePathHTML} & ${t.binderPath}`);
     }
+};
+
+export const generateWebGraph = async (fileName: string, opts: GenerateOptions): Promise<void> => {
+    const services = createHotDrinkDslServices().hotdrinkDSL;
+    const model = await extractAstNode<Model>(fileName, HotDrinkDslLanguageMetaData.fileExtensions, services);
+    if (modelHasErrors(model)) {
+        window.showErrorMessage(`There is a error in the model. Please fix it before generating the code.`);
+        return
+    }
+    generateWGraph(model, fileName, opts.destination);
 };
 
 function modelHasErrors(model:Model) {

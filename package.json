@@ -39,9 +39,14 @@
         ],
         "commands": [
             {
+                "command": "hot-drink-dsl.generate-web-graph",
+                "title": "Generate sourcefile for web graph",
+                "category": "HotDrink DSL"
+            },
+            {
                 "command": "hot-drink-dsl.generate-demo",
                 "title": "Generate Demo",
-                "category": "HotDrink DSL Demo"
+                "category": "HotDrink DSL"
             },
             {
                 "command": "hot-drink-dsl.generate-javascript",
@@ -77,6 +82,10 @@
         ],
         "menus": {
             "commandPalette": [
+                {
+                    "command": "hot-drink-dsl.generate-web-graph",
+                    "when": "editorLangId == 'hot-drink-dsl'"
+                },
                 {
                     "command": "hot-drink-dsl.generate-demo",
                     "when": "editorLangId == 'hot-drink-dsl'"

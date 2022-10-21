@@ -1,4 +1,5 @@
-import { sqrt1 } from './temp.js'  
+import { sqrt1 } from './temp.js' 
+
 component whap {
     var A:number=100, w:number, h:number, p:number;
 

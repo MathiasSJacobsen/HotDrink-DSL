@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { SprottyLspVscodeExtension } from "sprotty-vscode/lib/lsp";
 import { HotDrinkDSLSprottyVscodeExtension } from "./sprotty/hot-drink-dsl-sprotty-lsp-extension";
-import { generateDemo, generateJavaScript } from "./cli";
+import { generateDemo, generateJavaScript, generateWebGraph } from "./cli";
 
 let extension: SprottyLspVscodeExtension;
 
@@ -25,13 +25,6 @@ export function activate(context: vscode.ExtensionContext): void {
 
     extension.context.subscriptions.push(
         vscode.commands.registerCommand("hot-drink-dsl.generate-demo", async () => {
-            /*
-            const temp = await vscode.window.showInputBox({
-                title: "Enter the name of the file to generate",
-                placeHolder: "demo.html",
-                value: "demo.html",
-            });
-            */
             try {
                 generateDemo(vscode.window.activeTextEditor?.document.uri.fsPath!,{})
             } catch (error: any) {
@@ -39,6 +32,16 @@ export function activate(context: vscode.ExtensionContext): void {
             }
         })
     );
+
+    extension.context.subscriptions.push(
+        vscode.commands.registerCommand("hot-drink-dsl.generate-web-graph", async () => {
+            try {
+                generateWebGraph(vscode.window.activeTextEditor?.document.uri.fsPath!,{})
+            } catch (error: any) {
+                vscode.window.showErrorMessage(error.message);
+            }
+        })
+    )
 }
 
 // This function is called when the extension is deactivated.
