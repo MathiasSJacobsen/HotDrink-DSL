@@ -43,6 +43,10 @@ export const generateWebGraph = async (fileName: string, opts: GenerateOptions):
         window.showErrorMessage(`There is a error in the model. Please fix it before generating the code.`);
         return
     }
+    if (model.components.length !== 1) {
+        window.showErrorMessage(`Can only make graph for one component. Please fix it before generating the code.`);
+        return
+    }
     generateWGraph(model, fileName, opts.destination);
 };
 

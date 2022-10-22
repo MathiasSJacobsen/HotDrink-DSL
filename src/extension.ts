@@ -36,7 +36,10 @@ export function activate(context: vscode.ExtensionContext): void {
     extension.context.subscriptions.push(
         vscode.commands.registerCommand("hot-drink-dsl.generate-web-graph", async () => {
             try {
-                generateWebGraph(vscode.window.activeTextEditor?.document.uri.fsPath!,{})
+                generateWebGraph(vscode.window.activeTextEditor?.document.uri.fsPath!,{
+                    destination:
+                        vscode.workspace.workspaceFolders![0].uri.fsPath + "/generated",
+                })
             } catch (error: any) {
                 vscode.window.showErrorMessage(error.message);
             }
