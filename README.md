@@ -67,6 +67,8 @@ Then you can open the generated HTML file in a browser and see the demo in the b
 The extension provides a command to generate code for diagraph, a web-based graph editor. By pressing `cmd + shift + p` when a HotDrink file (.hd) is active. There is a menu item to generate the code. Type `Generate code for diagraph` and click on it. This will generate a text file inside a folder called `<root>/generated`. Copy the content of the file and paste it into the [diagraph editor](https://dreampuf.github.io/GraphvizOnline/#digraph). Then you can see the graph in the editor.
 
 ## Release Notes
+### 1.0.5
+- Add Diagraph code generation.
 ### 1.0.4
 - Bugfix in demo generation and JavaScript generation.
 
