@@ -66,7 +66,6 @@ export class HotDrinkDslDiagramGenerator extends LangiumDiagramGenerator {
                 sourceId = idCache.getId(node.$container);
                 targetId = idCache.getId(node);
             } else if (isMethod(node)) {
-                console.log(idCache.getId(node));
                 sourceId = idCache.getId(node.$container);
                 targetId = idCache.getId(node);
                 edgeType = 'edge:constraint:method';
