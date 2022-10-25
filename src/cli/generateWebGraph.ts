@@ -23,9 +23,11 @@ export function generateWGraph(
   fileNode.append(`digraph ${model.components[0].name} {`, NL);
 
   entries.forEach(([key, value]) => {
-    value.forEach((v) => {
-      fileNode.append(`${v} -> ${key};`, NL);
-    });
+    if (value.size !== 0) {
+      value.forEach((v) => {
+        fileNode.append(`${v} -> ${key};`, NL);
+      });
+    }
   });
 
   fileNode.append("}", NL);
